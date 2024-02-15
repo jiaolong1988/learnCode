@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="01designPatterns" />
+        <module name="02nand2tetris" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="8">
+      <module name="01designPatterns" target="1.8" />
+      <module name="02nand2tetris" target="1.8" />
+      <module name="designPatterns" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
