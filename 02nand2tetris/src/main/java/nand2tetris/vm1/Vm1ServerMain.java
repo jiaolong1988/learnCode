@@ -1,10 +1,6 @@
 package nand2tetris.vm1;
 
-/**
- * @author jiaolong
- * @date 2024/01/19 17:20
- * @description: TODO
- */
+
 public class Vm1ServerMain {
     public static void main(String[] args) {
         String file ="D:\\test\\07\\MemoryAccess\\StaticTest\\StaticTest.vm";

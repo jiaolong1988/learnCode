@@ -92,7 +92,12 @@ public class CodeWriter {
 
     }
 
+
     public void close() {
+     /*
+      *
+      * @date 2024/2/15 17:44
+      */
         Path filePath = Paths.get(fileAddress);
         CommonUtils.outputFile(filePath, vmInfo, "asm");
     }
@@ -135,25 +140,25 @@ public class CodeWriter {
         private static String getArithmeticAssemInfo(String command) {
             int lableIndex = StackSPUtils.LableIndex.getAssemblerLableIndex();
 
-          /* eq 案例
-                   获取两个值 且指针减1
+    /* eq lt gt案例
+
             @SP
             AM=M-1
-            D=M
+            D=M     获取两个值做减法运算
             A=A-1
             D=M-D
 
-                  不相等的结果设置0
+                    不相等设置为：0
             M=0
-            @eq_0
-            D;JNE
+            @eq_0         -->指定标签变量
+            D;JNE         -->[eq->JNE lt->JGE gt->JLE]
 
-                  相等的结果设置为-1
+                    相等设置为: -1
             @SP
             A=M-1
             M=-1
 
-            (eq_0)
+            (eq_0)        -->定义标签
     */
             StringBuilder sb = new StringBuilder();
             //获取两个值 且指针减1
@@ -318,6 +323,8 @@ public class CodeWriter {
             /*
                    实现 push 指令-入栈
                                 push temp 2
+                                push pointer 0
+                                push static 0
 
                     @5+index  计算真实地址
                     D=M
@@ -471,13 +478,15 @@ public class CodeWriter {
              /*
                    实现 pop 指令-出栈
                               pop temp 0
+                              pop pointer 0
+                              pop static 0
                     @SP
                     A=M-1
                     D=M     获取栈顶数据
 
                     @temp+index
                     M=D     将栈顶数据存放temp5中
-         */
+            */
 
             //临时字段地址
             String readAddress = "";
