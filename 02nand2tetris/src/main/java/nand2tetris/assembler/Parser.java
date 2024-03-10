@@ -25,11 +25,13 @@ public class Parser {
     //返回标签符号
     public static String symbol(String command){
         String res = "";
+        //@value --> value
         CmomandType type = commandType(command);
         if(type == CmomandType.A_COMMAND){
             res = command.substring(1, command.length());
         }
 
+        //(aaa) --> aaa
         if(type == CmomandType.L_COMMAND){
             res = command.substring(1, command.length()-1);
         }
