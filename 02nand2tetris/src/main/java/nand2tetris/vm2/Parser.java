@@ -48,7 +48,7 @@ public class Parser {
         boolean flag = hasMoreCommands();
         if(flag){
             currentCommand  = iterator.next().trim();
-            System.out.println("÷∏¡Ó–≈œ¢£∫"+currentCommand);
+            System.out.println("vm info£∫"+currentCommand);
         }
         return flag;
     }
