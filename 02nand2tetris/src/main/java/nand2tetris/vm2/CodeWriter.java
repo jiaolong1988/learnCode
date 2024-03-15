@@ -117,14 +117,14 @@ public class CodeWriter {
              *  if-goto LOOP_START
              *
              *  @SP
-             *  A=M-1
+             *  AM=M-1
              *  D=M
              *  @LOOP_START
              *  D;JNE
              *  @SP M=M-1
              * @date 2024/3/10 15:13
              */
-            String info = "@SP A=M-1 D=M @"+arg1+" D;JNE @SP M=M-1";
+            String info = "@SP AM=M-1 D=M @"+arg1+" D;JNE";
             List<String> assemblerList = Arrays.asList(info.split(" "));
 
             System.out.println("    " + info);
@@ -358,28 +358,11 @@ public class CodeWriter {
         private static String getPushConstantAssemblerInfo(String index) {
             /*
                 实现 push constant 指令-入栈
-                        @17
-                        D=A         将17放入到D存储器
-
-                        @16         指针
-                        M=D		  将数据写入指定地址
-
-                        D=A		  获取指针
-                        @SP       指针加1
-                        M=D+1
+                    @17 D=A @SP A=M M=D @SP M=M+1
             */
 
-            //获取当前指针
-            int sp = StackSPUtils.get();
-
             StringBuilder sb = new StringBuilder();
-            sb.append("@" + index + " ")
-                    .append("D=A ")
-                    .append("@" + sp + " ")
-                    .append("M=D ")
-                    .append("D=A ")
-                    .append("@SP ")
-                    .append("M=D+1 ");
+            sb.append("@" + index + " D=A @SP A=M M=D @SP M=M+1");
 
             return sb.toString();
         }

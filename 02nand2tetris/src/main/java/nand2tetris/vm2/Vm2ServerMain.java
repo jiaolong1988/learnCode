@@ -12,6 +12,7 @@ public class Vm2ServerMain {
     public static void main(String[] args) {
         String file ="D:\\test\\08\\ProgramFlow\\FibonacciSeries\\FibonacciSeries.vm";
         ParserSingle(file);
+
     }
     /**
      * 单文件解析
