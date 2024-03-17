@@ -10,7 +10,7 @@ import nand2tetris.vm1.StackSPUtils;
  */
 public class Vm2ServerMain {
     public static void main(String[] args) {
-        String file ="D:\\test\\08\\ProgramFlow\\FibonacciSeries\\FibonacciSeries.vm";
+        String file ="D:\\test\\08\\FunctionCalls\\SimpleFunction\\SimpleFunction.vm";
         ParserSingle(file);
 
     }
@@ -33,26 +33,33 @@ public class Vm2ServerMain {
                 break;
             }
 
-            //vm 翻译为 汇编
-            String arg1 = parser.arg1().trim();
-            String arg2 = parser.arg2();
-
-            //push 和 pop
             CmomandType currentCommantType = parser.commandType();
-            if(currentCommantType == CmomandType.C_PUSH || currentCommantType == CmomandType.C_POP){
-                codeWriter.writePushPop(parser.commandType(), arg1, arg2);
-            }
-            //算术类型指令
-            if(currentCommantType == CmomandType.C_ARITHMETIC){
-                codeWriter.writerArithmetic(arg1);
-            }
-            //流程控制指令
-            if(currentCommantType == CmomandType.C_LABLE ||
-                    currentCommantType == CmomandType.C_IF ||
-                    currentCommantType == CmomandType.C_GOTO){
-                codeWriter.writeFlow(currentCommantType, arg1);
-            }
+            if(currentCommantType == CmomandType.C_RETURNN){
+                codeWriter.wirteReturn();
 
+            }else{
+                //vm 翻译为 汇编
+                String arg1 = parser.arg1().trim();
+                String arg2 = parser.arg2();
+
+                //push 和 pop
+                if(currentCommantType == CmomandType.C_PUSH || currentCommantType == CmomandType.C_POP){
+                    codeWriter.writePushPop(parser.commandType(), arg1, arg2);
+                }
+                //算术类型指令
+                if(currentCommantType == CmomandType.C_ARITHMETIC){
+                    codeWriter.writerArithmetic(arg1);
+                }
+                //流程控制指令
+                if(currentCommantType == CmomandType.C_LABLE ||
+                        currentCommantType == CmomandType.C_IF ||
+                        currentCommantType == CmomandType.C_GOTO){
+                    codeWriter.writeFlow(currentCommantType, arg1);
+                }
+                if(currentCommantType == CmomandType.C_FUNCTION){
+                    codeWriter.wirteFunction(arg1, Integer.valueOf(arg2));
+                }
+            }
 
             lineNum++;
             System.out.println("--> "+lineNum);

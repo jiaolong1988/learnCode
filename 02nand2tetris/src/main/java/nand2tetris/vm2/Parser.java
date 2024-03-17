@@ -78,7 +78,8 @@ public class Parser {
 
     public String arg2(){
         String result = "";
-        if(CmomandType.C_PUSH == commandType() || CmomandType.C_POP == commandType()){
+        if(CmomandType.C_PUSH == commandType() || CmomandType.C_POP == commandType()||
+            CmomandType.C_FUNCTION == commandType()){
             //命令的第二个参数
             result = currentCommand.split(" ")[2];
         }
@@ -105,6 +106,10 @@ public class Parser {
             arithmeticList.put("label",CmomandType.C_LABLE);
             arithmeticList.put("if-goto",CmomandType.C_IF);
             arithmeticList.put("goto",CmomandType.C_GOTO);
+
+            //方法
+            arithmeticList.put("function",CmomandType.C_FUNCTION);
+            arithmeticList.put("return",CmomandType.C_RETURNN);
         }
 
     }

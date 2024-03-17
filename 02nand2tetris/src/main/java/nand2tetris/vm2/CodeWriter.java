@@ -136,6 +136,7 @@ public class CodeWriter {
             List<String> oldInfo = assemblerList.subList(1,assemblerList.size());
             vmInfo.addAll(oldInfo);
         }
+
         if(cmomandType == CmomandType.C_GOTO){
             /*
              *  goto LOOP_START
@@ -159,6 +160,73 @@ public class CodeWriter {
 
         }
     }
+
+
+    public void wirteReturn(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("@LCL D=M @14 M=D ")                   //LCL的值存入 14地址
+            .append("@5 D=A @14 D=M-D @15 M=D ")         //REF：返回地址 存入15地址
+            .append("@SP A=M-1 D=M @ARG A=M M=D ")       //重置 调用者的 返回值地址
+            .append("@ARG D=M @SP M=D+1 ")               //恢复调用者的 SP
+            .append("@14 A=M-1 D=M @THAT M=D ")          //恢复调用者的 THAT
+            .append("@2 D=A @14 A=M-D D=M @THIS M=D ")   //恢复调用者的 THIS
+            .append("@3 D=A @14 A=M-D D=M @ARG M=D ")    //恢复调用者的 ARG
+            .append("@4 D=A @14 A=M-D D=M @LCL M=D ")    //恢复调用者的 LCL
+            .append("@15 A=M 0;JMP")                     //跳转到返回地址 goto REF
+        ;
+        addLog(sb.toString(), "return");
+    }
+
+    public void wirteFunction(String functionName, int numLocals){
+        /*
+         *function SimpleFunction.test 2
+         *
+         * @LCL         //LCL元素初始化为0
+         * A=M
+         * M=0
+         *
+         * A=A+1
+         * M=0
+         *
+         * D=A+1          //SP=LCL+元素个数
+         * @SP
+         * M=D
+         * @date 2024/3/17 16:09
+         */
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("("+functionName+")");
+
+        sb.append(" @LCL ");
+        for (int i = 0; i < numLocals; i++) {
+            if(i==0){
+                sb.append("A=M ");
+            }
+            sb.append("M=0");
+            if (numLocals > 1 && i != numLocals - 1) {
+                sb.append(" A=A+1 ");
+            }
+        }
+
+        sb.append(" D=A+1 @SP M=D");
+
+        String log = "function "+ functionName +" "+ numLocals;
+        addLog(sb.toString(), log);
+    }
+
+    private void addLog(String info, String log) {
+        List<String> assemblerList = Arrays.asList(info.split(" "));
+
+        System.out.println("    " + info);
+
+        //第一含代码添加注释 function SimpleFunction.test 2
+        String firstNewLine = assemblerList.get(0)+"   // "+ log ;
+        vmInfo.add(firstNewLine);
+
+        List<String> oldInfo = assemblerList.subList(1,assemblerList.size());
+        vmInfo.addAll(oldInfo);
+    }
+
 
     public void close() {
      /*
