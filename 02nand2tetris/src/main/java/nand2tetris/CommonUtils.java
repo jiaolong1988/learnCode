@@ -30,10 +30,10 @@ public class CommonUtils {
      * suffix
      */
     public static void outputFile(Path p, List<String> binaryProgram,String suffix) {
-        String fileName = p.getFileName().toString();
-        String outFileName = fileName.substring(0, fileName.length()-suffix.length())+"."+suffix;
-        Path outPath = Paths.get(p.getParent().toString(), outFileName );
+        String fileName = p.toAbsolutePath().toString();
+        String outFileName = fileName.substring(0, fileName.lastIndexOf(".") )+"."+suffix;
 
+        Path outPath = Paths.get(outFileName);
         try {
             Files.write(outPath, binaryProgram);
         } catch (IOException e) {

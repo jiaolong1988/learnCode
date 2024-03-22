@@ -49,9 +49,7 @@ public class CodeWriter {
             StackSPUtils.decrementOne();
         }
 
-        List<String> assemblerList = Arrays.asList(assemblerInfo.split(" "));
-        vmInfo.add("//" + command);
-        vmInfo.addAll(assemblerList);
+        addLog(assemblerInfo, command);
     }
 
     //将push pop vm命令翻译未汇编
@@ -101,18 +99,35 @@ public class CodeWriter {
     }
 
 
+    //lable
+    public void writeLable( String arg1, String functionName) {
+
+        //label LOOP_START --> (LOOP_START)
+        String functionLable = functionName+"$"+arg1;
+        String lable = "("+functionLable+")" +"  //label "+arg1;
+        System.out.println("    " + lable);
+
+        vmInfo.add(lable);
+    }
+
+    public void writeGoto( String arg1, String functionName) {
+            /*
+             *  goto LOOP_START
+             *
+             *  @LOOP_START
+             *  0;JMP
+             *  @SP M=M-1
+             * @date 2024/3/10 15:13
+             */
+
+            String functionLable = functionName+"$"+arg1;
+            String info = "@"+functionLable+" 0;JMP";
+
+            String log = "goto "+ functionName;
+            addLog(info, log);
+    }
     //程序流程控制
-    public void writeFlow(CmomandType cmomandType, String arg1) {
-        //流程控制指令
-        if(cmomandType == CmomandType.C_LABLE){
-            //label LOOP_START --> (LOOP_START)
-            String lable = "("+arg1+")" +"  //label "+arg1;
-            System.out.println("    " + lable);
-
-            vmInfo.add(lable);
-        }
-
-        if(cmomandType == CmomandType.C_IF){
+    public void writeIf(String arg1,String functionName) {
             /*
              *  if-goto LOOP_START
              *
@@ -124,41 +139,13 @@ public class CodeWriter {
              *  @SP M=M-1
              * @date 2024/3/10 15:13
              */
-            String info = "@SP AM=M-1 D=M @"+arg1+" D;JNE";
-            List<String> assemblerList = Arrays.asList(info.split(" "));
 
-            System.out.println("    " + info);
+            String functionLable = functionName+"$"+arg1;
+            String info = "@SP AM=M-1 D=M @"+functionLable+" D;JNE";
 
-            //第一含代码添加注释
-            String firstNewLine = assemblerList.get(0)+"   //if-goto "+arg1;
-            vmInfo.add(firstNewLine);
+            String log = "if-goto "+ arg1;
+            addLog(info, log);
 
-            List<String> oldInfo = assemblerList.subList(1,assemblerList.size());
-            vmInfo.addAll(oldInfo);
-        }
-
-        if(cmomandType == CmomandType.C_GOTO){
-            /*
-             *  goto LOOP_START
-             *
-             *  @LOOP_START
-             *  0;JMP
-             *  @SP M=M-1
-             * @date 2024/3/10 15:13
-             */
-            String info = "@"+arg1+" 0;JMP";
-            List<String> assemblerList = Arrays.asList(info.split(" "));
-
-            System.out.println("    " + info);
-
-            //第一含代码添加注释
-            String firstNewLine = assemblerList.get(0)+"   //goto "+arg1;
-            vmInfo.add(firstNewLine);
-
-            List<String> oldInfo = assemblerList.subList(1, assemblerList.size());
-            vmInfo.addAll(oldInfo);
-
-        }
     }
 
 
@@ -166,8 +153,8 @@ public class CodeWriter {
         StringBuilder sb = new StringBuilder();
         sb.append("@LCL D=M @14 M=D ")                   //LCL的值存入 14地址
             .append("@5 D=A @14 D=M-D @15 M=D ")         //REF：返回地址 存入15地址
-            .append("@SP A=M-1 D=M @ARG A=M M=D ")       //重置 调用者的 返回值地址
-            .append("@ARG D=M @SP M=D+1 ")               //恢复调用者的 SP
+            .append("@SP A=M-1 D=M @ARG A=M M=D ")       //重置 调用者的 返回值地址,（在ARG地址中，将当前栈顶的值 放入其中）。 *ARG = pop()
+            .append("@ARG D=M @SP M=D+1 ")               //恢复调用者的 SP        SP = ARG+1
             .append("@14 A=M-1 D=M @THAT M=D ")          //恢复调用者的 THAT
             .append("@2 D=A @14 A=M-D D=M @THIS M=D ")   //恢复调用者的 THIS
             .append("@3 D=A @14 A=M-D D=M @ARG M=D ")    //恢复调用者的 ARG
@@ -195,23 +182,60 @@ public class CodeWriter {
          */
 
         StringBuilder sb = new StringBuilder();
-        sb.append("("+functionName+")");
-
-        sb.append(" @LCL ");
+        sb.append("("+functionName+") ");
         for (int i = 0; i < numLocals; i++) {
-            if(i==0){
-                sb.append("A=M ");
-            }
-            sb.append("M=0");
-            if (numLocals > 1 && i != numLocals - 1) {
-                sb.append(" A=A+1 ");
-            }
+           sb.append("@SP A=M M=0 @SP M=M+1 ") ;
         }
 
-        sb.append(" D=A+1 @SP M=D");
+//
+//        //向栈中压入数据，并初始化为0
+//        for (int i = 0; i < numLocals; i++) {
+//            if(i==0){
+//                sb.append(" @LCL ");
+//                sb.append("A=M ");
+//            }
+//            sb.append("M=0");
+//            if (numLocals > 1 && i != numLocals - 1) {
+//                sb.append(" A=A+1 ");
+//            }
+//        }
+//
+//        //SP=LCL+元素个数
+//        if(numLocals > 0){
+//            sb.append(" D=A+1 @SP M=D");
+//        }
+
 
         String log = "function "+ functionName +" "+ numLocals;
+        addLog(sb.toString().trim(), log);
+    }
+
+    /**
+     * 将1个参数压入堆栈，然后调用 Main.fibonacci函数
+     * call Main.fibonacci 1
+     *
+     **/
+    public void wirteCall(String functionName, int numLocals ){
+
+        String returnAddress = "End$"+functionName+"$"+ReturnAddressValueUtil.getOnlyValue();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("@"+returnAddress+" D=A @SP A=M M=D @SP M=M+1 ") //返回地址加入栈
+            .append("@LCL D=M @SP A=M M=D @SP M=M+1 ")//报错调用函数的 LCL段指针
+            .append("@ARG D=M @SP A=M M=D @SP M=M+1 ")//报错调用函数的 ARG段指针
+            .append("@THIS D=M @SP A=M M=D @SP M=M+1 ")//报错调用函数的 THIS段指针
+            .append("@THAT D=M @SP A=M M=D @SP M=M+1 ")//报错调用函数的 THAT段指针
+
+            .append("@"+numLocals+" D=A @5 D=D+A @SP D=M-D @ARG M=D " )//重置ARG(n=参数数量) ARG=SP-n-5
+
+            .append("@SP D=M @LCL M=D ")//重置LCL  LCL=SP
+            .append("@"+functionName+" 0;JMP ")//跳转控制
+            .append("("+returnAddress+")") //为返回地址什么一个标签
+        ;
+
+        String log = "call "+ functionName +" "+ numLocals;
         addLog(sb.toString(), log);
+
     }
 
     private void addLog(String info, String log) {
@@ -273,7 +297,6 @@ public class CodeWriter {
          * @return: java.lang.String
          **/
         private static String getArithmeticAssemInfo(String command) {
-            int lableIndex = StackSPUtils.LableIndex.getAssemblerLableIndex();
 
     /* eq lt gt案例
 
@@ -295,20 +318,25 @@ public class CodeWriter {
 
             (eq_0)        -->定义标签
     */
+
+            //标签与 汇编符号(eq_0)
+            int lableIndex = StackSPUtils.LableIndex.getAssemblerLableIndex();
+            String lable = command + "_" + lableIndex;
+
             StringBuilder sb = new StringBuilder();
             //获取两个值 且指针减1
             sb.append("@SP ");
             sb.append("AM=M-1 ");
-            sb.append("D=M ");
+            sb.append("D=M ");  //最近的一个值
             sb.append("A=A-1 ");
-            sb.append("D=M-D ");
+            sb.append("D=M-D "); //差值
 
             //不相等的结果设置0
             sb.append("M=0 ");
-            //sb.append("@eq_0 ");
-            sb.append("@%1$s ");
+            sb.append("@"+lable+" ");  //@eq_0
+
             //sb.append("D;JNE ");
-            sb.append("D;%2$s ");
+            sb.append("D;%1$s ");
 
             //相等的结果设置为-1
             sb.append("@SP ");
@@ -316,15 +344,12 @@ public class CodeWriter {
             sb.append("M=-1 ");
 
             //设置标签
-            //sb.append("(eq_0) ");
-            sb.append("(%3$s) ");
+            //(eq_0)
+            sb.append("("+lable+") ");
 
-            //标签与 汇编符号
-            String lable = command + "_" + lableIndex;
+
             String arithmeticChar = compare.get(command);
-
-            String returnAsserbler = String.format(sb.toString(), lable, arithmeticChar, lable);
-            System.out.println("    " + returnAsserbler);
+            String returnAsserbler = String.format(sb.toString(),arithmeticChar);
 
             return returnAsserbler;
         }
@@ -365,10 +390,7 @@ public class CodeWriter {
 
             //替换相应计算字符
             String returnAsserbler = String.format(sb.toString(), computeTypes.get(command));
-            System.out.println("    " + returnAsserbler);
-
             return returnAsserbler;
-
         }
 
         /**
@@ -395,8 +417,6 @@ public class CodeWriter {
             sb.append("M=" + "%1$s" + "D ");
 
             String returnAsserbler = String.format(sb.toString(), negNotTypes.get(command));
-            System.out.println("    " + returnAsserbler);
-
             return returnAsserbler;
         }
     }
@@ -422,7 +442,6 @@ public class CodeWriter {
             segments.put("that","THAT");
         }
 
-
         private static String getPushConstantAssemblerInfo(String index) {
             /*
                 实现 push constant 指令-入栈
@@ -434,7 +453,6 @@ public class CodeWriter {
 
             return sb.toString();
         }
-
 
         private static String getPushTempPointerStaticAssemblerInfo(String segment, String index){
 
@@ -526,9 +544,7 @@ public class CodeWriter {
                     );
 
             return sb.toString();
-
         }
-
 
         private static String getPopLocaArgThisThatAssemblerInfo(String segment, String index){
 
@@ -630,6 +646,7 @@ public class CodeWriter {
         private static String getNewInfo(String info){
             return info+" ";
         }
+
         private static String getFileName() {
             String fileName = new File(fileAddress).getName();
             return fileName.split("\\.")[0];
@@ -637,4 +654,7 @@ public class CodeWriter {
 
     }
 
+    public List<String> getVmInfo() {
+        return vmInfo;
+    }
 }
