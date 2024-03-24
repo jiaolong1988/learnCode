@@ -143,15 +143,15 @@ public class CodeWriter {
 
     public void wirteReturn(){
         StringBuilder sb = new StringBuilder();
-        sb.append("@LCL D=M @14 M=D ")                   //LCL的值存入 14地址
-            .append("@5 D=A @14 D=M-D @15 M=D ")         //REF：返回地址 存入15地址
-            .append("@SP A=M-1 D=M @ARG A=M M=D ")       //重置 调用者的 返回值地址,（在ARG地址中，将当前栈顶的值 放入其中）。 *ARG = pop()
-            .append("@ARG D=M @SP M=D+1 ")               //恢复调用者的 SP        SP = ARG+1
-            .append("@14 A=M-1 D=M @THAT M=D ")          //恢复调用者的 THAT
-            .append("@2 D=A @14 A=M-D D=M @THIS M=D ")   //恢复调用者的 THIS
-            .append("@3 D=A @14 A=M-D D=M @ARG M=D ")    //恢复调用者的 ARG
-            .append("@4 D=A @14 A=M-D D=M @LCL M=D ")    //恢复调用者的 LCL
-            .append("@15 A=M 0;JMP")                     //跳转到返回地址 goto REF
+        sb.append("@LCL D=M @R15 M=D ")                   //LCL的值存入 15地址
+            .append("@5 D=A @R15 A=M-D D=M @R14 M=D ")         //REF：返回地址 存入14地址
+            .append("@SP AM=M-1 D=M @ARG A=M M=D ")       //重置 调用者的 返回值地址,（在ARG地址中，将当前栈顶的值 放入其中）。 *ARG = pop()
+            .append("@ARG D=M+1 @SP M=D ")               //恢复调用者的 SP        SP = ARG+1
+            .append("@R15 A=M-1 D=M @THAT M=D ")          //恢复调用者的 THAT
+            .append("@2 D=A @R15 A=M-D D=M @THIS M=D ")   //恢复调用者的 THIS
+            .append("@3 D=A @R15 A=M-D D=M @ARG M=D ")    //恢复调用者的 ARG
+            .append("@4 D=A @R15 A=M-D D=M @LCL M=D ")    //恢复调用者的 LCL
+            .append("@R14 A=M 0;JMP")                     //跳转到返回地址 goto REF
         ;
         addLog(sb.toString(), "return");
     }
@@ -160,16 +160,6 @@ public class CodeWriter {
         /*
          *function SimpleFunction.test 2
          *
-         * @LCL         //LCL元素初始化为0
-         * A=M
-         * M=0
-         *
-         * A=A+1
-         * M=0
-         *
-         * D=A+1          //SP=LCL+元素个数
-         * @SP
-         * M=D
          * @date 2024/3/17 16:09
          */
 
@@ -178,25 +168,6 @@ public class CodeWriter {
         for (int i = 0; i < numLocals; i++) {
            sb.append("@SP A=M M=0 @SP M=M+1 ") ;
         }
-
-//
-//        //向栈中压入数据，并初始化为0
-//        for (int i = 0; i < numLocals; i++) {
-//            if(i==0){
-//                sb.append(" @LCL ");
-//                sb.append("A=M ");
-//            }
-//            sb.append("M=0");
-//            if (numLocals > 1 && i != numLocals - 1) {
-//                sb.append(" A=A+1 ");
-//            }
-//        }
-//
-//        //SP=LCL+元素个数
-//        if(numLocals > 0){
-//            sb.append(" D=A+1 @SP M=D");
-//        }
-
 
         String log = "function "+ functionName +" "+ numLocals;
         addLog(sb.toString().trim(), log);
@@ -455,22 +426,10 @@ public class CodeWriter {
                                 push temp 2
                                 push pointer 0
                                 push static 0
-
-                    @5+index  计算真实地址
-                    D=M
-
-                    @SP
-                    A=M		获取栈顶元素地址
-                    M=D     将数据放入栈
-
-                    @SP		栈指针加1
-                    M=M+1
             */
 
             StringBuilder sb = new StringBuilder();
 
-            //对地址进行 计算
-            String readAddress = "";
             if(segment.equals("temp")){
                 sb.append("@"+index+" D=A ").append("@"+SEGMENT_TEMP).append(" A=A+D D=M ");
 
@@ -479,8 +438,8 @@ public class CodeWriter {
                 sb.append("@"+index+" D=A ").append("@"+SEGMENT_POINTER).append(" A=A+D D=M ");
             }
             if(segment.equals("static")){
-                readAddress = getFileName()+"."+index;
-                sb.append("@"+readAddress+" D=M");
+                String readAddress = getFileName()+"."+index;
+                sb.append("@"+readAddress+" D=M ");
             }
 
             sb.append("@SP A=M M=D @SP M=M+1");
@@ -503,20 +462,6 @@ public class CodeWriter {
                                 push this 2
                                 push that 2
                                 push temp 2
-
-                    @segmentAddress
-                    D=M     获取段地址
-
-                    @index  计算真实地址
-                    A=D+A
-                    D=M
-
-                    @SP
-                    A=M		获取栈顶元素地址
-                    M=D     将数据放入栈
-
-                    @SP		栈指针加1
-                    M=M+1
             */
             StringBuilder sb = new StringBuilder();
             sb.append("@"+index)
@@ -526,29 +471,11 @@ public class CodeWriter {
                     .append("D=M ");
 
             sb.append("@SP A=M M=D @SP M=M+1");
-//            sb.append(getNewInfo("@"+segmentAddress))
-//                    .append(getNewInfo("D=M"))
-//
-//                    .append(getNewInfo("@"+index))
-//                    .append(getNewInfo("A=D+A"))
-//                    .append(getNewInfo("D=M"))
-//
-//                    .append(getNewInfo("@SP"))
-//                    .append(getNewInfo("A=M"))
-//                    .append(getNewInfo("M=D"))
-//
-//                    .append(getNewInfo("@SP"))
-//                    .append(getNewInfo("M=M+1")
-//                    );
 
             return sb.toString();
         }
 
         private static String getPopLocaArgThisThatAssemblerInfo(String segment, String index){
-
-            //临时字段地址
-            int temp0Address = SEGMENT_TEMP;
-            int temp1Address = temp0Address+1;
 
             String segmentAddress =Optional.ofNullable(segments.get(segment)).orElse("");
             if(segmentAddress.length() == 0){
@@ -561,45 +488,14 @@ public class CodeWriter {
                               pop argument 2
                               pop this 2
                               pop that 2
-        获取数据
-                    @SP
-                    A=M-1
-                    D=M     获取栈顶数据
-              1
-                    @temp0Address
-                    M=D     将栈顶数据存放temp5中
-
-
-                    @segmentAddress
-                    D=M     获取段地址
-                    @index
-                    D=D+A   计算真实地址
-              2
-                    @temp1Address
-                    M=D     将段的真实地址temp6中
-
-        操作数据
-                    @temp0Address
-                    D=M
-
-                    @temp1Address
-                    A=M
-                    M=D    将栈数据 放入 指定位置
-
-                    @SP		栈指针减1
-                    M=M-1
             */
+
             StringBuilder sb = new StringBuilder();
-            sb.append(getNewInfo("@SP A=M-1 D=M"))
-                    .append(getNewInfo("@"+temp0Address+" M=D"))
+            sb.append("@"+index+" D=A ")
+                    .append("@"+segmentAddress+" D=M+D ")
+                    .append("@R15 M=D ")
 
-                    .append(getNewInfo("@"+segmentAddress+" D=M"))
-                    .append(getNewInfo("@"+index+" D=D+A"))
-                    .append(getNewInfo("@"+temp1Address+" M=D"))
-
-                    .append(getNewInfo("@"+temp0Address+" D=M"))
-                    .append(getNewInfo("@"+temp1Address+" A=M M=D"))
-                    .append(getNewInfo("@SP M=M-1"))
+                    .append("@SP AM=M-1 D=M @R15 A=MM =D")
                     ;
 
             return sb.toString();
@@ -612,37 +508,23 @@ public class CodeWriter {
                               pop temp 0
                               pop pointer 0
                               pop static 0
-                    @SP
-                    A=M-1
-                    D=M     获取栈顶数据
-
-                    @temp+index
-                    M=D     将栈顶数据存放temp5中
             */
 
-            //临时字段地址
-            String readAddress = "";
+            StringBuilder sb = new StringBuilder();
             if(segment.equals("temp")){
-                readAddress = SEGMENT_TEMP+Integer.valueOf(index)+"";
+                sb.append("@"+index+" D=A " ).append("@"+SEGMENT_TEMP+" D=A+D @R15 M=D ");
             }
             if(segment.equals("pointer")){
-                readAddress = SEGMENT_POINTER+Integer.valueOf(index)+"";
+                sb.append("@"+index+" D=A " ).append("@"+SEGMENT_POINTER+" D=A+D @R15 M=D ");
             }
             if(segment.equals("static")){
-                readAddress = getFileName()+"."+index;
+              String symbol = getFileName()+"."+index;
+              sb.append("@"+symbol+" D=A @R15 M=D ");
             }
-            StringBuilder sb = new StringBuilder();
-            sb.append(getNewInfo("@SP A=M-1 D=M"))
-              .append(getNewInfo("@"+readAddress+" M=D"))
-              .append(getNewInfo("@SP M=M-1"))
-            ;
+
+            sb.append("@SP AM=M-1 D=M @R15 A=M M=D");
 
             return sb.toString();
-        }
-
-
-        private static String getNewInfo(String info){
-            return info+" ";
         }
 
         private static String getFileName() {

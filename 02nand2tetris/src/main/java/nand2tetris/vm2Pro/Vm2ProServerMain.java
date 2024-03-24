@@ -18,30 +18,21 @@ import java.util.List;
 public class Vm2ProServerMain {
     public static void main(String[] args) {
 
-//        String file ="D:\\test\\07\\MemoryAccess\\PointerTest\\PointerTest.vm";
-//        vmParserMerge(file).close();
-
-        mergeCompileTest();
+        //指定目录
+        String fibonacciElementDir = "D:\\test\\08\\FunctionCalls\\FibonacciElement";
+        String staticTestDir = "D:\\test\\08\\FunctionCalls\\StaticsTest";
+        mergeCompileTest(staticTestDir);
     }
 
-    public static void mergeCompileTest() {
-        //指定目录
-        String dir = "D:\\test\\08\\FunctionCalls\\FibonacciElement";
+    public static void mergeCompileTest(String dir) {
         //指令结合
         List<String> infoList = new ArrayList();
 
         //初始化
-        /**
-         *
-         * 初始化操作
-         *  1.堆栈初始值为：256
-         *  2.第一个执行程序必须为：Sys.init
-         **/
-        StringBuilder sb = new StringBuilder();
-        sb.append("@256 D=A @SP M=D ").append("@Sys.init 0;JMP");
+        StringBuilder sb = init();
+        //添加初始化指令
         List info = Arrays.asList(sb.toString().split(" "));
         infoList.addAll(info);
-
 
         mergeCompile(dir, infoList);
 
@@ -50,6 +41,38 @@ public class Vm2ProServerMain {
         String ourFileAddress = String.join(File.separator, dir, dirFile.getName() + ".vm");
         Path filePath = Paths.get(ourFileAddress);
         CommonUtils.outputFile(filePath, infoList, "asm");
+    }
+
+    /**
+     *
+     * 初始化操作
+     *  1.堆栈初始值为：256
+     *  2.第一个执行程序必须为：Sys.init
+     **/
+    private static StringBuilder init() {
+        //init-start
+        StringBuilder sb = new StringBuilder();
+        sb.append("@256 D=A @SP M=D ")
+//        .append("@1 D=A @LCL M=D ")
+//        .append("@2 D=A @ARG M=D ")
+//        .append("@3 D=A @THIS M=D ")
+//        .append("@4 D=A @THAT M=D ")
+        ;
+
+        //push retAddr
+        String push_D="@SP A=M M=D @SP M=M+1 ";
+        sb.append("@bootstrap D=A "+push_D);
+
+        for(String x :Arrays.asList("LCL","ARG","THIS","THAT")){
+            sb.append("@"+x+" D=M "+push_D);
+        }
+
+        // ARG=SP-n-5
+        sb.append("@5 D=A @SP D=M-D @ARG M=D ");
+        //LCL=SP
+        sb.append("@SP D=M @LCL M=D ");
+        sb.append("@Sys.init 0;JMP (bootstrap)");
+        return sb;
     }
 
     public static void mergeCompile(String dir, List<String> infoList) {
