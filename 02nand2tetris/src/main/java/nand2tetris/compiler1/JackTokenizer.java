@@ -18,6 +18,8 @@ import java.util.List;
 public class JackTokenizer {
 
     private Iterator<String> iterator = null;
+    //当前Jack内容
+    private String currentCommand;
 
     public JackTokenizer(File inputFilePath) {
         //读取文件内容
@@ -41,11 +43,6 @@ public class JackTokenizer {
                 list.add(command);
             }
         }
-
-        for(String word: list){
-            word.trim().split(" ");
-        }
-
         iterator = list.iterator();
     }
 
@@ -57,7 +54,7 @@ public class JackTokenizer {
     public boolean advance(){
         boolean flag = hasMoreTokens();
         if(flag){
-            String currentCommand = iterator.next().trim();
+            currentCommand = iterator.next().trim();
             System.out.println("jack info："+currentCommand);
         }
 
@@ -69,28 +66,36 @@ public class JackTokenizer {
         return TokenType.IDENTIFIER;
     }
 
+    //字元的5中类型1
     public Keyword keyword() {
+    //<keyword>  </keyword>
 
         return Keyword.BOOLEAN;
     }
 
+    //符号
     public String symbol() {
+    //<symbol>  </symbol>
 
         return null;
     }
 
+    //标识符：类名 方法名 变量名
     public String identifier() {
+    //<identifier>  </identifier>
 
         return null;
     }
 
+    //整数常量
     public int inVal() {
-
+    //<integerConstant>  </integerConstant>
         return 0;
     }
 
+    //字符常量
     public String StringVal() {
-
+        //<stringConstant> </stringConstant>
         return null;
     }
 
