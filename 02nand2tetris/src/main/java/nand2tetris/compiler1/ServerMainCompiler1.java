@@ -18,6 +18,15 @@ import java.util.List;
 public class ServerMainCompiler1 {
     public static void main(String[] args) {
 
+        String file  = "D:\\test\\10\\Square\\MainT.xml";
+        File inputFile = new File(file);
+
+        CompilationEngine ce = new CompilationEngine(inputFile, null);
+        ce.getInfo();
+
+    }
+
+    public static void tets1(){
         String dirPath  = "D:\\test\\10\\Square";
         File dir = new File(dirPath);
         for(File file : dir.listFiles()){
@@ -37,56 +46,17 @@ public class ServerMainCompiler1 {
         File f = new File(file);
 
         JackScaning.infos.add("<tokens>");
-        List<String> jackCodes = readJackFile(f);
+        List<String> jackCodes = ReadJackFileUtil.readJackFile(f);
         for(String code: jackCodes){
             //System.out.println("--> "+code);
             JackScaning.getJackChar(code);
         }
 
         JackScaning.infos.add("</tokens>");
-        outputFile(f.toPath(),JackScaning.infos,"_T");
+        ReadJackFileUtil.outputFile(f.toPath(),JackScaning.infos,"_T");
     }
 
 
-    private static List<String> readJackFile(File jackFile) {
-       //读取文件内容
-       List<String> jackInfo = CommonUtils.readFile(jackFile.toPath());
 
-       //内容过滤
-       List<String> list = new ArrayList<>();
-       for (String jack : jackInfo) {
-
-           String info = jack.trim();
-           String command = "";
-           if (info.contains("/**")) {
-               command = info.substring(0, info.indexOf("/**")).trim();
-
-           } else if (info.contains("//")) {
-               command = info.substring(0, info.indexOf("//")).trim();
-
-           } else if (info.startsWith("*") || info.startsWith("*/")) {
-               command="";
-           }else {
-               command = info.trim();
-           }
-
-           if (command.length() > 0) {
-               list.add(command);
-           }
-       }
-        return list;
-   }
-
-   public static void outputFile(Path p, List<String> binaryProgram, String type) {
-        String fileName = p.toAbsolutePath().toString();
-        String outFileName = fileName.substring(0, fileName.lastIndexOf(".") )+type+".xml";
-
-        Path outPath = Paths.get(outFileName);
-        try {
-            Files.write(outPath, binaryProgram);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 }
