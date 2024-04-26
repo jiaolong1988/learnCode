@@ -1,8 +1,7 @@
 package nand2tetris.compiler1;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 自顶向下的递归语法分析器
@@ -10,226 +9,213 @@ import java.util.List;
  * @date 2024/04/06 11:02
  */
 public class CompilationEngine {
-    //语句类型
-    List<String> languageType = new ArrayList<>();
-    List<String> level = new ArrayList<>();
+    //类别定义
+    private LinkedHashMap<String, String> typeDef = new LinkedHashMap();
+    private HashMap<String, String> keywordLableMap = new HashMap<>();
+    private HashMap<String, String> statements = new HashMap<>();
 
+    private HashMap<String, String> expressionMap = new HashMap<>();
+
+   // List statementKeyWords = Arrays.asList("let","","","");
+    String currentCode = "";
     File inputFile=null;
-    public CompilationEngine(File inputFile, File outFile ){
-        level.add("");
+
+    public CompilationEngine(File inputFile, File outFile){
         this.inputFile = inputFile;
+
+        keywordLableMap.put("class","class");
+        keywordLableMap.put("static","classVarDec");
+        keywordLableMap.put("function","subroutineDec");
+        keywordLableMap.put("var","varDec");
+
+        statements.put("let","letStatement");
+        statements.put("do","doStatement");
+        statements.put("return","returnStatement");
+
+
+        expressionMap.put("=","expression");
     }
 
     public void getInfo(){
         List<String> jackCodes = ReadJackFileUtil.readJackFile(inputFile);
         for(String code: jackCodes){
             if(!code.contains("tokens")){
-                // System.out.println("--> "+code);
-                compileClass(code);
-            }
-        }
-    }
+                currentCode = code;
+                //System.out.println("--> "+code);
+                if(code.contains("keyword")){
+                    keywordsHandle();
 
-    /**
-     * 编译整个类
-     * @return: void
-     * @date 2024/4/6 11:11
-     */
-    public void compileClass(String code){
-        boolean flag =true;
-        String value = code.split(" ")[1].trim();
-        if(code.contains("keyword")){
+                }else if(code.contains("symbol")){
+                    symbolHandle();
 
-            if(value.equals("class")){
-                System.out.println("<class>");
-                level.add("  ");
-                languageType.add("class");
-            }
-
-            if(value.equals("static")){
-                compileClassVarDec("start");
-            }
-            if(value.equals("function")){
-                compileSubroutline("start");
-            }
-
-            if(value.equals("var")){
-                compileVarDec("start");
-            }
-            if(value.equals("let")){
-
-
-            }
-            if(value.equals("do")){
-
-
-            }
-            if(value.equals("return")){
-
-
-            }
-            if(value.equals("if")){
-
-
-            }
-
-            if(value.equals("else")){
-
-
-            }
-        }
-
-        if(code.contains("symbol")){
-
-            if(value.equals("(")){
-                flag= false;
-                System.out.println(getCurrentLevel()  +code);
-                compileParameterList("start");
-            }
-            //表达式结束
-            if(value.equals(")")){
-                compileParameterList("end");
-                languageType.remove(languageType.size()-1);
-            }
-            if(value.equals("{")){
-                if(getCurrentLanguageType().equals("subroutineDec")){
-                    languageType.add("subroutineBody");
-                    System.out.println(getCurrentLevel() +"<"+getCurrentLanguageType()+">");
-                    level.add("      ");
+                }else{
+                    printCurrentCode();
                 }
             }
-            //方法结束
-            if(value.equals("}")){
-                if(getCurrentLanguageType().equals("subroutineDec")){
-                    flag= false;
-                    System.out.println(getCurrentLevel()  +code);
-                    System.out.println(getCurrentLevel() +"</"+getCurrentLanguageType()+">");
-                    languageType.remove(languageType.size()-1);
-                }
-            }
+        }
+    }
 
+    //符号处理
+    private void symbolHandle() {
+        String value = currentCode.split(" ")[1].trim();
+        if(value.equals(";")){
+            printLable("e");
         }
 
-        if(flag){
-            System.out.println(getCurrentLevel()  +code);
+        else if(value.equals("(")){
+            setStartLableList("parameterList");
         }
 
+        else if(value.equals(")")){
+            printLableList("e");
 
-        if(code.contains("symbol")){
-
-            if(value.equals(";")){
-                if(getCurrentLanguageType().equals("classVarDec")){
-
-                    level.remove(level.size()-1);
-                    compileClassVarDec("end");
-                    languageType.remove(languageType.size()-1);
-                }
-                if(getCurrentLanguageType().equals("varDec")){
-                    level.remove(level.size()-1);
-                    compileVarDec("end");
-                    languageType.remove(languageType.size()-1);
-                }
-
+            if (getCurrentKey().equals("term")) {
+                printOnlyCurrentLable("e");
+                printOnlyCurrentLable("e");
             }
         }
-    }
 
-    public  String getCurrentLevel(){
-       return level.get(level.size()-1);
-    }
-    public  String getCurrentLanguageType(){
-        return languageType.get(languageType.size()-1);
-    }
+        else if(value.equals("{")){
+            if(getCurrentKey().equals("subroutineDec")){
+               setStartLable("subroutineBody" );
+            }else{
+                printCurrentCode();
+            }
+        }
+        else if(value.equals("=")){
+            printCurrentCode();
+            if(!getCurrentKey().equals("expression")){
+                setStartOnlyLable("expression");
+            }
+            setStartOnlyLable("term");
 
-    /**
-     * 编译静态声名或字段声名
-     * @return: void
-     * @date 2024/4/6 11:12
-     */
-    public void compileClassVarDec(String type){
-        if(type.equals("start")){
-            languageType.add("classVarDec");
-            //System.out.println(getCurrentLevel() +"<classVarDec>");
-            System.out.println(getCurrentLevel() +"<"+getCurrentLanguageType()+">");
-            level.add("    ");
-
-        }else{
-             System.out.println(getCurrentLevel() +"</"+getCurrentLanguageType()+">");
+        }
+        else{
+            printCurrentCode();
         }
 
 
     }
 
-    //编译整个方法、函数、构造函数
-    public void compileSubroutline(String type){
-        if(type.equals("start")){
-            languageType.add("subroutineDec");
-            //System.out.println(getCurrentLevel() +"<subroutineDec>");
-            System.out.println(getCurrentLevel() +"<"+getCurrentLanguageType()+">");
-            level.add("    ");
+    //关键字处理
+    private void keywordsHandle() {
+        String value = currentCode.split(" ")[1].trim();
 
-        }else{
-            System.out.println(getCurrentLevel() +"</"+getCurrentLanguageType()+">");
+        if(keywordLableMap.keySet().contains(value)){
+            setStartLable(keywordLableMap.get(value));
+        }
+        else if(statements.keySet().contains(value)){
+            if(!getCurrentKey().equals("statements")){
+                setStartOnlyLable("statements");
+            }
+
+            setStartLable(statements.get(value));
+        }
+        else{
+            printCurrentCode();
         }
     }
 
-    //编译参数列表不包含 ( )
-    public void compileParameterList(String type){
-        if(type.equals("start")){
-            languageType.add("parameterList");
-            System.out.println(getCurrentLevel() +"<"+getCurrentLanguageType()+">");
+
+    public void printCurrentCode(){
+        System.out.println(getNextSpace()  +currentCode);
+    }
+    //仅打印标签
+    public void printOnlyCurrentLable(String type){
+        if(type.equals("s")){
+            System.out.println(getCurrentSpace()  +"<"+getCurrentKey()+">");
         }else{
-            System.out.println(getCurrentLevel() +"</"+getCurrentLanguageType()+">");
+            System.out.println(getCurrentSpace()  +"</"+getCurrentKey()+">");
+            typeDef.remove(getCurrentKey());
         }
 
-
     }
 
-    public void compileVarDec(String type){
-        if(type.equals("start")){
-            languageType.add("varDec");
-            System.out.println(getCurrentLevel() +"<"+getCurrentLanguageType()+">");
-            level.add("        ");
+    //标签信息
+    public void printLable(String type){
+        if(type.equals("s")){
+            //正标题
+            System.out.println(getCurrentSpace()  +"<"+getCurrentKey()+">");
+            System.out.println(getNextSpace()  +currentCode);
         }else{
-            System.out.println(getCurrentLevel() +"</"+getCurrentLanguageType()+">");
+            //反标题
+            System.out.println(getNextSpace()  +currentCode);
+            System.out.println(getCurrentSpace()+"</"+getCurrentKey()+">");
+
+            typeDef.remove(getCurrentKey());
         }
     }
 
-    public void compileStatements(String type){
+    public void printLableList(String type){
+        if(type.equals("s")){
+            System.out.println(getCurrentSpace()  +currentCode);
+            System.out.println(getCurrentSpace()+"<"+getCurrentKey()+">");
 
+        }else{
+            System.out.println(getCurrentSpace()  +"</"+getCurrentKey()+">");
+            System.out.println(getCurrentSpace()  +currentCode);
+
+            typeDef.remove(getCurrentKey());
+        }
     }
 
-    public void compileDo(String type){
 
+
+//    private String getLastValue(){
+//        String newestKey = "";
+//        int length = typeDef.keySet().size();
+//        int i=0;
+//        for (String key : typeDef.keySet()) {
+//
+//            if(i==(length-2)){
+//                newestKey =typeDef.get(key) ;
+//            }
+//            i++;
+//        }
+//        return newestKey;
+//    }
+
+
+    //设置开始标签信息
+    private void setStartLable(String lable){
+        if(lable.equals("class")){
+            typeDef.put(lable,"");
+        }else{
+            typeDef.put(lable,getNextSpace());
+        }
+        printLable("s");
     }
 
-    public void compileLet(String type){
-
+    private void setStartLableList(String lable){
+        typeDef.put(lable,getNextSpace());
+        printLableList("s");
     }
 
-    public void compileWhile(String type){
-
+    //设置statements标签
+    private void setStartOnlyLable(String lable){
+        typeDef.put(lable, getNextSpace());
+        printOnlyCurrentLable("s");
     }
 
-    public void compileReturn(String type){
+    //获取当前类型
+    private String getCurrentKey(){
+        String newestKey = null;
 
+        for (String key : typeDef.keySet()) {
+            newestKey = key;
+        }
+        return newestKey;
+    }
+    //获取当前空格
+    private String getCurrentSpace(){
+        String newestKey = getCurrentKey();
+        return typeDef.get(newestKey);
+    }
+    //获取下一行空格
+    public String getNextSpace(){
+        return getCurrentSpace()+"  ";
     }
 
-    public void compileIf(String type){
-
-    }
-
-    public void compileExpression(){
-
-    }
-
-    public void compileTerm(){
-
-    }
-
-    public void compileExpressionList(){
-
-    }
 
 
 }

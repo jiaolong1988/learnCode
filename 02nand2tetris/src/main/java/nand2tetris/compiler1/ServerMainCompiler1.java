@@ -1,14 +1,6 @@
 package nand2tetris.compiler1;
 
-import nand2tetris.CommonUtils;
-
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -23,7 +15,6 @@ public class ServerMainCompiler1 {
 
         CompilationEngine ce = new CompilationEngine(inputFile, null);
         ce.getInfo();
-
     }
 
     public static void tets1(){
@@ -55,8 +46,6 @@ public class ServerMainCompiler1 {
         JackScaning.infos.add("</tokens>");
         ReadJackFileUtil.outputFile(f.toPath(),JackScaning.infos,"_T");
     }
-
-
 
 
 }
