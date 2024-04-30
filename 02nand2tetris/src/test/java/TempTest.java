@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -7,13 +8,17 @@ import java.util.List;
  */
 public class TempTest {
     public static void main(String[] args) {
-        List<String> list = new ArrayList<>();
-        list.add("1");
-        list.add("2 ");
-        list.add("3  ");
-        list.forEach(System.out::println);
-        list.remove(list.size()-1);
-        list.forEach(System.out::println);
 
+        String x ="";
+        if(x == null){
+
+        }
+
+
+    }
+
+    private static String extracted(String tockenInfo) {
+        String lable = tockenInfo.split(" ")[0];
+        return lable.replace("<","").replace(">", "");
     }
 }
