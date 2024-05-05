@@ -36,7 +36,6 @@ public class CompilationEngine {
 
         statements.put("let","letStatement");
         statements.put("do","doStatement");
-        statements.put("return","returnStatement");
         statements.put("if","ifStatement");
 
         expressionMap.put("=","expression");
@@ -67,6 +66,8 @@ public class CompilationEngine {
         String currentType = LableUtil.getCurrentType();
         List  termList= Arrays.asList("stringConstant","integerConstant");
 
+        List<String> termEnd = Arrays.asList( "*", "/","-","|" );
+
         if(keywordLableMap.keySet().contains(value)){
             printStartLableCode(keywordLableMap.get(value), PrintType.AFTER_PRINT);
 
@@ -76,16 +77,43 @@ public class CompilationEngine {
             }
             printStartLableCode(statements.get(value), PrintType.AFTER_PRINT);
         }
+        else if(value.equals("return")){
+            while(true){
+                if(LableUtil.getCurrentType().equals("statements")){
+                    break;
+                }
+                printEndLable(PrintType.NO_PRINT, null);
+            }
+            printStartLableCode("returnStatement", PrintType.AFTER_PRINT);
+        }
         else if(currentType.equals("expression") &&
                 LableUtil.getTockenLable().equals("identifier")){
-                 //<term>
+                 //<term> new
             printStartLableCode("term", PrintType.AFTER_PRINT);
+        }
+        else if(termEnd.contains(LableUtil.getTockenLableValue())){
+            //变量
+            if(currentType.equals("term") ){
+                //打印结束标签
+                printEndLable(PrintType.NO_PRINT,null);
+            }
+            if(currentType.equals("expression") ){
+                //打印term开始标签
+                printStartLableCode("term",null);
+            }
+
+            printStartLableCode("term", PrintType.BEFORE_PRINT);
         }
         else if(keywordConstant.contains(value) ||
                 termList.contains(LableUtil.getTockenLable())){
-            //关键字处理
-            printStartLableCode("term", PrintType.AFTER_PRINT);
-            printEndLable(PrintType.NO_PRINT,null);
+            if(currentType.equals("term")){
+                printCurrentCode();
+            }else{
+                //关键字处理
+                printStartLableCode("term", PrintType.AFTER_PRINT);
+                printEndLable(PrintType.NO_PRINT,null);
+            }
+
         }
         else{
             printCurrentCode();
@@ -96,7 +124,6 @@ public class CompilationEngine {
         String value = LableUtil.getTockenLableValue();
         String currentType = LableUtil.getCurrentType();
 
-        Arrays.asList("");
 
         if ("(".equals(value) && currentType.equals("subroutineDec")) {
             printStartLableCode("parameterList", PrintType.BEFORE_PRINT);
@@ -108,7 +135,7 @@ public class CompilationEngine {
                 || currentType.equals("doStatement")) ){
             printStartLableCode("expressionList", PrintType.BEFORE_PRINT);
         }
-        else if ("(".equals(value) && currentType.equals("ifStatement") ) {
+        else if ("(".equals(value) && (currentType.equals("ifStatement") || currentType.equals("term"))) {
             printStartLableCode("expression", PrintType.BEFORE_PRINT);
         }
         else if ("{".equals(value) && currentType.equals("subroutineDec") ) {
@@ -147,16 +174,33 @@ public class CompilationEngine {
             //数组
             printEndLable(PrintType.AFTER_PRINT, SpaceType.CURRENT_SPACE);
         }
+        else if(")".equals(value) && currentType.equals("term") ){
+            while(true){
+                if(LableUtil.getCurrentType().equals("expression")){
+                    printEndLable(PrintType.NO_PRINT, null);
+                    break;
+                }
+                printEndLable(PrintType.NO_PRINT, null);
+            }
+            printEndLable(PrintType.BEFORE_PRINT,SpaceType.NEXT_SPACE);
+        }
         else if(";".equals(value) && currentType.equals("term") ){
-            printEndLable(PrintType.NO_PRINT, null);
-            printEndLable(PrintType.NO_PRINT, null);
+            while(true){
+                if(LableUtil.getCurrentType().equals("expression")){
+                    printEndLable(PrintType.NO_PRINT, null);
+                    break;
+                }
+                printEndLable(PrintType.NO_PRINT, null);
+            }
+//            printEndLable(PrintType.NO_PRINT, null);
+//            printEndLable(PrintType.NO_PRINT, null);
             printEndLable(PrintType.BEFORE_PRINT,SpaceType.NEXT_SPACE);
 
         }
         else if("}".equals(value) &&  currentType.equals("statements") &&
                 LableUtil.getCurrentPreviousType().equals("ifStatement") ){
             //if statements
-            printEndLable(PrintType.BEFORE_PRINT,SpaceType.NEXT_SPACE);
+            printEndLable(PrintType.AFTER_PRINT,SpaceType.CURRENT_SPACE);
         }
         else if( ";}".contains(value) && typeList.contains(currentType)){
             if(currentType.equals("expression")){
