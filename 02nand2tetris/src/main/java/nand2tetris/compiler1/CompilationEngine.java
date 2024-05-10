@@ -1,7 +1,12 @@
 package nand2tetris.compiler1;
 
+import nand2tetris.CommonUtils;
+
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 自顶向下的递归语法分析器
@@ -10,333 +15,469 @@ import java.util.*;
  */
 public class CompilationEngine {
 
-    private HashMap<String, String> keywordLableMap = new HashMap<>();
-    private HashMap<String, String> statements = new HashMap<>();
-    private HashMap<String, String> expressionMap = new HashMap<>();
-    private List<String> keywordConstant = Arrays.asList("true","false","null","this");
+    public static final boolean printLog = true;
 
-    File inputFile=null;
+    private List<String> infos = new ArrayList<>();
+    private String currentSpace="";
 
-    //指针
-    private static List<String> type = new ArrayList<>();
-    //当前类型的空格距离
-    private static String currentSpace = "";
-    //当前代码
-    private static String currentCode = "";
-    //上一行代码
-    private static String previousCodeVlaue="";
+    List<String> tockens = null;
+    private int localCount=0;
 
-    public CompilationEngine(File inputFile, File outFile){
+    File inputFile = null;
+    public CompilationEngine(File inputFile, File outFile) {
+        List<String> list = CommonUtils.readFile(inputFile.toPath());
+        tockens = list.stream().filter(t -> !t.contains("tokens")).collect(Collectors.toList());
         this.inputFile = inputFile;
-
-        keywordLableMap.put("class","class");
-        keywordLableMap.put("static","classVarDec");
-        keywordLableMap.put("function","subroutineDec");
-        keywordLableMap.put("var","varDec");
-
-        statements.put("let","letStatement");
-        statements.put("do","doStatement");
-        statements.put("if","ifStatement");
-
-        expressionMap.put("=","expression");
     }
 
-    public void getInfo(){
-        List<String> jackCodes = ReadJackFileUtil.readJackFile(inputFile);
-        for(String code: jackCodes){
-            if(!code.contains("tokens")){
-                previousCodeVlaue = currentCode;
-                currentCode = code;
+    public String getPeekType(){
+        String lable = tockens.get(localCount).split(" ")[0];
+        return lable.replace("<","").replace(">", "").trim();
+    }
 
-                String value = LableUtil.getTockenLableValue();
-                if("[({=".contains(value)){
-                    symbolTypeStart();
-                }else if(")}];".contains(value)){
-                    symbolTypeEnd();
-                }else{
-                    otherHandle(value);
-                }
+    public String getPeekValue(){
+        String info = tockens.get(localCount);
+        return  info.split(" ")[1].trim();
+    }
 
-            }
-        }
+    public String getNextValue(){
+        String info = tockens.get(localCount+1);
+        return info.split(" ")[1].trim();
     }
 
 
-    private void otherHandle(String value) {
-        String currentType = LableUtil.getCurrentType();
-        List  termList= Arrays.asList("stringConstant","integerConstant");
+    public void compileClass () {
+        String lableName = "class";
+        if(!getPeekValue().equals("class")){
+            throw new RuntimeException("class defined error.");
+        }
 
-        List<String> termEnd = Arrays.asList( "*", "/","-","|" );
+        startLableNextElementAddTwoSpace(lableName);
+        addCurrentCode();//class
+        addCurrentCode();//main
 
-        if(keywordLableMap.keySet().contains(value)){
-            printStartLableCode(keywordLableMap.get(value), PrintType.AFTER_PRINT);
+        if(getPeekValue().equals("{")){
+            addCurrentCode();//{
+            compileClassVarDec();
+            compileSubroutline();
+        }
 
-        }else if(statements.keySet().contains(value)){
-            if(!currentType.equals("statements")){
-                printStartLableCode("statements", PrintType.NO_PRINT);
-            }
-            printStartLableCode(statements.get(value), PrintType.AFTER_PRINT);
-        }
-        else if(value.equals("return")){
-            while(true){
-                if(LableUtil.getCurrentType().equals("statements")){
-                    break;
-                }
-                printEndLable(PrintType.NO_PRINT, null);
-            }
-            printStartLableCode("returnStatement", PrintType.AFTER_PRINT);
-        }
-        else if(currentType.equals("expression") &&
-                LableUtil.getTockenLable().equals("identifier")){
-                 //<term> new
-            printStartLableCode("term", PrintType.AFTER_PRINT);
-        }
-        else if(termEnd.contains(LableUtil.getTockenLableValue())){
-            //变量
-            if(currentType.equals("term") ){
-                //打印结束标签
-                printEndLable(PrintType.NO_PRINT,null);
-            }
-            if(currentType.equals("expression") ){
-                //打印term开始标签
-                printStartLableCode("term",null);
-            }
+        addCurrentCode();//}
+        endLableSpaceLenthSubTwo(lableName);
 
-            printStartLableCode("term", PrintType.BEFORE_PRINT);
-        }
-        else if(keywordConstant.contains(value) ||
-                termList.contains(LableUtil.getTockenLable())){
-            if(currentType.equals("term")){
-                printCurrentCode();
-            }else{
-                //关键字处理
-                printStartLableCode("term", PrintType.AFTER_PRINT);
-                printEndLable(PrintType.NO_PRINT,null);
-            }
-
-        }
-        else{
-            printCurrentCode();
-        }
+        ReadJackFileUtil.outputFile(inputFile.toPath(), infos,"_JL");
     }
 
-    public void symbolTypeStart(){
-        String value = LableUtil.getTockenLableValue();
-        String currentType = LableUtil.getCurrentType();
 
+    /**
+     * 编译静态声名或字段声名
+     * @return: void
+     * @date 2024/4/6 11:12
+     */
+    public void compileClassVarDec(){
+        List<String> fields= Arrays.asList("static","field");
+        String lableName = "classVarDec";
 
-        if ("(".equals(value) && currentType.equals("subroutineDec")) {
-            printStartLableCode("parameterList", PrintType.BEFORE_PRINT);
-        }
-        else if( "=".equals(value)){
-            printStartLableCode( expressionMap.get(value), PrintType.BEFORE_PRINT);
-        }
-        else if("(".equals(value) && (LableUtil.getTockenLableValuePrevious().equals("new")
-                || currentType.equals("doStatement")) ){
-            printStartLableCode("expressionList", PrintType.BEFORE_PRINT);
-        }
-        else if ("(".equals(value) && (currentType.equals("ifStatement") || currentType.equals("term"))) {
-            printStartLableCode("expression", PrintType.BEFORE_PRINT);
-        }
-        else if ("{".equals(value) && currentType.equals("subroutineDec") ) {
-            printStartLableCode("subroutineBody", PrintType.AFTER_PRINT);
-        }
-        else if ("[".equals(value) ) {
-            printStartLableCode("expression", PrintType.BEFORE_PRINT);
-        }
-        else {
-            printCurrentCode();
+        while(fields.contains(getPeekValue())){
+            startLableNextElementAddTwoSpace(lableName);
+
+            addCurrentCode();  //static
+            addCurrentCode();  //type
+            addCurrentCode();  //varName
+            while(getPeekValue().equals(",")){
+               addCurrentCode();  //,
+               addCurrentCode();  //varName
+            }
+            if(getPeekValue().equals(";") ){
+                addCurrentCode();
+                endLableSpaceLenthSubTwo(lableName);
+            }
         }
 
     }
 
-    public void symbolTypeEnd(){
-        String value = LableUtil.getTockenLableValue();
-        String currentType = LableUtil.getCurrentType();
-        List<String> typeList = Arrays.asList( "expression", "returnStatement","subroutineBody" );
+    //编译整个方法、函数、构造函数
+    public void compileSubroutline() {
+        String lableDec = "subroutineDec";
+        String lableDecBody = "subroutineBody";
 
-        if(")".equals(value) &&currentType.equals("parameterList")){
-                printEndLable(PrintType.AFTER_PRINT,SpaceType.CURRENT_SPACE);
-        }
-        else if(")".equals(value) && currentType.equals("expressionList")){
-            //先答应标签 在打印代码  在打印标签
-            printEndLable(PrintType.AFTER_PRINT,SpaceType.CURRENT_SPACE);
+        List<String> methods = Arrays.asList("constructor", "function", "method");
 
-            if(LableUtil.getCurrentType().equals("term")){
-                printEndLable(PrintType.NO_PRINT,SpaceType.CURRENT_SPACE); //打印 </term>
+        while (methods.contains(getPeekValue())) {
+            startLableNextElementAddTwoSpace(lableDec);
+
+            addCurrentCode(); //function
+            addCurrentCode(); //type
+            addCurrentCode(); //functionName
+            if (getPeekValue().equals("(")) {
+                addCurrentCode();
+                compileParameterList();
             }
-        }
-        else  if(")".equals(value) && currentType.equals("expression")){
-            //if()
-            printEndLable(PrintType.AFTER_PRINT, SpaceType.CURRENT_SPACE);
-        }
-        else  if("]".equals(value)){
-            //数组
-            printEndLable(PrintType.AFTER_PRINT, SpaceType.CURRENT_SPACE);
-        }
-        else if(")".equals(value) && currentType.equals("term") ){
-            while(true){
-                if(LableUtil.getCurrentType().equals("expression")){
-                    printEndLable(PrintType.NO_PRINT, null);
-                    break;
-                }
-                printEndLable(PrintType.NO_PRINT, null);
+            if (getPeekValue().equals("{")) {
+                //开始标签
+                startLableNextElementAddTwoSpace(lableDecBody);
+                addCurrentCode();//{
+
+                compileVarDec();
+
+                compileStatements();
             }
-            printEndLable(PrintType.BEFORE_PRINT,SpaceType.NEXT_SPACE);
-        }
-        else if(";".equals(value) && currentType.equals("term") ){
-            while(true){
-                if(LableUtil.getCurrentType().equals("expression")){
-                    printEndLable(PrintType.NO_PRINT, null);
-                    break;
-                }
-                printEndLable(PrintType.NO_PRINT, null);
+
+            if (getPeekValue().equals("}")) {
+                addCurrentCode();//}
+
+                endLableSpaceLenthSubTwo(lableDecBody);
+                endLableSpaceLenthSubTwo(lableDec);
+            } else {
+                throw new RuntimeException("method difine error.");
             }
-//            printEndLable(PrintType.NO_PRINT, null);
-//            printEndLable(PrintType.NO_PRINT, null);
-            printEndLable(PrintType.BEFORE_PRINT,SpaceType.NEXT_SPACE);
 
         }
-        else if("}".equals(value) &&  currentType.equals("statements") &&
-                LableUtil.getCurrentPreviousType().equals("ifStatement") ){
-            //if statements
-            printEndLable(PrintType.AFTER_PRINT,SpaceType.CURRENT_SPACE);
-        }
-        else if( ";}".contains(value) && typeList.contains(currentType)){
-            if(currentType.equals("expression")){
-                // ; expression
-                printEndLable(PrintType.AFTER_PRINT,SpaceType.CURRENT_SPACE);
-            }else{
-                //;return 或 }subroutineBody
-                printEndLable(PrintType.BEFORE_PRINT,SpaceType.NEXT_SPACE);
+
+    }
+
+    //编译参数列表不包含 ( )
+    public void compileParameterList(){
+        String lableName = "parameterList";
+        startLableNextElementAddTwoSpace(lableName);
+
+        if(!getPeekValue().equals(")")){
+            addCurrentCode();//type
+            addCurrentCode();//varName
+
+            while(getPeekValue().equals(",")){
+                addCurrentCode();//,
+                addCurrentCode();//type
+                addCurrentCode();//varName
             }
-            printEndLable(PrintType.NO_PRINT,SpaceType.CURRENT_SPACE);
+
         }
-//        else if(";".equals(value) && currentType.equals("expression")){
-//            printEndLable(PrintType.AFTER_PRINT,SpaceType.CURRENT_SPACE);
-//            printEndLable(PrintType.NO_PRINT,SpaceType.CURRENT_SPACE);
-//        }
-//        else if(";".equals(value) && currentType.equals("returnStatement")  ){
-//            printEndLable(PrintType.BEFORE_PRINT,SpaceType.NEXT_SPACE);
-//            printEndLable(PrintType.NO_PRINT,SpaceType.CURRENT_SPACE);
-//        }
-//        else if("}".equals(value) && currentType.equals("subroutineBody")){
-//            printEndLable(PrintType.BEFORE_PRINT,SpaceType.NEXT_SPACE);
-//            printEndLable(PrintType.NO_PRINT,SpaceType.CURRENT_SPACE);
-//        }
-        else{
-            //    <symbol> ; </symbol>
-            //  </classVarDec>
-            printEndLable(PrintType.BEFORE_PRINT, SpaceType.NEXT_SPACE);
+
+        if(getPeekValue().equals(")")){
+            endLableSpaceLenthSubTwo(lableName);
+            addCurrentCode();
+        }
+
+    }
+
+    public void compileVarDec(){
+        String lableName = "varDec";
+
+        while(getPeekValue().equals("var")){
+            startLableNextElementAddTwoSpace(lableName);
+
+           addCurrentCode(); //var
+           addCurrentCode(); //type
+           addCurrentCode(); //name
+
+            while(getPeekValue().equals(",")){
+               addCurrentCode(); //,
+               addCurrentCode(); //name
+            }
+            if(getPeekValue().equals(";")){
+               addCurrentCode(); //;
+                endLableSpaceLenthSubTwo(lableName);
+            }
+        }
+
+    }
+
+    public void compileStatements(){
+        String lableName = "statements";
+        startLableNextElementAddTwoSpace(lableName);
+
+        List<String> methods= Arrays.asList("let", "if", "while", "do", "return");
+        while(methods.contains(getPeekValue())){
+            if(getPeekValue().equals("let")){
+                compileLet();
+            }
+            else if(getPeekValue().equals("if")){
+                compileIf();
+            }
+            else if(getPeekValue().equals("while")){
+                compileWhile();
+            }
+            else if(getPeekValue().equals("do")){
+                compileDo();
+            }
+            else if(getPeekValue().equals("return")){
+                compileReturn();
+            }
+            else{
+                throw new RuntimeException("statements Syntax error. keyword: "+getPeekValue());
+            }
+
+        }
+
+        endLableSpaceLenthSubTwo(lableName);
+    }
+
+    public void compileDo(){
+        String lableName = "doStatement";
+        startLableNextElementAddTwoSpace(lableName);
+
+        addCurrentCode(); //do
+        compileSubroutineCall();
+        if(getPeekValue().equals(";")){
+            addCurrentCode();
+            endLableSpaceLenthSubTwo(lableName);
+        }
+    }
+
+    public void compileLet(){
+        String lableName = "letStatement";
+        startLableNextElementAddTwoSpace(lableName);
+
+        addCurrentCode(); // let
+        addCurrentCode(); // varName
+
+        if(getPeekValue().equals("[")){
+            addCurrentCode(); // [
+            compileExpression();
+            addCurrentCode(); // ]
+        }
+        if(getPeekValue().equals("=")){
+            addCurrentCode(); // =
+            compileExpression();
+        }
+
+        if(getPeekValue().equals(";")){
+            addCurrentCode();
+            endLableSpaceLenthSubTwo(lableName);
         }
 
 
     }
 
+    public void compileWhile(){
+        String lableName = "whileStatement";
+        startLableNextElementAddTwoSpace(lableName);
+
+        addCurrentCode();//while
+        if(getPeekValue().equals("(")){
+            addCurrentCode();//(
+            compileExpression();
+            addCurrentCode();//)
+        }
+
+        if(getPeekValue().equals("{")){
+            addCurrentCode();//{
+            compileStatements();
+        }
 
 
-    public void printCurrentCode(){
-        System.out.println(LableUtil.getNextSpace()  +currentCode);
-    }
-
-    public void printEndLable(PrintType pt, SpaceType st) {
-        String spaceType ="";
-        if(st == SpaceType.CURRENT_SPACE){
-            spaceType = currentSpace;
+        if(getPeekValue().equals("}")){
+            addCurrentCode();//}
+            endLableSpaceLenthSubTwo(lableName);
         }else{
-            spaceType = LableUtil.getNextSpace();
-        }
-
-        if(PrintType.BEFORE_PRINT == pt){
-            System.out.println(spaceType  +currentCode);
-        }
-
-        System.out.println(currentSpace + "</" + LableUtil.getCurrentType() + ">");
-        type.remove(type.size() - 1);
-        currentSpace = LableUtil.getPreviousSpace();
-
-        if(PrintType.AFTER_PRINT == pt){
-            //打印代码
-            System.out.println(spaceType +currentCode);
+            new RuntimeException("if not exit end lable, }");
         }
     }
 
-    public void printStartLableCode(String newType, PrintType pt){
-        LableUtil.addNewType(newType);
+    public void compileReturn(){
+        String lableName = "returnStatement";
+        startLableNextElementAddTwoSpace(lableName);
 
-        if(PrintType.BEFORE_PRINT == pt){
-            System.out.println(currentSpace +currentCode);
+        addCurrentCode(); //return
+        if(!getPeekValue().equals(";")){
+            compileExpression();
         }
 
-        //打印标签
-        System.out.println(currentSpace  +"<"+ LableUtil.getCurrentType()+">");
-
-        if(PrintType.AFTER_PRINT == pt){
-            //打印代码
-            System.out.println(LableUtil.getNextSpace()  +currentCode);
+        if(getPeekValue().equals(";")){
+            addCurrentCode();
+            endLableSpaceLenthSubTwo(lableName);
         }
     }
 
+    public void compileIf(){
+        String lableName = "ifStatement";
+        startLableNextElementAddTwoSpace(lableName);
 
+        addCurrentCode();//if
+        if(getPeekValue().equals("(")){
+            addCurrentCode();//(
+            compileExpression();
+            addCurrentCode();//)
+        }
 
+        if(getPeekValue().equals("{")){
+            addCurrentCode();//{
+            compileStatements();
+        }
 
-   private static class LableUtil {
-        public static void addNewType(String newType){
-            type.add(newType);
-            if(!newType.equals("class")){
-                currentSpace = LableUtil.getNextSpace();
+        if(getPeekValue().equals("}") && getNextValue().equals("else")){
+            addCurrentCode();//}
+            addCurrentCode();//else
+            addCurrentCode();//{
+
+            compileStatements();
+        }
+        if(getPeekValue().equals("}")){
+            addCurrentCode();//}
+            endLableSpaceLenthSubTwo(lableName);
+        }else{
+            new RuntimeException("if not exit end lable, }");
+        }
+
+    }
+
+    public void compileExpression(){
+        String lableName = "expression";
+        startLableNextElementAddTwoSpace(lableName);
+
+        List<String> op = Arrays.asList("+", "-", "*", "/", "&", "|", "<", ">", "=");
+        for (int i = 0; i < op.size(); i++) {
+            String info = op.get(i);
+            if (info.equals("<")) {
+                op.set(i, "&lt;");
+            } else if (info.equals(">")) {
+                op.set(i, "&gt;");
+            } else if (info.equals("&")) {
+                op.set(i, "&amp;");
             }
         }
 
-        //获取tockens标签
-        private static  String getTockenLable() {
-            String lable = currentCode.split(" ")[0];
-            return lable.replace("<","").replace(">", "").trim();
-        }
-        //获取tockens标签中的值
-        private static String getTockenLableValue() {
-            return currentCode.split(" ")[1].trim();
-        }
-       private static String getTockenLableValuePrevious() {
-           return previousCodeVlaue.split(" ")[1].trim();
-       }
+        compileTerm();
 
-        //获取当前类型
-        private static String getCurrentType(){
-            if(type.size()>0){
-                return type.get(type.size()-1);
-            }
-           return "";
+        while(op.contains(getPeekValue())){
+            addCurrentCode(); //op
+            compileTerm();
         }
-       private static String getCurrentPreviousType(){
-           if(type.size()>0){
-               return type.get(type.size()-2);
-           }
-           return "";
-       }
-        //获取下一行空格
-        public static String getNextSpace(){
-          return currentSpace+"  ";
-        }
-        //获取上一个空格
-        public static String getPreviousSpace(){
-            if(currentSpace.length()>0){
-                return currentSpace.substring(0, currentSpace.length()-2);
-            }
-            return "";
-        }
-
+        endLableSpaceLenthSubTwo(lableName);
     }
 
-   private enum PrintType{
-        BEFORE_PRINT,
-        AFTER_PRINT,
-        NO_PRINT;
+    public void compileTerm(){
+        List<String> keywordConstant= Arrays.asList("true", "false", "null", "this");
+        List<String> unaryOp = Arrays.asList("-", "~");
+        List<String> op = Arrays.asList("+", "-", "*", "/", "&", "|", "<", ">", "=");
+
+        List<String> varNameEndChar = Arrays.asList(")", ";",",","&lt;","&gt;","]");
+
+        String lableName = "term";
+        startLableNextElementAddTwoSpace(lableName);
+
+        String currentType = getPeekType();
+        String nextValue = getNextValue();
+        if(currentType.equals("identifier") && (nextValue.equals(".") || nextValue.equals("("))){
+            //subroutineCall 处理
+            compileSubroutineCall();
+        }
+        else if(currentType.equals("stringConstant")){
+            addCurrentCode();
+        }
+        else if(currentType.equals("integerConstant")){
+            addCurrentCode();
+        }
+        else if(currentType.equals("keyword") && keywordConstant.contains(getPeekValue())){
+            addCurrentCode();
+        }else if(getPeekValue().equals("(")){
+            //()
+            addCurrentCode();//(
+            compileExpression();
+            addCurrentCode();//)
+        }else if (currentType.equals("identifier") && nextValue.equals("[")){
+            //varName[]
+            addCurrentCode();//varname
+            addCurrentCode();//[
+
+            compileExpression();
+
+            addCurrentCode();//]
+        }else if(currentType.equals("identifier") && (op.contains(nextValue) || varNameEndChar.contains(nextValue) ) ){
+            //varName + varName
+            //(varName)
+            //varName;
+            //varName,varName
+            addCurrentCode();
+
+        }else if(unaryOp.contains(getPeekValue())){
+            addCurrentCode(); // -
+            compileTerm();
+        }else{
+            throw new RuntimeException("Term not found type.");
+        }
+
+
+        endLableSpaceLenthSubTwo(lableName);
     }
 
-   private enum SpaceType{
-        CURRENT_SPACE,
-        NEXT_SPACE;
+    public void compileExpressionList(){
+        String lableName = "expressionList";
+        startLableNextElementAddTwoSpace(lableName);
+
+        if(!getPeekValue().equals(")")){
+            compileExpression();
+            while(getPeekValue().equals(",")){
+                addCurrentCode();
+                compileExpression();
+            }
+        }
+
+        endLableSpaceLenthSubTwo(lableName);
+    }
+    public void compileSubroutineCall(){
+        String nextValue = getNextValue();
+        //aa.bb();
+        if(nextValue.equals(".")){
+            addCurrentCode(); //aa
+            addCurrentCode(); //.
+            addCurrentCode(); //bb
+
+
+        }else if(nextValue.equals("(")){
+            //(
+            addCurrentCode();
+        }
+
+        if(getPeekValue().equals("(")){
+            addCurrentCode(); //(
+            compileExpressionList();
+        }
+
+        if(getPeekValue().equals(")")){
+            addCurrentCode(); //)
+        }
+    }
+
+
+
+
+    public void startLableNextElementAddTwoSpace(String lableName) {
+        startLable(lableName);
+        //空格长度加2
+        currentSpace = currentSpace+"  ";
+    }
+
+    public void endLableSpaceLenthSubTwo(String lableName){
+        //空格长度减2
+        currentSpace = currentSpace.substring(0, currentSpace.length()-2);
+        endLable(lableName);
+    }
+
+    public void addCurrentCode(){
+        String info= currentSpace+tockens.get(localCount);
+        localCount++;
+
+        infos.add(info);
+        printLog(info);
+    }
+
+    public void startLable(String lableName) {
+        String info = currentSpace + "<"+lableName+">";
+        infos.add(info);
+
+        printLog(info);
+    }
+    public void endLable(String lableName){
+        String info = currentSpace+"</"+lableName+">";
+        infos.add(info);
+
+        printLog(info);
+    }
+    private void printLog(String info) {
+        if (printLog) {
+            System.out.println(info);
+        }
     }
 
 }

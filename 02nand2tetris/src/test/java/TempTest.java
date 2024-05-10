@@ -9,10 +9,20 @@ import java.util.List;
 public class TempTest {
     public static void main(String[] args) {
 
-        String x ="";
-        if(x == null){
+        List<String> op = Arrays.asList("+", "-", "*", "/", "&", "|", "<", ">", "=");
 
+        for (int i = 0; i < op.size(); i++) {
+            String info = op.get(i);
+            if (info.equals("<")) {
+                op.set(i, "&lt;");
+            } else if (info.equals(">")) {
+                op.set(i, "&gt;");
+            } else if (info.equals("&")) {
+                op.set(i, "&amp;");
+            }
         }
+
+        op.forEach(System.out::println);
 
 
     }

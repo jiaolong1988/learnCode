@@ -10,11 +10,11 @@ import java.util.List;
 public class ServerMainCompiler1 {
     public static void main(String[] args) {
 
-        String file  = "D:\\test\\10\\Square\\MainT.xml";
+        String file  = "D:\\test\\10\\ExpressionLessSquare\\SquareGameT.xml";
         File inputFile = new File(file);
 
         CompilationEngine ce = new CompilationEngine(inputFile, null);
-        ce.getInfo();
+        ce.compileClass();
     }
 
     public static void tets1(){
