@@ -1,7 +1,6 @@
 package nand2tetris.compiler1;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * @author jiaolong
