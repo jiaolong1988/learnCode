@@ -1,11 +1,12 @@
 package nand2tetris.compiler2;
 
 import nand2tetris.compiler1.ReadJackFileUtil;
-import nand2tetris.compiler1.pubField.Keyword;
 import nand2tetris.compiler1.pubField.TokenType;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 字元转换器
@@ -163,6 +164,16 @@ public class JackTokenizer {
     public String getPeekValue(){
         return tockens.peek();
     }
+    public String getNextValue(){
+        //取出当前值，并删除元素
+        String temp = tockens.poll();
+        String returnValue = tockens.peek();
+        //栈操作，后进入先出
+        tockens.push(temp);
+
+        return returnValue;
+    }
+
 
     public TokenType getPeekType(){
         String temp = currentCommand;

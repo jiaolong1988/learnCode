@@ -11,30 +11,22 @@ import java.io.PrintWriter;
  * @date: 2024/05/23 16:24
  **/
 public class VmWriter {
-    PrintWriter wirter ;
-    VmWriter(FileWriter fileWriter){
-        wirter= new PrintWriter(fileWriter, true);
+    PrintWriter wirter;
+
+    VmWriter(FileWriter fileWriter) {
+        wirter = new PrintWriter(fileWriter, true);
     }
 
     public void writePush(SegmentType segmentType, int index) {
-        if(segmentType == SegmentType.CONST){
-            wirter.println("push constant "+index);
-           // System.out.println("push constant "+index);
-        }
-
+        writeFileInfo("push " + segmentType.toString().toLowerCase() + " " + index);
     }
+
     public void writePop(SegmentType segmentType, int index) {
-        if(segmentType == SegmentType.TEMP){
-            wirter.println("pop temp "+index);
-           // System.out.println("pop temp "+index);
-        }
+        writeFileInfo("pop " + segmentType.toString().toLowerCase() + " " + index);
     }
 
     public void writeArithmetic(ArithmeticOperate operate) {
-        if(operate==ArithmeticOperate.ADD){
-            wirter.println("add");
-            //System.out.println("add");
-        }
+        writeFileInfo( ArithmeticOperate.NEG.toString().toLowerCase());
     }
 
     public void writeLabel(String lable) {
@@ -47,22 +39,22 @@ public class VmWriter {
     }
 
     public void writeCall(String methodName, int num) {
-        wirter.println("call "+methodName+" "+num);
-        //System.out.println("call "+methodName+" "+num);
+        writeFileInfo("call " + methodName + " " + num);
     }
 
-
     public void writeFunction(String methodName, int num) {
-        wirter.println("function "+methodName+" "+num);
-        //System.out.println("function "+methodName+" "+num);
+        writeFileInfo("function " + methodName + " " + num);
     }
 
     public void writeReturn() {
-        wirter.println("return");
-       // System.out.println("return");
+        writeFileInfo("return");
     }
 
-    public void close(){
+    public void writeFileInfo(String writeInfo){
+        wirter.println(writeInfo);
+        System.out.println(writeInfo);
+    }
+    public void close() {
         wirter.close();
     }
 

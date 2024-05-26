@@ -1,6 +1,7 @@
 package nand2tetris.compiler2;
 
 import nand2tetris.compiler1.pubField.TokenType;
+import nand2tetris.compiler2.util.ArithmeticOperate;
 import nand2tetris.compiler2.util.InitData;
 import nand2tetris.compiler2.util.SegmentType;
 
@@ -49,8 +50,6 @@ public class CompilationEngine {
 
     private String currentClassName;
 
-    private String currentFunctionReturnType;
-
     public void compileClass () {
         String classKeyword = getCurrentValue();
         if(!classKeyword.equals("class")){
@@ -63,12 +62,26 @@ public class CompilationEngine {
 
         if(!getCurrentValue().equals("{"))
             throw new RuntimeException("class not have start end char {");
-
+        compileClassVarDec();
         compileSubroutline();
 
         if(!getCurrentValue().equals("}"))
             throw new RuntimeException("class not have  end char }");
         vmWriter.close();
+    }
+    /**
+     * 编译静态声名或字段声名
+     * @return: void
+     * @date 2024/4/6 11:12
+            */
+    public void compileClassVarDec(){
+        List<String> fields= Arrays.asList("static","field");
+        String lableName = "classVarDec";
+
+        while(fields.contains(jackTokenizer.getPeekValue())){
+
+        }
+
     }
 
     //编译整个方法、函数、构造函数
@@ -77,18 +90,16 @@ public class CompilationEngine {
         String lableDecBody = "subroutineBody";
 
         List<String> methods = Arrays.asList("constructor", "function", "method");
-        symbolTable.startSubroutine();
 
         while (methods.contains(getCurrentValue())) {
-            currentFunctionReturnType = getCurrentValue(); //type
+
+            String suborutineReturnType = getCurrentValue(); //type
             String functionName = getCurrentValue(); //functionName
+            symbolTable.startSubroutine(suborutineReturnType,functionName);
 
             //(
             if (getCurrentValue().equals("(")) {
-               int paramNum = compileParameterList();
-
-                String vmFunctionName = String.join(".",currentClassName,functionName);
-                vmWriter.writeFunction(vmFunctionName,paramNum);
+               compileParameterList();
 
                 advance(); //)
             }
@@ -96,6 +107,7 @@ public class CompilationEngine {
             if(!getCurrentValue().equals("{")){
                 throw new RuntimeException(" method not have start char {");
             }
+            compileVarDec();
             compileStatements();
 
             if(!getCurrentValue().equals("}"))
@@ -104,9 +116,33 @@ public class CompilationEngine {
 
     }
 
+    public void compileVarDec(){
+
+        while(jackTokenizer.getPeekValue().equals("var")){
+            advance();  //var
+            String type = getCurrentValue(); //type
+            String name = getCurrentValue(); //name
+            symbolTable.define(name, type, "var");
+
+            while(jackTokenizer.getPeekValue().equals(",")){
+                advance(); //,
+                String name2 = getCurrentValue(); //name
+                symbolTable.define(name2, type, "var");
+            }
+            if(jackTokenizer.getPeekValue().equals(";")){
+              advance(); //;
+            }
+        }
+
+    }
+
     public void compileStatements(){
 
         List<String> methods= Arrays.asList("let", "if", "while", "do", "return");
+
+        int varCount = symbolTable.varCount("var");
+        String vmFunctionName = String.join(".",currentClassName, symbolTable.getSubroutineName());
+        vmWriter.writeFunction(vmFunctionName, varCount);
 
         while(methods.contains(jackTokenizer.getPeekValue())){
             String statementKey = getCurrentValue();
@@ -114,7 +150,9 @@ public class CompilationEngine {
             if(statementKey.equals("do")){
                 compileDo();
             }
-
+            if(statementKey.equals("let")){
+                compileLet();
+            }
             if(statementKey.equals("return")){
                 compileReturn();
             }
@@ -126,11 +164,40 @@ public class CompilationEngine {
         String lableName = "doStatement";
         compileSubroutineCall();
 
+        //保存结果
+        vmWriter.writePop(SegmentType.TEMP,0);
+
         if(jackTokenizer.getPeekValue().equals(";")){
             advance();
         }
     }
 
+    public void compileLet(){
+        String lableName = "letStatement";
+
+        String varname = getCurrentValue(); // varName
+
+//        if(currentValue.equals("[")){
+//            addCurrentCode(); // [
+//            compileExpression();
+//            addCurrentCode(); // ]
+//        }
+
+        if(jackTokenizer.getPeekValue().equals("=")){
+           advance();
+           compileExpression();
+            //保存结果
+            int index = symbolTable.indexOf(varname);
+            SegmentType segmentType = symbolTable.kindOf(varname);
+            vmWriter.writePop(segmentType,index);
+        }
+
+        if(jackTokenizer.getPeekValue().equals(";")){
+           advance();
+        }
+
+
+    }
     public void compileReturn(){
         String lableName = "returnStatement";
 
@@ -139,11 +206,8 @@ public class CompilationEngine {
         }else{
             advance();
 
-            //保存结果
-            vmWriter.writePop(SegmentType.TEMP,0);
-
-            if(currentFunctionReturnType.equals("void")){
-                vmWriter.writePush(SegmentType.CONST,0);
+            if(symbolTable.getSubroutineReturnType().equals("void")){
+                vmWriter.writePush(SegmentType.CONSTANT,0);
             }
 
             vmWriter.writeReturn();
@@ -175,17 +239,23 @@ public class CompilationEngine {
         String currentValue = jackTokenizer.getPeekValue();
 
         int parameterNum = 0;
-//        if(!jackTokenizer.getPeekValue().equals(")")){
-//            addCurrentCode();//type
-//            addCurrentCode();//varName
-//
-//            while(getPeekValue().equals(",")){
-//                addCurrentCode();//,
-//                addCurrentCode();//type
-//                addCurrentCode();//varName
-//            }
-//
-//        }
+        if(!jackTokenizer.getPeekValue().equals(")")){
+            String type = getCurrentValue();//type
+            String varname = getCurrentValue();//varName
+            symbolTable.define(varname, type, SegmentType.ARG.toString().toLowerCase());
+            parameterNum++;
+
+            while(jackTokenizer.getPeekValue().equals(",")){
+                advance(); //,
+
+                String type1 = getCurrentValue();//type
+                String varname1 = getCurrentValue();//varName
+                symbolTable.define(varname1, type1, SegmentType.ARG.toString().toLowerCase());
+
+                parameterNum++;
+            }
+
+        }
 
         return parameterNum;
     }
@@ -206,11 +276,15 @@ public class CompilationEngine {
         return paramNum;
     }
 
+    /**
+     * "expression"
+     * @return: void
+     * @date 2024/5/26 13:59
+     */
     public void compileExpression(){
-        String lableName = "expression";
-        List<String> op = Arrays.asList("+", "-", "*", "/", "&", "|", "<", ">", "=");
         compileTerm();
 
+        List<String> op = Arrays.asList("+", "-", "*", "/", "&", "|", "<", ">", "=");
         while(op.contains(jackTokenizer.getPeekValue())){
             //a+(b*c)
             String operate = getCurrentValue();
@@ -240,8 +314,35 @@ public class CompilationEngine {
 
          if(jackTokenizer.getPeekType() == TokenType.INT_CONST){
              String intVal = getCurrentValue();//数字值
-             vmWriter.writePush(SegmentType.CONST,Integer.valueOf(intVal));
+             vmWriter.writePush(SegmentType.CONSTANT, Integer.valueOf(intVal));
         }
+         //非
+         if(unaryOp.contains(jackTokenizer.getPeekValue()) ){
+             advance(); //符号
+             String intVal = getCurrentValue();//数字值
+
+             vmWriter.writePush(SegmentType.CONSTANT, Integer.valueOf(intVal));
+             vmWriter.writeArithmetic(ArithmeticOperate.NEG);
+
+         }
+        //subroutineCall 处理
+        if(jackTokenizer.getPeekType() == TokenType.IDENTIFIER &&
+                (jackTokenizer.getNextValue().equals(".") || jackTokenizer.getNextValue().equals("("))
+        ){
+            //subroutineCall 处理
+            compileSubroutineCall();
+        }
+        //varname
+        if (jackTokenizer.getPeekType() == TokenType.IDENTIFIER &&
+                jackTokenizer.getNextValue().equals(")") ) {
+
+            String varname = getCurrentValue();
+            int index = symbolTable.indexOf(varname);
+            SegmentType segmentType = symbolTable.kindOf(varname);
+
+            vmWriter.writePush(segmentType, index);
+        }
+
         if(jackTokenizer.getPeekValue().equals("(")){
             //()
             advance();//(

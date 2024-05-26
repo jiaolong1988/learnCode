@@ -5,5 +5,5 @@ package nand2tetris.compiler2.util;
  * @date: 2024/05/23 16:53
  **/
 public enum SegmentType {
-    CONST,ARG,LOCAL,STATIC,THIS,THAT,POINTER,TEMP;
+    CONSTANT,ARG,LOCAL,STATIC,THIS,THAT,POINTER,TEMP;
 }

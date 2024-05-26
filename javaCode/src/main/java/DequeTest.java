@@ -19,9 +19,9 @@ public class DequeTest {
         stack.offer("Horse");
 
         //栈操作-后进先出  [Horse, Cat, Dog]
-        stack.push("Dog");
-        stack.push("Cat");
-        stack.push("Horse");
+//        stack.push("Dog");
+//        stack.push("Cat");
+//        stack.push("Horse");
         System.out.println("Stack: " + stack);
 
         //从顶部访问元素
@@ -32,5 +32,8 @@ public class DequeTest {
         //返回元素，并删除顶部元素
         String remElement = stack.poll();
         System.out.println("删除element: " + remElement);
+
+        stack.push("Dog");
+        System.out.println("访问元素： " + stack);
     }
 }

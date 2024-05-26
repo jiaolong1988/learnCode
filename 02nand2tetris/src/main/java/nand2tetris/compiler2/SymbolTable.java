@@ -1,7 +1,7 @@
 package nand2tetris.compiler2;
 
+import nand2tetris.compiler2.util.SegmentType;
 import nand2tetris.compiler2.util.SymbolTableInfo;
-import nand2tetris.vm2Pro.ReturnAddressValueUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,8 +19,15 @@ public class SymbolTable {
     Map<String, SymbolTableInfo> var = new HashMap<>();
     Map<String, SymbolTableInfo> argument = new HashMap<>();
 
+    private String subroutineName;
+    private String subroutineReturnType;
+
     //开创新的子程序作用域（既将子程序的符号重置）
-    public void startSubroutine() {
+    public void startSubroutine(String subroutineReturnType,String subroutineName) {
+        this.subroutineReturnType = subroutineReturnType;
+        this.subroutineName = subroutineName;
+        var.clear();
+        argument.clear();
     }
 
     /*
@@ -29,7 +36,7 @@ public class SymbolTable {
        kind：static field,arg,var
      */
     public void define(String name, String type, String kind) {
-        SymbolTableInfo info = new SymbolTableInfo(name, type, kind);
+        SymbolTableInfo info = new SymbolTableInfo(type);
         if (kind.equals("static")) {
             info.setIndex(staticType.size());
             staticType.put(name, info);
@@ -71,8 +78,22 @@ public class SymbolTable {
     }
 
     //返回当前作用域的 的标识符种类
-    public String kindOf(String name) {
-        return null;
+    public SegmentType kindOf(String name) {
+        SegmentType kind = null;
+        if (var.containsKey(name)) {
+            kind = SegmentType.LOCAL;
+        }
+//       else if (argument.containsKey(name)) {
+//            kind ="";
+//
+//        } else if (field.containsKey(name)) {
+//            kind = field.get(name).getIndex();
+//
+//        } else if (staticType.containsKey(name)) {
+//            kind = staticType.get(name).getIndex();
+//        }
+
+        return kind;
     }
 
     public String typeOf(String name) {
@@ -80,6 +101,25 @@ public class SymbolTable {
     }
 
     public int indexOf(String name) {
-        return 0;
+        int index = -1;
+        if (var.containsKey(name)) {
+            index = var.get(name).getIndex();
+        } else if (argument.containsKey(name)) {
+            index = argument.get(name).getIndex();
+        } else if (field.containsKey(name)) {
+            index = field.get(name).getIndex();
+        } else if (staticType.containsKey(name)) {
+            index = staticType.get(name).getIndex();
+        }
+
+        return index;
+    }
+
+    public String getSubroutineReturnType() {
+        return subroutineReturnType;
+    }
+
+    public String getSubroutineName() {
+        return subroutineName;
     }
 }
