@@ -5,6 +5,6 @@ package nand2tetris.compiler2.util;
  * @date: 2024/05/23 16:57
  **/
 public enum ArithmeticOperate {
-    //("+", "-", "*", "/", "&", "|", "<", ">", "=")
-    ADD,SUB,NEG,EQ,GT,LT,AND,OR,ONT;
+    //("+", "-", "¸º", "=", ">","<", "&", "|","·Ç",)
+    ADD,SUB,NEG,EQ,GT,LT,AND,OR,NOT;
 }

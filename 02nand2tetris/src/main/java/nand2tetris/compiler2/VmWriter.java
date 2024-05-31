@@ -18,24 +18,60 @@ public class VmWriter {
     }
 
     public void writePush(SegmentType segmentType, int index) {
-        writeFileInfo("push " + segmentType.toString().toLowerCase() + " " + index);
+        String directive = "";
+        if(segmentType == SegmentType.CONSTANT){
+            directive = "constant";
+        }else if(segmentType == SegmentType.LOCAL){
+            directive = "local";
+        }
+        else if(segmentType == SegmentType.ARG){
+            directive = "argument";
+        }
+        if(directive.length()>0){
+            writeFileInfo("push " + directive + " " + index);
+        }else{
+           throw new RuntimeException("SegmentType is null.");
+        }
+
     }
 
     public void writePop(SegmentType segmentType, int index) {
-        writeFileInfo("pop " + segmentType.toString().toLowerCase() + " " + index);
+        String directive = "";
+        if(segmentType == SegmentType.CONSTANT){
+            directive = "constant";
+        }else if(segmentType == SegmentType.LOCAL){
+            directive = "local";
+        }
+        else if(segmentType == SegmentType.ARG){
+            directive = "argument";
+
+        } else if(segmentType == SegmentType.TEMP){
+            directive = "temp";
+        }
+        if(directive.length()>0){
+            writeFileInfo("pop " + directive + " " + index);
+        }else{
+            throw new RuntimeException("SegmentType is null. "+segmentType);
+        }
     }
 
     public void writeArithmetic(ArithmeticOperate operate) {
-        writeFileInfo( ArithmeticOperate.NEG.toString().toLowerCase());
+        writeFileInfo(operate.toString().toLowerCase());
     }
 
     public void writeLabel(String lable) {
+
+        writeFileInfo("label "+lable);
     }
 
     public void writeGoto(String lable) {
+        //goto IF_FALSE0
+        writeFileInfo("goto "+lable);
     }
 
     public void writeIf(String lable) {
+        //System.out.println("if-goto WHILE_END0");
+        writeFileInfo("if-goto "+lable);
     }
 
     public void writeCall(String methodName, int num) {

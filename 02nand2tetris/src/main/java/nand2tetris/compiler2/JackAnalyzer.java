@@ -8,7 +8,7 @@ import java.io.File;
  **/
 public class JackAnalyzer {
     public static void main(String[] args) {
-        String file  = "D:\\test\\11\\ConvertToBin\\Main.jack";
+        String file  = "D:\\test\\11\\Square\\SquareGame.jack";
         File inputFile = new File(file);
         File outFile = getOutputFile(inputFile);
 

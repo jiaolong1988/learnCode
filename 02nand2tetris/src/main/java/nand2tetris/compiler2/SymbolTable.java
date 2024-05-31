@@ -83,21 +83,32 @@ public class SymbolTable {
         if (var.containsKey(name)) {
             kind = SegmentType.LOCAL;
         }
-//       else if (argument.containsKey(name)) {
-//            kind ="";
+       else if (argument.containsKey(name)) {
+            kind = SegmentType.ARG;
+        }
+//       else if (field.containsKey(name)) {
+//            kind = SegmentType.;
 //
-//        } else if (field.containsKey(name)) {
-//            kind = field.get(name).getIndex();
-//
-//        } else if (staticType.containsKey(name)) {
-//            kind = staticType.get(name).getIndex();
 //        }
+       else if (staticType.containsKey(name)) {
+            kind = SegmentType.STATIC;
+        }
 
         return kind;
     }
 
     public String typeOf(String name) {
-        return null;
+        String info =null;
+        if (var.containsKey(name)) {
+            info = var.get(name).getType();
+        }
+        else if (argument.containsKey(name)) {
+            info = argument.get(name).getType();
+        }
+        else if (staticType.containsKey(name)) {
+            info = staticType.get(name).getType();
+        }
+        return info;
     }
 
     public int indexOf(String name) {

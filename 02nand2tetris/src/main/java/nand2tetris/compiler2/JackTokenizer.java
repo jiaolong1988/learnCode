@@ -106,45 +106,22 @@ public class JackTokenizer {
 
     //字元的5中类型1
     public String keyword() {
-        if(tokenType() == TokenType.KEYWORD){
             return currentCommand;
-        }
-        return "";
     }
 
     //符号
     public String symbol() {
-        String schar="";
-        if(tokenType() == TokenType.SYMBOL){
-            if(currentCommand.equals("<")){
-                schar = "&lt;";
-            }else if(currentCommand.equals(">")){
-                schar = "&gt;";
-            } else if(currentCommand.equals("&")){
-                schar = "&amp;";
-            }else{
-                schar=currentCommand;
-            }
-        }
-
-        return schar;
+            return currentCommand;
     }
 
     //标识符：类名 方法名 变量名
     public String identifier() {
-        if(tokenType() == TokenType.IDENTIFIER){
             return  currentCommand ;
-        }
-        return "";
     }
 
     //整数常量
     public String inVal() {
-        if(tokenType() == TokenType.INT_CONST){
-            return currentCommand;
-        }
-
-        return "";
+        return currentCommand;
     }
 
     //字符常量
