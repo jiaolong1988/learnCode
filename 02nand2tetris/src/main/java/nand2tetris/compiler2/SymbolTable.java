@@ -13,11 +13,11 @@ import java.util.Map;
 public class SymbolTable {
 
     //类级别
-    Map<String, SymbolTableInfo> staticType = new HashMap<>();
-    Map<String, SymbolTableInfo> field = new HashMap<>();
+    private Map<String, SymbolTableInfo> staticType = new HashMap<>();
+    private  Map<String, SymbolTableInfo> field = new HashMap<>();
     //方法级别
-    Map<String, SymbolTableInfo> var = new HashMap<>();
-    Map<String, SymbolTableInfo> argument = new HashMap<>();
+    private  Map<String, SymbolTableInfo> var = new HashMap<>();
+    private  Map<String, SymbolTableInfo> argument = new HashMap<>();
 
     private String subroutineName;
     private String subroutineReturnType;
@@ -64,7 +64,7 @@ public class SymbolTable {
         }
 
         else if (kind.equals("field")) {
-          return   field.size();
+          return  field.size();
         }
 
        else if (kind.equals("arg")) {
@@ -86,10 +86,9 @@ public class SymbolTable {
        else if (argument.containsKey(name)) {
             kind = SegmentType.ARG;
         }
-//       else if (field.containsKey(name)) {
-//            kind = SegmentType.;
-//
-//        }
+       else if (field.containsKey(name)) {
+            kind = SegmentType.THIS;
+        }
        else if (staticType.containsKey(name)) {
             kind = SegmentType.STATIC;
         }
@@ -107,6 +106,9 @@ public class SymbolTable {
         }
         else if (staticType.containsKey(name)) {
             info = staticType.get(name).getType();
+        }
+        else if (field.containsKey(name)) {
+            info = field.get(name).getType();
         }
         return info;
     }
@@ -132,5 +134,12 @@ public class SymbolTable {
 
     public String getSubroutineName() {
         return subroutineName;
+    }
+
+    public void clear(){
+        staticType.clear();
+        field.clear();
+        var.clear();
+        argument.clear();
     }
 }

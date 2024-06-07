@@ -18,41 +18,46 @@ public class VmWriter {
     }
 
     public void writePush(SegmentType segmentType, int index) {
-        String directive = "";
-        if(segmentType == SegmentType.CONSTANT){
-            directive = "constant";
-        }else if(segmentType == SegmentType.LOCAL){
-            directive = "local";
-        }
-        else if(segmentType == SegmentType.ARG){
-            directive = "argument";
-        }
-        if(directive.length()>0){
-            writeFileInfo("push " + directive + " " + index);
-        }else{
-           throw new RuntimeException("SegmentType is null.");
-        }
-
+        String command = getSegmentTypeCommand(segmentType);
+        writeFileInfo("push " + command + " " + index);
     }
 
     public void writePop(SegmentType segmentType, int index) {
+        String command = getSegmentTypeCommand(segmentType);
+        writeFileInfo("pop " + command + " " + index);
+    }
+
+    private String getSegmentTypeCommand(SegmentType segmentType) {
+
         String directive = "";
         if(segmentType == SegmentType.CONSTANT){
             directive = "constant";
-        }else if(segmentType == SegmentType.LOCAL){
+        }else if(segmentType == SegmentType.ARG){
+            directive = "argument";
+        }
+        else if(segmentType == SegmentType.LOCAL){
             directive = "local";
         }
-        else if(segmentType == SegmentType.ARG){
-            directive = "argument";
-
-        } else if(segmentType == SegmentType.TEMP){
+        else if(segmentType == SegmentType.STATIC){
+            directive = "static";
+        }
+        else if(segmentType == SegmentType.THIS){
+            directive = "this";
+        }
+        else if(segmentType == SegmentType.THAT){
+            directive = "that";
+        }
+        else if(segmentType == SegmentType.POINTER){
+            directive = "pointer";
+        }
+        else if(segmentType == SegmentType.TEMP){
             directive = "temp";
         }
-        if(directive.length()>0){
-            writeFileInfo("pop " + directive + " " + index);
-        }else{
-            throw new RuntimeException("SegmentType is null. "+segmentType);
+        if(directive.length()==0){
+            throw new RuntimeException("SegmentType not have command. reason: "+segmentType.toString());
         }
+
+        return directive;
     }
 
     public void writeArithmetic(ArithmeticOperate operate) {

@@ -12,7 +12,6 @@ public class InitData {
    static {
         op.put("+",ArithmeticOperate.ADD);
         op.put("-",ArithmeticOperate.SUB);
-//        op.put("/",ArithmeticOperate);
 
         op.put("<",ArithmeticOperate.LT);
         op.put(">",ArithmeticOperate.GT);

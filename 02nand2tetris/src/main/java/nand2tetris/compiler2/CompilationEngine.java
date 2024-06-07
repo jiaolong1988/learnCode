@@ -24,9 +24,11 @@ public class CompilationEngine {
 
     private File inputFile = null;
 
-    private InitData initData;
     private int whileCount = 0;
     private int ifCount = 0;
+    //ture:表示 需要将 变量 赋值给 数组
+    //fase:表示读取变量
+    private boolean arrayWriteFlag = false;
 
     public CompilationEngine(File inputFile, File outFile) {
         jackTokenizer = new JackTokenizer(inputFile);
@@ -46,6 +48,7 @@ public class CompilationEngine {
     private void advance(){
         jackTokenizer.advance();
     }
+
     private String getCurrentValue(){
          advance();
          return  jackTokenizer.getTockenValue();
@@ -103,17 +106,22 @@ public class CompilationEngine {
     public void compileSubroutine() {
         List<String> methods = Arrays.asList("constructor", "function", "method");
 
-        while (methods.contains(getCurrentValue())) {
+        while (methods.contains(jackTokenizer.getPeekValue())) {
+            String subroutineType = getCurrentValue();
             this.ifCount=0;
             this.whileCount=0;
 
             String suborutineReturnType = getCurrentValue(); //type
             String functionName = getCurrentValue(); //functionName
-            symbolTable.startSubroutine(suborutineReturnType,functionName);
+            symbolTable.startSubroutine(suborutineReturnType, functionName);
 
             //(
             if (getCurrentValue().equals("(")) {
-               compileParameterList();
+                if(subroutineType.equals("method")){
+                    //方法的第一个字段
+                    symbolTable.define("method-first-element", "method-first-element", "arg");
+                }
+                compileParameterList();
 
                 advance(); //)
             }
@@ -127,11 +135,31 @@ public class CompilationEngine {
             int varCount = symbolTable.varCount("var");
             String vmFunctionName = String.join(".",currentClassName, symbolTable.getSubroutineName());
             vmWriter.writeFunction(vmFunctionName, varCount);
+            if(subroutineType.equals("method")){
+//                push argument 0
+//                pop pointer 0
+
+                //方法的第一个参数 是对象的地址及this
+                vmWriter.writePush(SegmentType.ARG,0);
+                vmWriter.writePop(SegmentType.POINTER,0);
+            }
+
+            if(subroutineType.equals("constructor")){
+//                push constant 2
+//                call Memory.alloc 1
+//                pop pointer 0     //this
+                int index = symbolTable.varCount("field");
+
+                //构造函数，给创建的对象分配控件
+                vmWriter.writePush(SegmentType.CONSTANT,index);
+                vmWriter.writeCall("Memory.alloc",1);
+                vmWriter.writePop(SegmentType.POINTER, 0); //将创建的 内存空间地址 赋值给this
+            }
 
             compileStatements();
 
             if(!getCurrentValue().equals("}"))
-                throw new RuntimeException(" method not have end char }");
+                throw new RuntimeException(" method not have end char }"+getCurrentValue());
         }
 
     }
@@ -183,7 +211,6 @@ public class CompilationEngine {
     }
 
     public void compileDo(){
-        String lableName = "doStatement";
         compileSubroutineCall();
 
         //保存结果
@@ -195,25 +222,57 @@ public class CompilationEngine {
     }
 
     public void compileLet(){
-        String varname = getCurrentValue(); // varName
+        String varname = null; // varName
+        String nextValue = jackTokenizer.getNextValue(); // 变量的下一个值
 
-//        if(currentValue.equals("[")){
-//            addCurrentCode(); // [
-//            compileExpression();
-//            addCurrentCode(); // ]
-//        }
+        if(nextValue.equals("[")){
+            //数组 a[i]
+            varname = jackTokenizer.getPeekValue();
+            arrayWriteFlag = true;
+
+            compileExpression();
+
+        }else{
+            varname = getCurrentValue();
+        }
+
+        if(jackTokenizer.getPeekValue().equals("]")){
+            getCurrentValue();
+        }
 
         if(jackTokenizer.getPeekValue().equals("=")){
            advance();
            compileExpression();
 
-            //保存结果
-            int index = symbolTable.indexOf(varname);
-            SegmentType segmentType = symbolTable.kindOf(varname);
-            if(segmentType==null){
-                throw new RuntimeException("SegmentType is null. "+segmentType+"-----> varname:"+varname);
+           //数组 ] 处理
+            if(jackTokenizer.getPeekValue().equals("]")){
+                getCurrentValue();
             }
-            vmWriter.writePop(segmentType, index);
+
+            //             //pop pointer 1
+            //             //push that 0
+           //数组的处理
+           if(arrayWriteFlag){
+               //保存表达式的结果，也就是等号 右边的结果.      pop temp 0
+               vmWriter.writePop(SegmentType.TEMP, 0);
+               //保存数组元素的地址 到 that.                pop pointer 1
+               vmWriter.writePop(SegmentType.POINTER, 1);
+               //将等号 右边的结果放入到 栈                  push temp 0
+               vmWriter.writePush(SegmentType.TEMP, 0);
+               //将值 赋值给数组                           pop that 0
+               vmWriter.writePop(SegmentType.THAT, 0);
+               arrayWriteFlag = false;
+           }else{
+               //保存结果
+               int index = symbolTable.indexOf(varname);
+               SegmentType segmentType = symbolTable.kindOf(varname);
+               if(segmentType==null){
+                   throw new RuntimeException("SegmentType is null. "+segmentType+"-----> varname:"+varname);
+               }
+               vmWriter.writePop(segmentType, index);
+           }
+
+
         }
 
         if(jackTokenizer.getPeekValue().equals(";")){
@@ -312,17 +371,6 @@ public class CompilationEngine {
 
 
     public void compileReturn(){
-        String lableName = "returnStatement";
-
-//        if(!getPeekValue().equals(";")){
-//            compileExpression();
-//        }
-//
-//        if(getPeekValue().equals(";")){
-//            addCurrentCode();
-//            endLableSpaceLenthSubTwo(lableName);
-//        }
-
 
         if(!jackTokenizer.getPeekValue().equals(";")){
             compileExpression();
@@ -332,6 +380,10 @@ public class CompilationEngine {
         if(symbolTable.getSubroutineReturnType().equals("void")){
             vmWriter.writePush(SegmentType.CONSTANT,0);
         }
+//        if(symbolTable.getSubroutineName().equals("new")){
+//            //push pointer 0
+//            vmWriter.writePush(SegmentType.POINTER,0);
+//        }
         vmWriter.writeReturn();
 
     }
@@ -362,7 +414,11 @@ public class CompilationEngine {
 
             functionName = String.join(fchar,fname,sfname);
         }else{
-            functionName = fname;
+            flag = true;
+
+            //push pointer 0
+            vmWriter.writePush(SegmentType.POINTER, 0);
+            functionName = String.join(".",currentClassName,fname);;
         }
 
         if(getCurrentValue().equals("(")){ //(
@@ -383,15 +439,13 @@ public class CompilationEngine {
      * 编译参数列表不包含 ( )
      * @return: 返回参数数量
      **/
-    public int compileParameterList(){
-        String lableName = "parameterList";
-        String currentValue = jackTokenizer.getPeekValue();
+    public void compileParameterList(){
 
         int parameterNum = 0;
         if(!jackTokenizer.getPeekValue().equals(")")){
             String type = getCurrentValue();//type
             String varname = getCurrentValue();//varName
-            symbolTable.define(varname, type, SegmentType.ARG.toString().toLowerCase());
+            symbolTable.define(varname, type, "arg");
             parameterNum++;
 
             while(jackTokenizer.getPeekValue().equals(",")){
@@ -399,17 +453,17 @@ public class CompilationEngine {
 
                 String type1 = getCurrentValue();//type
                 String varname1 = getCurrentValue();//varName
-                symbolTable.define(varname1, type1, SegmentType.ARG.toString().toLowerCase());
+                symbolTable.define(varname1, type1, "arg");
 
                 parameterNum++;
             }
 
         }
 
-        return parameterNum;
+       // return parameterNum;
     }
     public int compileExpressionList(){
-        String lableName = "expressionList";
+
         int paramNum = 0;
         if(!jackTokenizer.getPeekValue().equals(")")){
             compileExpression();
@@ -445,11 +499,14 @@ public class CompilationEngine {
     }
 
     private void arithmeticOperate(String operate) {
-        if(initData.op.containsKey(operate)){
-            vmWriter.writeArithmetic(initData.op.get(operate));
+        if(InitData.op.containsKey(operate)){
+            vmWriter.writeArithmetic(InitData.op.get(operate));
         }
         if("*".equals(operate)){
             vmWriter.writeCall("Math.multiply",2);
+        }
+        if("/".equals(operate)){
+            vmWriter.writeCall("Math.divide",2);
         }
     }
 
@@ -468,6 +525,18 @@ public class CompilationEngine {
          if(peekType == TokenType.INT_CONST){
              String intVal = getCurrentValue();//数字值
              vmWriter.writePush(SegmentType.CONSTANT, Integer.valueOf(intVal));
+        }
+        else if(peekType == TokenType.STRING_CONST){
+            //字符串的值
+             String stringVal = getCurrentValue();
+
+             vmWriter.writePush(SegmentType.CONSTANT, stringVal.length());
+             vmWriter.writeCall("String.new", 1);
+
+             for (char c : stringVal.toCharArray()) {
+                 vmWriter.writePush(SegmentType.CONSTANT,Integer.valueOf(c) );
+                 vmWriter.writeCall("String.appendChar", 2);
+             }
         }
          //非
         else if(unaryOp.contains(peekValue) ){
@@ -490,6 +559,29 @@ public class CompilationEngine {
             //subroutineCall 处理
             compileSubroutineCall();
         }
+       //数组处理
+         else if (peekType == TokenType.IDENTIFIER && nextValue.equals("[")){
+             //varName[]
+             String varname = getCurrentValue(); //varname
+             int index = symbolTable.indexOf(varname);
+             SegmentType segmentType = symbolTable.kindOf(varname);
+
+             getCurrentValue();//[
+             compileExpression();
+           //  getCurrentValue();//]
+
+             vmWriter.writePush(segmentType, index);
+             vmWriter.writeArithmetic(ArithmeticOperate.ADD);
+
+             //数组读取变量
+             if(!arrayWriteFlag){
+                 //pop pointer 1    将数组地址写入 that
+                 vmWriter.writePop(SegmentType.POINTER,1);
+                 // push that 0     读取数组的值
+                 vmWriter.writePush(SegmentType.THAT, 0);
+             }
+
+         }
             //varname
        else if (peekType == TokenType.IDENTIFIER &&
                 (op.contains( nextValue) || varNameEndChar.contains(nextValue) )  ) {
@@ -510,6 +602,10 @@ public class CompilationEngine {
                 vmWriter.writePush(SegmentType.CONSTANT, 0);
                 vmWriter.writeArithmetic(ArithmeticOperate.NOT);
             }
+             if(value.equals("this") ){
+                 //push pointer 0
+                 vmWriter.writePush(SegmentType.POINTER, 0);
+             }
         }
         //表达式 (
        else if(jackTokenizer.getPeekValue().equals("(")){
