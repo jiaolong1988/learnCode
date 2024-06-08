@@ -11,7 +11,7 @@ public class JackAnalyzer {
     public static void main(String[] args) {
 
         //目录
-        String dir = "D:\\test\\11\\ComplexArrays";
+        String dir = "D:\\test\\11\\Square";
         File dirFile = new File(dir);
 
         //获取目录下的 jack文件

@@ -174,7 +174,7 @@ public class JackTokenizer {
 
                 }
                 //·ûºÅ
-                else if(symbols.contains(String.valueOf(c))){
+                else if(symbols.contains(String.valueOf(c))&& stringTypeFlag==false){
                     printSymbols(info.toString());
                     info.setLength(0);
 

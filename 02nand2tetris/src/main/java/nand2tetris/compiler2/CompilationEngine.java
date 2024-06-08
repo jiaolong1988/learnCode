@@ -28,7 +28,12 @@ public class CompilationEngine {
     private int ifCount = 0;
     //ture:表示 需要将 变量 赋值给 数组
     //fase:表示读取变量
-    private boolean arrayWriteFlag = false;
+    private boolean arrayLeftVarWriteFlag = false;
+    //true:表示读取数组的值
+    private boolean arrayRightVarReadFlag = false;
+    //true:参数是数组
+    private boolean arrayParmaFlag = false;
+
 
     public CompilationEngine(File inputFile, File outFile) {
         jackTokenizer = new JackTokenizer(inputFile);
@@ -119,7 +124,7 @@ public class CompilationEngine {
             if (getCurrentValue().equals("(")) {
                 if(subroutineType.equals("method")){
                     //方法的第一个字段
-                    symbolTable.define("method-first-element", "method-first-element", "arg");
+                    symbolTable.define("object-reference", "method-first-element", "arg");
                 }
                 compileParameterList();
 
@@ -159,7 +164,7 @@ public class CompilationEngine {
             compileStatements();
 
             if(!getCurrentValue().equals("}"))
-                throw new RuntimeException(" method not have end char }"+getCurrentValue());
+                throw new RuntimeException(" method not have end char } 当前值为："+getCurrentValue());
         }
 
     }
@@ -228,7 +233,7 @@ public class CompilationEngine {
         if(nextValue.equals("[")){
             //数组 a[i]
             varname = jackTokenizer.getPeekValue();
-            arrayWriteFlag = true;
+            arrayLeftVarWriteFlag = true;
 
             compileExpression();
 
@@ -241,18 +246,18 @@ public class CompilationEngine {
         }
 
         if(jackTokenizer.getPeekValue().equals("=")){
-           advance();
-           compileExpression();
+            arrayRightVarReadFlag = true;
+            advance();
+            compileExpression();
+            arrayRightVarReadFlag = false;
 
            //数组 ] 处理
             if(jackTokenizer.getPeekValue().equals("]")){
                 getCurrentValue();
             }
 
-            //             //pop pointer 1
-            //             //push that 0
-           //数组的处理
-           if(arrayWriteFlag){
+           //数组的赋值处理
+           if(arrayLeftVarWriteFlag){
                //保存表达式的结果，也就是等号 右边的结果.      pop temp 0
                vmWriter.writePop(SegmentType.TEMP, 0);
                //保存数组元素的地址 到 that.                pop pointer 1
@@ -261,7 +266,7 @@ public class CompilationEngine {
                vmWriter.writePush(SegmentType.TEMP, 0);
                //将值 赋值给数组                           pop that 0
                vmWriter.writePop(SegmentType.THAT, 0);
-               arrayWriteFlag = false;
+               arrayLeftVarWriteFlag = false;
            }else{
                //保存结果
                int index = symbolTable.indexOf(varname);
@@ -432,6 +437,8 @@ public class CompilationEngine {
 
         if(jackTokenizer.getPeekValue().equals(")")){
             advance();
+        }else{
+            throw new RuntimeException("do method not have ), 当前值："+jackTokenizer.getPeekValue());
         }
     }
 
@@ -462,8 +469,15 @@ public class CompilationEngine {
 
        // return parameterNum;
     }
+
+    /**
+     * 参数列表
+     * @return: int
+     * @date 2024/6/8 19:26
+     */
     public int compileExpressionList(){
 
+        arrayParmaFlag = true;
         int paramNum = 0;
         if(!jackTokenizer.getPeekValue().equals(")")){
             compileExpression();
@@ -475,7 +489,7 @@ public class CompilationEngine {
                 compileExpression();
             }
         }
-
+        arrayParmaFlag = false;
         return paramNum;
     }
 
@@ -529,7 +543,7 @@ public class CompilationEngine {
         else if(peekType == TokenType.STRING_CONST){
             //字符串的值
              String stringVal = getCurrentValue();
-
+            int x =  stringVal.toCharArray().length;
              vmWriter.writePush(SegmentType.CONSTANT, stringVal.length());
              vmWriter.writeCall("String.new", 1);
 
@@ -568,17 +582,45 @@ public class CompilationEngine {
 
              getCurrentValue();//[
              compileExpression();
-           //  getCurrentValue();//]
 
              vmWriter.writePush(segmentType, index);
              vmWriter.writeArithmetic(ArithmeticOperate.ADD);
 
-             //数组读取变量
-             if(!arrayWriteFlag){
+             //判断数组类型 ture:二维数组， false:非二维数组
+             boolean array2DFlag = jackTokenizer.getNextValue().equals("]");
+
+             //等号右边的 数组 二维数组,与 等号左边的二维数组 都需要
+             if(array2DFlag || arrayRightVarReadFlag || arrayParmaFlag){
                  //pop pointer 1    将数组地址写入 that
                  vmWriter.writePop(SegmentType.POINTER,1);
                  // push that 0     读取数组的值
                  vmWriter.writePush(SegmentType.THAT, 0);
+
+             }
+
+//             //等号右边 去除二维数组的 ]
+//             if(arrayRightVarReadFlag && (
+//                     op.contains((jackTokenizer.getNextValue())) || jackTokenizer.getNextValue().equals(";")  //二维数组
+//             )){
+//                 advance(); //]
+//             }
+//
+//             if(array2DFlag ){
+//                 advance(); //]
+//             }
+
+
+             //等号右边 去除所有 ]
+             if(arrayRightVarReadFlag || arrayParmaFlag){
+                  if( jackTokenizer.getPeekValue().equals("]")) {
+                      advance(); //]
+                  }
+
+             }else{
+                 // 等号左边的数组处理 要保留一个 ]
+                 if( jackTokenizer.getNextValue().equals("]")) {
+                     advance(); //]
+                 }
              }
 
          }
