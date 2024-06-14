@@ -1,5 +1,8 @@
+package collection;
+
 import java.io.FileNotFoundException;
 import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.LinkedList;
 
 /**

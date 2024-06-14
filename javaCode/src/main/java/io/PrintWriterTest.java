@@ -1,3 +1,5 @@
+package io;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,7 +14,7 @@ public class PrintWriterTest {
     public static void main(String[] args) throws IOException {
 
         PrintWriter pw = new PrintWriter(new FileWriter("pw2.txt"), true);
-        //写任意类型
+        //杈撳嚭浠绘剰瀛楃 鍒版寚瀹氱殑鏂囦欢
         pw.println("hello");
         pw.println(100);
         pw.println(true);
