@@ -4,20 +4,21 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * »ñÈ¡µ±Ç°ÏîÄ¿µÄÂ·¾¶
+ * è·å–å½“å‰é¡¹ç›®çš„è·¯å¾„
  * @author: jiaolong
  * @date: 2024/06/13 14:23
  **/
 public class FetchCurrentPathTest {
     public static void main(String[] args) throws IOException {
 
-        System.out.println("===»ñÈ¡µ±Ç°ÏîÄ¿Â·¾¶");
+        Thread t;
+        System.out.println("===è·å–å½“å‰é¡¹ç›®è·¯å¾„");
         File f = new File("");
         System.out.println(f.getAbsolutePath());
 
 
-        System.out.println("\n===¸ù¾İÏà¶ÔÂ·¾¶ »ñÈ¡±ê×¼µØÖ·£º ./javaCode/Main.jack");
-        //»ñÈ¡Ïà¶ÔÂ·¾¶
+        System.out.println("\n===æ ¹æ®ç›¸å¯¹è·¯å¾„ è·å–æ ‡å‡†åœ°å€ï¼š ./javaCode/Main.jack");
+        //è·å–ç›¸å¯¹è·¯å¾„
         File directory = new File("./javaCode/Main.jack");
         File fFile = directory.getCanonicalFile();
         String fString = directory.getCanonicalPath();
@@ -25,9 +26,9 @@ public class FetchCurrentPathTest {
 
 
 
-        System.out.println("\n===»ñÈ¡¾ø¶ÔÂ·¾¶");
+        System.out.println("\n===è·å–ç»å¯¹è·¯å¾„");
         File dir = new File("aa");
-        System.out.println(dir.getAbsolutePath());//»ñÈ¡¾ø¶ÔÂ·¾¶
-        System.out.println(dir.getPath());  //»ñÈ¡Ö¸¶¨µÄÂ·¾¶£¬¼ÈFileÀàÖ¸¶¨µÄÂ·¾¶
+        System.out.println(dir.getAbsolutePath());//è·å–ç»å¯¹è·¯å¾„
+        System.out.println(dir.getPath());  //è·å–æŒ‡å®šçš„è·¯å¾„ï¼Œæ—¢Fileç±»æŒ‡å®šçš„è·¯å¾„
     }
 }

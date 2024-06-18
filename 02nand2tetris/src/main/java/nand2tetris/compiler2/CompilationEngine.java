@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * ×Ô¶¥ÏòÏÂµÄµİ¹éÓï·¨·ÖÎöÆ÷
+ * è‡ªé¡¶å‘ä¸‹çš„é€’å½’è¯­æ³•åˆ†æå™¨
  * @author jiaolong
  * @date 2024/04/06 11:02
  */
@@ -26,12 +26,12 @@ public class CompilationEngine {
 
     private int whileCount = 0;
     private int ifCount = 0;
-    //ture:±íÊ¾ ĞèÒª½« ±äÁ¿ ¸³Öµ¸ø Êı×é
-    //fase:±íÊ¾¶ÁÈ¡±äÁ¿
+    //ture:è¡¨ç¤º éœ€è¦å°† å˜é‡ èµ‹å€¼ç»™ æ•°ç»„
+    //fase:è¡¨ç¤ºè¯»å–å˜é‡
     private boolean arrayLeftVarWriteFlag = false;
-    //true:±íÊ¾¶ÁÈ¡Êı×éµÄÖµ
+    //true:è¡¨ç¤ºè¯»å–æ•°ç»„çš„å€¼
     private boolean arrayRightVarReadFlag = false;
-    //true:²ÎÊıÊÇÊı×é
+    //true:å‚æ•°æ˜¯æ•°ç»„
     private boolean arrayParmaFlag = false;
 
 
@@ -81,7 +81,7 @@ public class CompilationEngine {
         vmWriter.close();
     }
     /**
-     * ±àÒë¾²Ì¬ÉùÃû»ò×Ö¶ÎÉùÃû
+     * ç¼–è¯‘é™æ€å£°åæˆ–å­—æ®µå£°å
      * @return: void
      * @date 2024/4/6 11:12
             */
@@ -107,7 +107,7 @@ public class CompilationEngine {
 
     }
 
-    //±àÒëÕû¸ö·½·¨¡¢º¯Êı¡¢¹¹Ôìº¯Êı
+    //ç¼–è¯‘æ•´ä¸ªæ–¹æ³•ã€å‡½æ•°ã€æ„é€ å‡½æ•°
     public void compileSubroutine() {
         List<String> methods = Arrays.asList("constructor", "function", "method");
 
@@ -123,7 +123,7 @@ public class CompilationEngine {
             //(
             if (getCurrentValue().equals("(")) {
                 if(subroutineType.equals("method")){
-                    //·½·¨µÄµÚÒ»¸ö×Ö¶Î
+                    //æ–¹æ³•çš„ç¬¬ä¸€ä¸ªå­—æ®µ
                     symbolTable.define("object-reference", "method-first-element", "arg");
                 }
                 compileParameterList();
@@ -136,7 +136,7 @@ public class CompilationEngine {
             }
             compileVarDec();
 
-            //·½·¨±êÊ¶
+            //æ–¹æ³•æ ‡è¯†
             int varCount = symbolTable.varCount("var");
             String vmFunctionName = String.join(".",currentClassName, symbolTable.getSubroutineName());
             vmWriter.writeFunction(vmFunctionName, varCount);
@@ -144,7 +144,7 @@ public class CompilationEngine {
 //                push argument 0
 //                pop pointer 0
 
-                //·½·¨µÄµÚÒ»¸ö²ÎÊı ÊÇ¶ÔÏóµÄµØÖ·¼°this
+                //æ–¹æ³•çš„ç¬¬ä¸€ä¸ªå‚æ•° æ˜¯å¯¹è±¡çš„åœ°å€åŠthis
                 vmWriter.writePush(SegmentType.ARG,0);
                 vmWriter.writePop(SegmentType.POINTER,0);
             }
@@ -155,16 +155,16 @@ public class CompilationEngine {
 //                pop pointer 0     //this
                 int index = symbolTable.varCount("field");
 
-                //¹¹Ôìº¯Êı£¬¸ø´´½¨µÄ¶ÔÏó·ÖÅä¿Ø¼ş
+                //æ„é€ å‡½æ•°ï¼Œç»™åˆ›å»ºçš„å¯¹è±¡åˆ†é…æ§ä»¶
                 vmWriter.writePush(SegmentType.CONSTANT,index);
                 vmWriter.writeCall("Memory.alloc",1);
-                vmWriter.writePop(SegmentType.POINTER, 0); //½«´´½¨µÄ ÄÚ´æ¿Õ¼äµØÖ· ¸³Öµ¸øthis
+                vmWriter.writePop(SegmentType.POINTER, 0); //å°†åˆ›å»ºçš„ å†…å­˜ç©ºé—´åœ°å€ èµ‹å€¼ç»™this
             }
 
             compileStatements();
 
             if(!getCurrentValue().equals("}"))
-                throw new RuntimeException(" method not have end char } µ±Ç°ÖµÎª£º"+getCurrentValue());
+                throw new RuntimeException(" method not have end char } å½“å‰å€¼ä¸ºï¼š"+getCurrentValue());
         }
 
     }
@@ -218,7 +218,7 @@ public class CompilationEngine {
     public void compileDo(){
         compileSubroutineCall();
 
-        //±£´æ½á¹û
+        //ä¿å­˜ç»“æœ
         vmWriter.writePop(SegmentType.TEMP,0);
 
         if(jackTokenizer.getPeekValue().equals(";")){
@@ -228,10 +228,10 @@ public class CompilationEngine {
 
     public void compileLet(){
         String varname = null; // varName
-        String nextValue = jackTokenizer.getNextValue(); // ±äÁ¿µÄÏÂÒ»¸öÖµ
+        String nextValue = jackTokenizer.getNextValue(); // å˜é‡çš„ä¸‹ä¸€ä¸ªå€¼
 
         if(nextValue.equals("[")){
-            //Êı×é a[i]
+            //æ•°ç»„ a[i]
             varname = jackTokenizer.getPeekValue();
             arrayLeftVarWriteFlag = true;
 
@@ -251,24 +251,24 @@ public class CompilationEngine {
             compileExpression();
             arrayRightVarReadFlag = false;
 
-           //Êı×é ] ´¦Àí
+           //æ•°ç»„ ] å¤„ç†
             if(jackTokenizer.getPeekValue().equals("]")){
                 getCurrentValue();
             }
 
-           //Êı×éµÄ¸³Öµ´¦Àí
+           //æ•°ç»„çš„èµ‹å€¼å¤„ç†
            if(arrayLeftVarWriteFlag){
-               //±£´æ±í´ïÊ½µÄ½á¹û£¬Ò²¾ÍÊÇµÈºÅ ÓÒ±ßµÄ½á¹û.      pop temp 0
+               //ä¿å­˜è¡¨è¾¾å¼çš„ç»“æœï¼Œä¹Ÿå°±æ˜¯ç­‰å· å³è¾¹çš„ç»“æœ.      pop temp 0
                vmWriter.writePop(SegmentType.TEMP, 0);
-               //±£´æÊı×éÔªËØµÄµØÖ· µ½ that.                pop pointer 1
+               //ä¿å­˜æ•°ç»„å…ƒç´ çš„åœ°å€ åˆ° that.                pop pointer 1
                vmWriter.writePop(SegmentType.POINTER, 1);
-               //½«µÈºÅ ÓÒ±ßµÄ½á¹û·ÅÈëµ½ Õ»                  push temp 0
+               //å°†ç­‰å· å³è¾¹çš„ç»“æœæ”¾å…¥åˆ° æ ˆ                  push temp 0
                vmWriter.writePush(SegmentType.TEMP, 0);
-               //½«Öµ ¸³Öµ¸øÊı×é                           pop that 0
+               //å°†å€¼ èµ‹å€¼ç»™æ•°ç»„                           pop that 0
                vmWriter.writePop(SegmentType.THAT, 0);
                arrayLeftVarWriteFlag = false;
            }else{
-               //±£´æ½á¹û
+               //ä¿å­˜ç»“æœ
                int index = symbolTable.indexOf(varname);
                SegmentType segmentType = symbolTable.kindOf(varname);
                if(segmentType==null){
@@ -333,7 +333,7 @@ public class CompilationEngine {
             vmWriter.writeLabel(ifEnd);
 
         }else{
-            //if }½áÎ²
+            //if }ç»“å°¾
             vmWriter.writeLabel(ifFalse);
         }
 
@@ -401,12 +401,12 @@ public class CompilationEngine {
         String fname = getCurrentValue();//aa
         if(jackTokenizer.getPeekValue().equals(".")){
 
-            //ÅĞ¶ÏÊÇÀà »¹ÊÇ ±äÁ¿£¬Èç¹ûÊÇ±äÁ¿ ²éÑ¯ÆäÎ»ÖÃ
+            //åˆ¤æ–­æ˜¯ç±» è¿˜æ˜¯ å˜é‡ï¼Œå¦‚æœæ˜¯å˜é‡ æŸ¥è¯¢å…¶ä½ç½®
             String varType = symbolTable.typeOf(fname);
             if( varType !=null){
                 flag = true;
 
-                //»ñÈ¡Î»ÖÃ
+                //è·å–ä½ç½®
                 SegmentType type = symbolTable.kindOf(fname);
                 int index = symbolTable.indexOf(fname);
                 vmWriter.writePush(type,index);
@@ -438,13 +438,13 @@ public class CompilationEngine {
         if(jackTokenizer.getPeekValue().equals(")")){
             advance();
         }else{
-            throw new RuntimeException("do method not have ), µ±Ç°Öµ£º"+jackTokenizer.getPeekValue());
+            throw new RuntimeException("do method not have ), å½“å‰å€¼ï¼š"+jackTokenizer.getPeekValue());
         }
     }
 
     /**
-     * ±àÒë²ÎÊıÁĞ±í²»°üº¬ ( )
-     * @return: ·µ»Ø²ÎÊıÊıÁ¿
+     * ç¼–è¯‘å‚æ•°åˆ—è¡¨ä¸åŒ…å« ( )
+     * @return: è¿”å›å‚æ•°æ•°é‡
      **/
     public void compileParameterList(){
 
@@ -471,7 +471,7 @@ public class CompilationEngine {
     }
 
     /**
-     * ²ÎÊıÁĞ±í
+     * å‚æ•°åˆ—è¡¨
      * @return: int
      * @date 2024/6/8 19:26
      */
@@ -507,7 +507,7 @@ public class CompilationEngine {
             String operate = getCurrentValue();
             compileTerm();
 
-            //ÊıÑ§¼ÆËã
+            //æ•°å­¦è®¡ç®—
             arithmeticOperate(operate);
         }
     }
@@ -535,13 +535,13 @@ public class CompilationEngine {
         String nextValue = jackTokenizer.getNextValue();
         TokenType peekType = jackTokenizer.getPeekType();
 
-        //Êı×Ö
+        //æ•°å­—
          if(peekType == TokenType.INT_CONST){
-             String intVal = getCurrentValue();//Êı×ÖÖµ
+             String intVal = getCurrentValue();//æ•°å­—å€¼
              vmWriter.writePush(SegmentType.CONSTANT, Integer.valueOf(intVal));
         }
         else if(peekType == TokenType.STRING_CONST){
-            //×Ö·û´®µÄÖµ
+            //å­—ç¬¦ä¸²çš„å€¼
              String stringVal = getCurrentValue();
             int x =  stringVal.toCharArray().length;
              vmWriter.writePush(SegmentType.CONSTANT, stringVal.length());
@@ -552,9 +552,9 @@ public class CompilationEngine {
                  vmWriter.writeCall("String.appendChar", 2);
              }
         }
-         //·Ç
+         //é
         else if(unaryOp.contains(peekValue) ){
-             String unaryOpChar = getCurrentValue(); //·ûºÅ
+             String unaryOpChar = getCurrentValue(); //ç¬¦å·
              compileTerm();
 
              if(unaryOpChar.equals("-")){
@@ -567,13 +567,13 @@ public class CompilationEngine {
              }
 
          }
-        //subroutineCall ´¦Àí
+        //subroutineCall å¤„ç†
        else if(peekType == TokenType.IDENTIFIER &&
                 (nextValue.equals(".") || nextValue.equals("(")) ){
-            //subroutineCall ´¦Àí
+            //subroutineCall å¤„ç†
             compileSubroutineCall();
         }
-       //Êı×é´¦Àí
+       //æ•°ç»„å¤„ç†
          else if (peekType == TokenType.IDENTIFIER && nextValue.equals("[")){
              //varName[]
              String varname = getCurrentValue(); //varname
@@ -586,21 +586,21 @@ public class CompilationEngine {
              vmWriter.writePush(segmentType, index);
              vmWriter.writeArithmetic(ArithmeticOperate.ADD);
 
-             //ÅĞ¶ÏÊı×éÀàĞÍ ture:¶şÎ¬Êı×é£¬ false:·Ç¶şÎ¬Êı×é
+             //åˆ¤æ–­æ•°ç»„ç±»å‹ ture:äºŒç»´æ•°ç»„ï¼Œ false:éäºŒç»´æ•°ç»„
              boolean array2DFlag = jackTokenizer.getNextValue().equals("]");
 
-             //µÈºÅÓÒ±ßµÄ Êı×é ¶şÎ¬Êı×é,Óë µÈºÅ×ó±ßµÄ¶şÎ¬Êı×é ¶¼ĞèÒª
+             //ç­‰å·å³è¾¹çš„ æ•°ç»„ äºŒç»´æ•°ç»„,ä¸ ç­‰å·å·¦è¾¹çš„äºŒç»´æ•°ç»„ éƒ½éœ€è¦
              if(array2DFlag || arrayRightVarReadFlag || arrayParmaFlag){
-                 //pop pointer 1    ½«Êı×éµØÖ·Ğ´Èë that
+                 //pop pointer 1    å°†æ•°ç»„åœ°å€å†™å…¥ that
                  vmWriter.writePop(SegmentType.POINTER,1);
-                 // push that 0     ¶ÁÈ¡Êı×éµÄÖµ
+                 // push that 0     è¯»å–æ•°ç»„çš„å€¼
                  vmWriter.writePush(SegmentType.THAT, 0);
 
              }
 
-//             //µÈºÅÓÒ±ß È¥³ı¶şÎ¬Êı×éµÄ ]
+//             //ç­‰å·å³è¾¹ å»é™¤äºŒç»´æ•°ç»„çš„ ]
 //             if(arrayRightVarReadFlag && (
-//                     op.contains((jackTokenizer.getNextValue())) || jackTokenizer.getNextValue().equals(";")  //¶şÎ¬Êı×é
+//                     op.contains((jackTokenizer.getNextValue())) || jackTokenizer.getNextValue().equals(";")  //äºŒç»´æ•°ç»„
 //             )){
 //                 advance(); //]
 //             }
@@ -610,14 +610,14 @@ public class CompilationEngine {
 //             }
 
 
-             //µÈºÅÓÒ±ß È¥³ıËùÓĞ ]
+             //ç­‰å·å³è¾¹ å»é™¤æ‰€æœ‰ ]
              if(arrayRightVarReadFlag || arrayParmaFlag){
                   if( jackTokenizer.getPeekValue().equals("]")) {
                       advance(); //]
                   }
 
              }else{
-                 // µÈºÅ×ó±ßµÄÊı×é´¦Àí Òª±£ÁôÒ»¸ö ]
+                 // ç­‰å·å·¦è¾¹çš„æ•°ç»„å¤„ç† è¦ä¿ç•™ä¸€ä¸ª ]
                  if( jackTokenizer.getNextValue().equals("]")) {
                      advance(); //]
                  }
@@ -634,7 +634,7 @@ public class CompilationEngine {
 
             vmWriter.writePush(segmentType, index);
         }
-        //¹Ø¼ü×Ö³£Á¿
+        //å…³é”®å­—å¸¸é‡
        else if(keywordConstant.contains(peekValue)){
             String value = getCurrentValue();
             if(value.equals("null") || value.equals("false") ){
@@ -649,7 +649,7 @@ public class CompilationEngine {
                  vmWriter.writePush(SegmentType.POINTER, 0);
              }
         }
-        //±í´ïÊ½ (
+        //è¡¨è¾¾å¼ (
        else if(jackTokenizer.getPeekValue().equals("(")){
             //()
             advance();//(

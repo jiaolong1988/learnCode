@@ -14,29 +14,29 @@ public class DequeTest {
         ArrayDeque<String> stack = new ArrayDeque<>();
         LinkedList<String> listDeque = new LinkedList<>();
 
-        System.out.println("ÅĞ¶ÏlistDequeÊÇ·ñÎª¿Õ£º"+listDeque.isEmpty());
+        System.out.println("åˆ¤æ–­listDequeæ˜¯å¦ä¸ºç©ºï¼š"+listDeque.isEmpty());
 
-        //¶ÓÁĞ²Ù×÷-ÏÈ½øÏÈ³ö  [Dog, Cat, Horse]
+        //é˜Ÿåˆ—æ“ä½œ-å…ˆè¿›å…ˆå‡º  [Dog, Cat, Horse]
         stack.offer("Dog");
         stack.offer("Cat");
         stack.offer("Horse");
 
-        //Õ»²Ù×÷-ºó½øÏÈ³ö  [Horse, Cat, Dog]
+        //æ ˆæ“ä½œ-åè¿›å…ˆå‡º  [Horse, Cat, Dog]
 //        stack.push("Dog");
 //        stack.push("Cat");
 //        stack.push("Horse");
         System.out.println("Stack: " + stack);
 
-        //´Ó¶¥²¿·ÃÎÊÔªËØ
+        //ä»é¡¶éƒ¨è®¿é—®å…ƒç´ 
         String element = stack.peek();
-        System.out.println("·ÃÎÊÔªËØ£º " + element);
+        System.out.println("è®¿é—®å…ƒç´ ï¼š " + element);
 
 
-        //·µ»ØÔªËØ£¬²¢É¾³ı¶¥²¿ÔªËØ
+        //è¿”å›å…ƒç´ ï¼Œå¹¶åˆ é™¤é¡¶éƒ¨å…ƒç´ 
         String remElement = stack.poll();
-        System.out.println("É¾³ıelement: " + remElement);
+        System.out.println("åˆ é™¤element: " + remElement);
 
         stack.push("Dog");
-        System.out.println("·ÃÎÊÔªËØ£º " + stack);
+        System.out.println("è®¿é—®å…ƒç´ ï¼š " + stack);
     }
 }

@@ -1,7 +1,7 @@
 package base;
 
 /**
- * 标准写法
+ * 鏍囧噯鍐欐硶
  * @author: jiaolong
  * @date: 2024/06/13 15:10
  **/
@@ -20,16 +20,16 @@ public class SwitchTest {
                 break;
 
             default:
-                x="未知等级";
+                x="鏈煡绛夌骇";
         }
         System.out.println("return: " + x);
     }
 
     public static String case1(){
-        return "优秀";
+        return "浼樼";
     }
     public static String case2(){
-        return "及格";
+        return "鍙婃牸";
     }
 
 }
