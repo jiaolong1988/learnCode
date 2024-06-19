@@ -29,17 +29,17 @@ public class Vm2ServerMain {
     }
 
     public static void mergeTest(){
-        //Ö¸Áî½áºÏ
+        //æŒ‡ä»¤ç»“åˆ
         List<String> infoList = new ArrayList();
 
-        //³õÊ¼»¯²Ù×÷
+        //åˆå§‹åŒ–æ“ä½œ
         init(infoList);
 
-        //Ä¿Â¼
+        //ç›®å½•
         String dir = "D:\\test\\08\\FunctionCalls\\FibonacciElement";
         File dirFile = new File(dir);
 
-        //»ñÈ¡Ä¿Â¼ÏÂµÄ vmÎÄ¼ş
+        //è·å–ç›®å½•ä¸‹çš„ vmæ–‡ä»¶
         List<String> vmList = new ArrayList();
         for(File fp : dirFile.listFiles()){
             if(fp.getName().endsWith(".vm")){
@@ -47,7 +47,7 @@ public class Vm2ServerMain {
             }
         }
 
-        //»ñÈ¡½âÎöĞÅÏ¢
+        //è·å–è§£æä¿¡æ¯
         for(String vmFile: vmList){
             CodeWriter cw = vmParserMerge(vmFile);
             List<String> info = cw.getVmInfo();
@@ -60,9 +60,9 @@ public class Vm2ServerMain {
     }
 
     /**
-     * ³õÊ¼»¯²Ù×÷
-     *  1.¶ÑÕ»³õÊ¼ÖµÎª£º256
-     *  2.µÚÒ»¸öÖ´ĞĞ³ÌĞò±ØĞëÎª£ºSys.init
+     * åˆå§‹åŒ–æ“ä½œ
+     *  1.å †æ ˆåˆå§‹å€¼ä¸ºï¼š256
+     *  2.ç¬¬ä¸€ä¸ªæ‰§è¡Œç¨‹åºå¿…é¡»ä¸ºï¼šSys.init
      * @return: void
      **/
     public static void init(List <String> infoList){
@@ -77,12 +77,12 @@ public class Vm2ServerMain {
     }
 
     /**
-     * ÎÄ¼ş¼Ğ vmÎÄ¼şºÏ²¢½âÎö
+     * æ–‡ä»¶å¤¹ vmæ–‡ä»¶åˆå¹¶è§£æ
      * @param: file
      * @return: void
      **/
     public static CodeWriter vmParserMerge(String file){
-        //ÖØÖÃ¶ÑÕ»Ö¸Õë
+        //é‡ç½®å †æ ˆæŒ‡é’ˆ
         StackSPUtils.reset();
 
        Parser parser = new Parser(file);
@@ -101,15 +101,15 @@ public class Vm2ServerMain {
                 codeWriter.wirteReturn();
 
             }else{
-                //vm ·­ÒëÎª »ã±à
+                //vm ç¿»è¯‘ä¸º æ±‡ç¼–
                 String arg1 = parser.arg1().trim();
                 String arg2 = parser.arg2();
 
-                //push ºÍ pop
+                //push å’Œ pop
                 if(currentCommantType == CmomandType.C_PUSH || currentCommantType == CmomandType.C_POP){
                     codeWriter.writePushPop(parser.commandType(), arg1, arg2);
                 }
-                //ËãÊõÀàĞÍÖ¸Áî
+                //ç®—æœ¯ç±»å‹æŒ‡ä»¤
                 if(currentCommantType == CmomandType.C_ARITHMETIC){
                     codeWriter.writerArithmetic(arg1);
                 }
@@ -147,7 +147,7 @@ public class Vm2ServerMain {
     }
 
     public static void ParserSingle(String file){
-        //ÖØÖÃ¶ÑÕ»Ö¸Õë
+        //é‡ç½®å †æ ˆæŒ‡é’ˆ
         StackSPUtils.reset();
 
         Parser parser = new Parser(file);
@@ -167,15 +167,15 @@ public class Vm2ServerMain {
                 functionName="";
 
             }else{
-                //vm ·­ÒëÎª »ã±à
+                //vm ç¿»è¯‘ä¸º æ±‡ç¼–
                 String arg1 = parser.arg1().trim();
                 String arg2 = parser.arg2();
 
-                //push ºÍ pop
+                //push å’Œ pop
                 if(currentCommantType == CmomandType.C_PUSH || currentCommantType == CmomandType.C_POP){
                     codeWriter.writePushPop(parser.commandType(), arg1, arg2);
                 }
-                //ËãÊõÀàĞÍÖ¸Áî
+                //ç®—æœ¯ç±»å‹æŒ‡ä»¤
                 if(currentCommantType == CmomandType.C_ARITHMETIC){
                     codeWriter.writerArithmetic(arg1);
                 }

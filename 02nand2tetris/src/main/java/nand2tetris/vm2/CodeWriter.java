@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * @author jiaolong
  * @date 2024/01/22 10:24
- * @description: ½«vmÃüÁî·­Òë³É»ã±àÓïÑÔ
+ * @description: å°†vmå‘½ä»¤ç¿»è¯‘æˆæ±‡ç¼–è¯­è¨€
  */
 public class CodeWriter {
     private static String fileAddress;
@@ -24,9 +24,9 @@ public class CodeWriter {
     }
 
     /**
-     * ½«ËãÊõ²Ù×÷µÄvm·­Òë³É»ã±à½øĞĞÊä³ö
-     * ÕıÈ··µ»Ø-1,´íÎó·µ»Ø0
-     * Ö¸Õë¼õ 1
+     * å°†ç®—æœ¯æ“ä½œçš„vmç¿»è¯‘æˆæ±‡ç¼–è¿›è¡Œè¾“å‡º
+     * æ­£ç¡®è¿”å›-1,é”™è¯¯è¿”å›0
+     * æŒ‡é’ˆå‡ 1
      *
      * @param: null
      * @return:
@@ -43,23 +43,23 @@ public class CodeWriter {
             assemblerInfo = ArithmeticAssemblerCode.getNegNotAssemInfo(command);
         }
 
-        //Ö¸Õë²Ù×÷
+        //æŒ‡é’ˆæ“ä½œ
         if (!"not neg".contains(command)) {
-            //Ö¸Õë¼õ1
+            //æŒ‡é’ˆå‡1
             StackSPUtils.decrementOne();
         }
 
         addLog(assemblerInfo, command);
     }
 
-    //½«push pop vmÃüÁî·­ÒëÎ´»ã±à
+    //å°†push pop vmå‘½ä»¤ç¿»è¯‘æœªæ±‡ç¼–
     public void writePushPop(CmomandType cmomandType, String segment, String index) {
         /*
          *
-         * Ö¸Áî²Ù×÷
-         * 1.¶¨Òå±äÁ¿£¨AÖ¸Áî£©£¬¾ÍÊÇ½«Êı¾İĞ´Èë¼Ä´æÆ÷
-         * 2.ÈçºÎÏòÄÚ´æĞ´ÈëĞÅÏ¢£¨CÖ¸Áî£©
-         *  ½«Êı¾İĞ´Èë¼Ä´æÆ÷£¬È»ºóÊ¹ÓÃCÖ¸Áî ½« ¼Ä´æÆ÷Êı¾İ Ğ´ÈëÄÚ´æ¡£
+         * æŒ‡ä»¤æ“ä½œ
+         * 1.å®šä¹‰å˜é‡ï¼ˆAæŒ‡ä»¤ï¼‰ï¼Œå°±æ˜¯å°†æ•°æ®å†™å…¥å¯„å­˜å™¨
+         * 2.å¦‚ä½•å‘å†…å­˜å†™å…¥ä¿¡æ¯ï¼ˆCæŒ‡ä»¤ï¼‰
+         *  å°†æ•°æ®å†™å…¥å¯„å­˜å™¨ï¼Œç„¶åä½¿ç”¨CæŒ‡ä»¤ å°† å¯„å­˜å™¨æ•°æ® å†™å…¥å†…å­˜ã€‚
          */
 
         String assemblerInfo = "";
@@ -90,7 +90,7 @@ public class CodeWriter {
         System.out.println("    " + assemblerInfo);
         List<String> assemblerList = Arrays.asList(assemblerInfo.split(" "));
 
-        //µÚÒ»º¬´úÂëÌí¼Ó×¢ÊÍ
+        //ç¬¬ä¸€å«ä»£ç æ·»åŠ æ³¨é‡Š
         String firstNewLine = assemblerList.get(0)+"   "+debugInfo;
         vmInfo.add(firstNewLine);
 
@@ -126,7 +126,7 @@ public class CodeWriter {
             String log = "goto "+ functionName;
             addLog(info, log);
     }
-    //³ÌĞòÁ÷³Ì¿ØÖÆ
+    //ç¨‹åºæµç¨‹æ§åˆ¶
     public void writeIf(String arg1,String functionName) {
             /*
              *  if-goto LOOP_START
@@ -151,15 +151,15 @@ public class CodeWriter {
 
     public void wirteReturn(){
         StringBuilder sb = new StringBuilder();
-        sb.append("@LCL D=M @14 M=D ")                   //LCLµÄÖµ´æÈë 14µØÖ·
-            .append("@5 D=A @14 D=M-D @15 M=D ")         //REF£º·µ»ØµØÖ· ´æÈë15µØÖ·
-            .append("@SP A=M-1 D=M @ARG A=M M=D ")       //ÖØÖÃ µ÷ÓÃÕßµÄ ·µ»ØÖµµØÖ·,£¨ÔÚARGµØÖ·ÖĞ£¬½«µ±Ç°Õ»¶¥µÄÖµ ·ÅÈëÆäÖĞ£©¡£ *ARG = pop()
-            .append("@ARG D=M @SP M=D+1 ")               //»Ö¸´µ÷ÓÃÕßµÄ SP        SP = ARG+1
-            .append("@14 A=M-1 D=M @THAT M=D ")          //»Ö¸´µ÷ÓÃÕßµÄ THAT
-            .append("@2 D=A @14 A=M-D D=M @THIS M=D ")   //»Ö¸´µ÷ÓÃÕßµÄ THIS
-            .append("@3 D=A @14 A=M-D D=M @ARG M=D ")    //»Ö¸´µ÷ÓÃÕßµÄ ARG
-            .append("@4 D=A @14 A=M-D D=M @LCL M=D ")    //»Ö¸´µ÷ÓÃÕßµÄ LCL
-            .append("@15 A=M 0;JMP")                     //Ìø×ªµ½·µ»ØµØÖ· goto REF
+        sb.append("@LCL D=M @14 M=D ")                   //LCLçš„å€¼å­˜å…¥ 14åœ°å€
+            .append("@5 D=A @14 D=M-D @15 M=D ")         //REFï¼šè¿”å›åœ°å€ å­˜å…¥15åœ°å€
+            .append("@SP A=M-1 D=M @ARG A=M M=D ")       //é‡ç½® è°ƒç”¨è€…çš„ è¿”å›å€¼åœ°å€,ï¼ˆåœ¨ARGåœ°å€ä¸­ï¼Œå°†å½“å‰æ ˆé¡¶çš„å€¼ æ”¾å…¥å…¶ä¸­ï¼‰ã€‚ *ARG = pop()
+            .append("@ARG D=M @SP M=D+1 ")               //æ¢å¤è°ƒç”¨è€…çš„ SP        SP = ARG+1
+            .append("@14 A=M-1 D=M @THAT M=D ")          //æ¢å¤è°ƒç”¨è€…çš„ THAT
+            .append("@2 D=A @14 A=M-D D=M @THIS M=D ")   //æ¢å¤è°ƒç”¨è€…çš„ THIS
+            .append("@3 D=A @14 A=M-D D=M @ARG M=D ")    //æ¢å¤è°ƒç”¨è€…çš„ ARG
+            .append("@4 D=A @14 A=M-D D=M @LCL M=D ")    //æ¢å¤è°ƒç”¨è€…çš„ LCL
+            .append("@15 A=M 0;JMP")                     //è·³è½¬åˆ°è¿”å›åœ°å€ goto REF
         ;
         addLog(sb.toString(), "return");
     }
@@ -168,14 +168,14 @@ public class CodeWriter {
         /*
          *function SimpleFunction.test 2
          *
-         * @LCL         //LCLÔªËØ³õÊ¼»¯Îª0
+         * @LCL         //LCLå…ƒç´ åˆå§‹åŒ–ä¸º0
          * A=M
          * M=0
          *
          * A=A+1
          * M=0
          *
-         * D=A+1          //SP=LCL+ÔªËØ¸öÊı
+         * D=A+1          //SP=LCL+å…ƒç´ ä¸ªæ•°
          * @SP
          * M=D
          * @date 2024/3/17 16:09
@@ -188,7 +188,7 @@ public class CodeWriter {
         }
 
 //
-//        //ÏòÕ»ÖĞÑ¹ÈëÊı¾İ£¬²¢³õÊ¼»¯Îª0
+//        //å‘æ ˆä¸­å‹å…¥æ•°æ®ï¼Œå¹¶åˆå§‹åŒ–ä¸º0
 //        for (int i = 0; i < numLocals; i++) {
 //            if(i==0){
 //                sb.append(" @LCL ");
@@ -200,7 +200,7 @@ public class CodeWriter {
 //            }
 //        }
 //
-//        //SP=LCL+ÔªËØ¸öÊı
+//        //SP=LCL+å…ƒç´ ä¸ªæ•°
 //        if(numLocals > 0){
 //            sb.append(" D=A+1 @SP M=D");
 //        }
@@ -211,7 +211,7 @@ public class CodeWriter {
     }
 
     /**
-     * ½«1¸ö²ÎÊıÑ¹Èë¶ÑÕ»£¬È»ºóµ÷ÓÃ Main.fibonacciº¯Êı
+     * å°†1ä¸ªå‚æ•°å‹å…¥å †æ ˆï¼Œç„¶åè°ƒç”¨ Main.fibonacciå‡½æ•°
      * call Main.fibonacci 1
      *
      **/
@@ -220,17 +220,17 @@ public class CodeWriter {
         String returnAddress = "End$"+functionName+"$"+ReturnAddressValueUtil.getOnlyValue();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("@"+returnAddress+" D=A @SP A=M M=D @SP M=M+1 ") //·µ»ØµØÖ·¼ÓÈëÕ»
-            .append("@LCL D=M @SP A=M M=D @SP M=M+1 ")//±¨´íµ÷ÓÃº¯ÊıµÄ LCL¶ÎÖ¸Õë
-            .append("@ARG D=M @SP A=M M=D @SP M=M+1 ")//±¨´íµ÷ÓÃº¯ÊıµÄ ARG¶ÎÖ¸Õë
-            .append("@THIS D=M @SP A=M M=D @SP M=M+1 ")//±¨´íµ÷ÓÃº¯ÊıµÄ THIS¶ÎÖ¸Õë
-            .append("@THAT D=M @SP A=M M=D @SP M=M+1 ")//±¨´íµ÷ÓÃº¯ÊıµÄ THAT¶ÎÖ¸Õë
+        sb.append("@"+returnAddress+" D=A @SP A=M M=D @SP M=M+1 ") //è¿”å›åœ°å€åŠ å…¥æ ˆ
+            .append("@LCL D=M @SP A=M M=D @SP M=M+1 ")//æŠ¥é”™è°ƒç”¨å‡½æ•°çš„ LCLæ®µæŒ‡é’ˆ
+            .append("@ARG D=M @SP A=M M=D @SP M=M+1 ")//æŠ¥é”™è°ƒç”¨å‡½æ•°çš„ ARGæ®µæŒ‡é’ˆ
+            .append("@THIS D=M @SP A=M M=D @SP M=M+1 ")//æŠ¥é”™è°ƒç”¨å‡½æ•°çš„ THISæ®µæŒ‡é’ˆ
+            .append("@THAT D=M @SP A=M M=D @SP M=M+1 ")//æŠ¥é”™è°ƒç”¨å‡½æ•°çš„ THATæ®µæŒ‡é’ˆ
 
-            .append("@"+numLocals+" D=A @5 D=D+A @SP D=M-D @ARG M=D " )//ÖØÖÃARG(n=²ÎÊıÊıÁ¿) ARG=SP-n-5
+            .append("@"+numLocals+" D=A @5 D=D+A @SP D=M-D @ARG M=D " )//é‡ç½®ARG(n=å‚æ•°æ•°é‡) ARG=SP-n-5
 
-            .append("@SP D=M @LCL M=D ")//ÖØÖÃLCL  LCL=SP
-            .append("@"+functionName+" 0;JMP ")//Ìø×ª¿ØÖÆ
-            .append("("+returnAddress+")") //Îª·µ»ØµØÖ·Ê²Ã´Ò»¸ö±êÇ©
+            .append("@SP D=M @LCL M=D ")//é‡ç½®LCL  LCL=SP
+            .append("@"+functionName+" 0;JMP ")//è·³è½¬æ§åˆ¶
+            .append("("+returnAddress+")") //ä¸ºè¿”å›åœ°å€ä»€ä¹ˆä¸€ä¸ªæ ‡ç­¾
         ;
 
         String log = "call "+ functionName +" "+ numLocals;
@@ -243,7 +243,7 @@ public class CodeWriter {
 
         System.out.println("    " + info);
 
-        //µÚÒ»º¬´úÂëÌí¼Ó×¢ÊÍ function SimpleFunction.test 2
+        //ç¬¬ä¸€å«ä»£ç æ·»åŠ æ³¨é‡Š function SimpleFunction.test 2
         String firstNewLine = assemblerList.get(0)+"   // "+ log ;
         vmInfo.add(firstNewLine);
 
@@ -262,8 +262,8 @@ public class CodeWriter {
     }
 
     /**
-     * vm ·­ÒëÎª »ã±àµÄ¹¤¾ß- ËãÊõºÍÂß¼­¶ÑÕ»ÃüÁî
-     * Ë½ÓĞ ²»¿É¼Ì³Ğ ¾²Ì¬ÄÚ²¿Àà
+     * vm ç¿»è¯‘ä¸º æ±‡ç¼–çš„å·¥å…·- ç®—æœ¯å’Œé€»è¾‘å †æ ˆå‘½ä»¤
+     * ç§æœ‰ ä¸å¯ç»§æ‰¿ é™æ€å†…éƒ¨ç±»
      *
      * @author jiaolong
      * @date 2024-1-24 16:57
@@ -298,52 +298,52 @@ public class CodeWriter {
          **/
         private static String getArithmeticAssemInfo(String command) {
 
-    /* eq lt gt°¸Àı
+    /* eq lt gtæ¡ˆä¾‹
 
             @SP
             AM=M-1
-            D=M     »ñÈ¡Á½¸öÖµ×ö¼õ·¨ÔËËã
+            D=M     è·å–ä¸¤ä¸ªå€¼åšå‡æ³•è¿ç®—
             A=A-1
             D=M-D
 
-                    ²»ÏàµÈÉèÖÃÎª£º0
+                    ä¸ç›¸ç­‰è®¾ç½®ä¸ºï¼š0
             M=0
-            @eq_0         -->Ö¸¶¨±êÇ©±äÁ¿
+            @eq_0         -->æŒ‡å®šæ ‡ç­¾å˜é‡
             D;JNE         -->[eq->JNE lt->JGE gt->JLE]
 
-                    ÏàµÈÉèÖÃÎª: -1
+                    ç›¸ç­‰è®¾ç½®ä¸º: -1
             @SP
             A=M-1
             M=-1
 
-            (eq_0)        -->¶¨Òå±êÇ©
+            (eq_0)        -->å®šä¹‰æ ‡ç­¾
     */
 
-            //±êÇ©Óë »ã±à·ûºÅ(eq_0)
+            //æ ‡ç­¾ä¸ æ±‡ç¼–ç¬¦å·(eq_0)
             int lableIndex = StackSPUtils.LableIndex.getAssemblerLableIndex();
             String lable = command + "_" + lableIndex;
 
             StringBuilder sb = new StringBuilder();
-            //»ñÈ¡Á½¸öÖµ ÇÒÖ¸Õë¼õ1
+            //è·å–ä¸¤ä¸ªå€¼ ä¸”æŒ‡é’ˆå‡1
             sb.append("@SP ");
             sb.append("AM=M-1 ");
-            sb.append("D=M ");  //×î½üµÄÒ»¸öÖµ
+            sb.append("D=M ");  //æœ€è¿‘çš„ä¸€ä¸ªå€¼
             sb.append("A=A-1 ");
-            sb.append("D=M-D "); //²îÖµ
+            sb.append("D=M-D "); //å·®å€¼
 
-            //²»ÏàµÈµÄ½á¹ûÉèÖÃ0
+            //ä¸ç›¸ç­‰çš„ç»“æœè®¾ç½®0
             sb.append("M=0 ");
             sb.append("@"+lable+" ");  //@eq_0
 
             //sb.append("D;JNE ");
             sb.append("D;%1$s ");
 
-            //ÏàµÈµÄ½á¹ûÉèÖÃÎª-1
+            //ç›¸ç­‰çš„ç»“æœè®¾ç½®ä¸º-1
             sb.append("@SP ");
             sb.append("A=M-1 ");
             sb.append("M=-1 ");
 
-            //ÉèÖÃ±êÇ©
+            //è®¾ç½®æ ‡ç­¾
             //(eq_0)
             sb.append("("+lable+") ");
 
@@ -362,14 +362,14 @@ public class CodeWriter {
          **/
         private static String getAndOrAddSubAssemInfo(String command) {
            /*
-                ÊµÏÖµÄÖ¸Áî£ºadd sub and or
+                å®ç°çš„æŒ‡ä»¤ï¼šadd sub and or
             @SP
             AM=M-1
             D=M                 y=D
             A=A-1
             D=M+D               x=M
 
-                 ÉèÖÃ·µ»Ø½á¹û
+                 è®¾ç½®è¿”å›ç»“æœ
             @SP
             A=M-1
             M=D
@@ -388,25 +388,25 @@ public class CodeWriter {
             sb.append("A=M-1 ");
             sb.append("M=D ");
 
-            //Ìæ»»ÏàÓ¦¼ÆËã×Ö·û
+            //æ›¿æ¢ç›¸åº”è®¡ç®—å­—ç¬¦
             String returnAsserbler = String.format(sb.toString(), computeTypes.get(command));
             return returnAsserbler;
         }
 
         /**
-         * not neg Ö¸Áî»ã±à·­Òë
+         * not neg æŒ‡ä»¤æ±‡ç¼–ç¿»è¯‘
          *
          * @param: command
          * @return: java.lang.String
          **/
         private static String getNegNotAssemInfo(String command) {
            /*
-                ÊµÏÖµÄÖ¸Áî£ºneg not
+                å®ç°çš„æŒ‡ä»¤ï¼šneg not
             @SP
             AM=M-1
             D=M                 y=D
 
-            M=!D                ¶ÔÊı¾İ½øĞĞ not neg²Ù×÷
+            M=!D                å¯¹æ•°æ®è¿›è¡Œ not negæ“ä½œ
            */
 
             StringBuilder sb = new StringBuilder();
@@ -423,7 +423,7 @@ public class CodeWriter {
 
 
     /**
-     * vm ·­ÒëÎª »ã±àµÄ¹¤¾ß- ÄÚ´æ·ÃÎÊÃüÁî
+     * vm ç¿»è¯‘ä¸º æ±‡ç¼–çš„å·¥å…·- å†…å­˜è®¿é—®å‘½ä»¤
      *
      * @author jiaolong
      * @date 2024-1-25 15:41
@@ -444,7 +444,7 @@ public class CodeWriter {
 
         private static String getPushConstantAssemblerInfo(String index) {
             /*
-                ÊµÏÖ push constant Ö¸Áî-ÈëÕ»
+                å®ç° push constant æŒ‡ä»¤-å…¥æ ˆ
                     @17 D=A @SP A=M M=D @SP M=M+1
             */
 
@@ -457,23 +457,23 @@ public class CodeWriter {
         private static String getPushTempPointerStaticAssemblerInfo(String segment, String index){
 
             /*
-                   ÊµÏÖ push Ö¸Áî-ÈëÕ»
+                   å®ç° push æŒ‡ä»¤-å…¥æ ˆ
                                 push temp 2
                                 push pointer 0
                                 push static 0
 
-                    @5+index  ¼ÆËãÕæÊµµØÖ·
+                    @5+index  è®¡ç®—çœŸå®åœ°å€
                     D=M
 
                     @SP
-                    A=M		»ñÈ¡Õ»¶¥ÔªËØµØÖ·
-                    M=D     ½«Êı¾İ·ÅÈëÕ»
+                    A=M		è·å–æ ˆé¡¶å…ƒç´ åœ°å€
+                    M=D     å°†æ•°æ®æ”¾å…¥æ ˆ
 
-                    @SP		Õ»Ö¸Õë¼Ó1
+                    @SP		æ ˆæŒ‡é’ˆåŠ 1
                     M=M+1
             */
 
-            //»ñÈ¡ÕæÊÇµØÖ·
+            //è·å–çœŸæ˜¯åœ°å€
             String readAddress = "";
             if(segment.equals("temp")){
                  readAddress = PubConst.SEGMENT_TEMP+Integer.valueOf(index)+"";
@@ -506,7 +506,7 @@ public class CodeWriter {
             }
 
             /*
-                   ÊµÏÖ push Ö¸Áî-ÈëÕ»
+                   å®ç° push æŒ‡ä»¤-å…¥æ ˆ
                                 push local 0
                                 push argument 2
                                 push this 2
@@ -514,17 +514,17 @@ public class CodeWriter {
                                 push temp 2
 
                     @segmentAddress
-                    D=M     »ñÈ¡¶ÎµØÖ·
+                    D=M     è·å–æ®µåœ°å€
 
-                    @index  ¼ÆËãÕæÊµµØÖ·
+                    @index  è®¡ç®—çœŸå®åœ°å€
                     A=D+A
                     D=M
 
                     @SP
-                    A=M		»ñÈ¡Õ»¶¥ÔªËØµØÖ·
-                    M=D     ½«Êı¾İ·ÅÈëÕ»
+                    A=M		è·å–æ ˆé¡¶å…ƒç´ åœ°å€
+                    M=D     å°†æ•°æ®æ”¾å…¥æ ˆ
 
-                    @SP		Õ»Ö¸Õë¼Ó1
+                    @SP		æ ˆæŒ‡é’ˆåŠ 1
                     M=M+1
             */
             StringBuilder sb = new StringBuilder();
@@ -548,7 +548,7 @@ public class CodeWriter {
 
         private static String getPopLocaArgThisThatAssemblerInfo(String segment, String index){
 
-            //ÁÙÊ±×Ö¶ÎµØÖ·
+            //ä¸´æ—¶å­—æ®µåœ°å€
             int temp0Address = PubConst.SEGMENT_TEMP;
             int temp1Address = temp0Address+1;
 
@@ -558,37 +558,37 @@ public class CodeWriter {
             }
 
             /*
-                   ÊµÏÖ pop Ö¸Áî-³öÕ»
+                   å®ç° pop æŒ‡ä»¤-å‡ºæ ˆ
                               pop local 0
                               pop argument 2
                               pop this 2
                               pop that 2
-        »ñÈ¡Êı¾İ
+        è·å–æ•°æ®
                     @SP
                     A=M-1
-                    D=M     »ñÈ¡Õ»¶¥Êı¾İ
+                    D=M     è·å–æ ˆé¡¶æ•°æ®
               1
                     @temp0Address
-                    M=D     ½«Õ»¶¥Êı¾İ´æ·Åtemp5ÖĞ
+                    M=D     å°†æ ˆé¡¶æ•°æ®å­˜æ”¾temp5ä¸­
 
 
                     @segmentAddress
-                    D=M     »ñÈ¡¶ÎµØÖ·
+                    D=M     è·å–æ®µåœ°å€
                     @index
-                    D=D+A   ¼ÆËãÕæÊµµØÖ·
+                    D=D+A   è®¡ç®—çœŸå®åœ°å€
               2
                     @temp1Address
-                    M=D     ½«¶ÎµÄÕæÊµµØÖ·temp6ÖĞ
+                    M=D     å°†æ®µçš„çœŸå®åœ°å€temp6ä¸­
 
-        ²Ù×÷Êı¾İ
+        æ“ä½œæ•°æ®
                     @temp0Address
                     D=M
 
                     @temp1Address
                     A=M
-                    M=D    ½«Õ»Êı¾İ ·ÅÈë Ö¸¶¨Î»ÖÃ
+                    M=D    å°†æ ˆæ•°æ® æ”¾å…¥ æŒ‡å®šä½ç½®
 
-                    @SP		Õ»Ö¸Õë¼õ1
+                    @SP		æ ˆæŒ‡é’ˆå‡1
                     M=M-1
             */
             StringBuilder sb = new StringBuilder();
@@ -610,19 +610,19 @@ public class CodeWriter {
         private static String getPopTempPointerStaticAssemblerInfo(String segment, String index){
 
              /*
-                   ÊµÏÖ pop Ö¸Áî-³öÕ»
+                   å®ç° pop æŒ‡ä»¤-å‡ºæ ˆ
                               pop temp 0
                               pop pointer 0
                               pop static 0
                     @SP
                     A=M-1
-                    D=M     »ñÈ¡Õ»¶¥Êı¾İ
+                    D=M     è·å–æ ˆé¡¶æ•°æ®
 
                     @temp+index
-                    M=D     ½«Õ»¶¥Êı¾İ´æ·Åtemp5ÖĞ
+                    M=D     å°†æ ˆé¡¶æ•°æ®å­˜æ”¾temp5ä¸­
             */
 
-            //ÁÙÊ±×Ö¶ÎµØÖ·
+            //ä¸´æ—¶å­—æ®µåœ°å€
             String readAddress = "";
             if(segment.equals("temp")){
                 readAddress = PubConst.SEGMENT_TEMP+Integer.valueOf(index)+"";
