@@ -1,8 +1,9 @@
-package issue.concurrency;
-
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 网站访客统计Demo
+ */
 public class Demo {
     // 网站总访问量：volatile保证线程可见性,便于在下面逻辑中 -> 保证多线程之间每次获取到的count是最新值
     volatile static int count = 0;

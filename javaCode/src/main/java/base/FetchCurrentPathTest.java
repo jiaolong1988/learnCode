@@ -11,7 +11,6 @@ import java.io.IOException;
 public class FetchCurrentPathTest {
     public static void main(String[] args) throws IOException {
 
-        Thread t;
         System.out.println("===获取当前项目路径");
         File f = new File("");
         System.out.println(f.getAbsolutePath());
