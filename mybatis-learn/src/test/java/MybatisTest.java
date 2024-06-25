@@ -1,19 +1,21 @@
-
 import dao.EmployeeMapper;
 import model.Employee;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.log4j.Logger;
 
 import java.io.InputStream;
 import java.util.List;
 
 /**
  * @author: jiaolong
- * @date: 2024/06/17 10:29
+ * @date: 2024/06/25 11:59
  **/
-public class Test {
+public class MybatisTest {
+    private static Logger logger = Logger.getLogger(MybatisTest.class);
+
     public static void main(String[] args) throws Exception {
 
 //第一步：读取mybatis-config.xml配置文件
@@ -31,10 +33,11 @@ public class Test {
 //第五步：调用Mapper接口对象的方法操作数据库；
         List<Employee> employee = mapper.getQuery();
         System.out.println(employee);
-////
-//        //第六步：业务处理
-//        log.info("查询结果: " + uUserInfo.getId() + "--" + uUserInfo.getPhone());
 
+//第六步：业务处理
+        for(Employee e :employee){
+            logger.info("查询结果: " + e.getId() + "--" + e.getEmail());
+        }
 
     }
 }
