@@ -2,6 +2,9 @@ package thread;
 
 /**
  *  每个线程都有独立的变量副本。线程不销毁，threadlocal的变量会一直存在。
+ *  https://zhuanlan.zhihu.com/p/102744180
+ *  https://www.zhihu.com/question/341005993
+ *
  * @author: jiaolong
  * @date: 2024/06/20 15:07
  **/
