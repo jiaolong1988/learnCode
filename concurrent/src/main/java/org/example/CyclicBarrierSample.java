@@ -42,8 +42,9 @@ public class CyclicBarrierSample {
 					 * 3.await()返回的是 当前线程的到达索引，既getParty() - 1 ，零表示最后一个到达，开始执行任务返回索引值.
 					  **/				 
 					int arrivalIndex =  barrier.await();
-					System.out.println(Thread.currentThread().getName()+" 执行具体任务"+i+"  "+arrivalIndex);
-					
+					//开始执行具体任务
+					System.out.println("--->"+Thread.currentThread().getName()+" 开始执行具体任务"+i+"  序号："+arrivalIndex);
+					System.out.println("			..."+Thread.currentThread().getName());
 				}
 			} catch (BrokenBarrierException e) {
 				e.printStackTrace();
