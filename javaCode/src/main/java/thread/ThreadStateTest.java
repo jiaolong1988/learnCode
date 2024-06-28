@@ -1,6 +1,8 @@
 package thread;
 
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
 /**
  * 1. 初始(NEW)：新创建了一个线程对象，但还没有调用start()方法。
  * 2. 运行(RUNNABLE)：Java线程中将就绪（ready）和运行中（running）两种状态笼统的称为“运行”。
@@ -16,21 +18,30 @@ package thread;
  **/
 public class ThreadStateTest {
     public static void main(String[] args) throws InterruptedException {
-        //  testRunnable();
-        //  testBlocked();
-        //  testWaiting();
-        //  testTimedWaiting();
-        //  testTerminated();
+        //testNew();        // 0
+        //testRunnable();   //2
+        //testBlocked();    //5
+        //testWaiting();      //401
+        //testTimedWaiting();
+        //testTerminated();
     }
 
-    public static void testRunnable(){
-		//1.线程RUNNABLE
-		Thread thread = new Thread(() -> {});
-		thread.start();
-		System.out.println(thread.getState());
+    public static void testNew() {
+        //NEW
+        Thread thread = new Thread(() -> {
+        });
+        System.out.println(thread.getState());
     }
 
-    public static void testBlocked()throws InterruptedException{
+    public static void testRunnable() {
+        //1.线程RUNNABLE
+        Thread thread = new Thread(() -> {
+        });
+        thread.start();
+        System.out.println(thread.getState());
+    }
+
+    public static void testBlocked() throws InterruptedException {
         //2.BLOCKED
         Thread t1 = new Thread(new DemoThreadB());
         Thread t2 = new Thread(new DemoThreadB());
@@ -44,52 +55,53 @@ public class ThreadStateTest {
 
     /**
      * WAITING-无时间参数等待
+     *
      * @return: void
      **/
-    public static void testWaiting()throws InterruptedException{
-		//3.WAITING-无时间参数等待
-		Thread main = Thread.currentThread();
+    public static void testWaiting() throws InterruptedException {
+        //3.WAITING-无时间参数等待
+        Thread main = Thread.currentThread();
 
-		Thread thread2 = new Thread(() -> {
-			try {
-				Thread.sleep(1000*10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			System.out.println("mainThread Status:"+main.getState());
-		});
+        Thread thread2 = new Thread(() -> {
+            try {
+                Thread.sleep(1000 * 10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("mainThread Status: " + main.getState());
+        });
 
-		thread2.start();
+        thread2.start();
         //等待线程2任务完成，此时的main主线程为WAITING
-		thread2.join();
+        thread2.join();
     }
 
 
-    public static void testTimedWaiting()throws InterruptedException{
+    public static void testTimedWaiting() throws InterruptedException {
         //4.TIMED_WAITING
-		Thread thread3 = new Thread(() -> {
-			try {
-				Thread.sleep(3000);
-			} catch (InterruptedException e) {
-			//	Thread.currentThread().interrupt();
-				e.printStackTrace();
-			}
-		});
-		thread3.start();
+        Thread thread3 = new Thread(() -> {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                //	Thread.currentThread().interrupt();
+                e.printStackTrace();
+            }
+        });
+        thread3.start();
 
-		Thread.sleep(1000);
-		System.out.println(thread3.getState());
+        Thread.sleep(1000);
+        System.out.println(thread3.getState());
     }
+
     public static void testTerminated() throws InterruptedException {
-		//1.线程TERMINATED
-		Thread thread = new Thread(() -> {});
-		thread.start();
-		Thread.sleep(1000);//TERMINATED
-		System.out.println(thread.getState());
+        //1.线程TERMINATED
+        Thread thread = new Thread(() -> {
+        });
+        thread.start();
+        Thread.sleep(1000);//TERMINATED
+        System.out.println(thread.getState());
     }
 }
-
-
 
 
 class DemoThreadB implements Runnable {
@@ -99,7 +111,7 @@ class DemoThreadB implements Runnable {
     }
 
     public static synchronized void commonResource() {
-        while(true) {
+        while (true) {
 
         }
     }

@@ -35,7 +35,7 @@ public class InterruptThreadTest {
         return new InterruptThread();
     }
 
-    class InterruptThread extends Thread {
+    private class InterruptThread extends Thread {
 
         @Override
         public void run() {

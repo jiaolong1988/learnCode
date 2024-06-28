@@ -10,11 +10,11 @@ public class CountDownLatchExample {
 
 	public static void main(String[] args) throws InterruptedException {
 		// 这里不推荐这样创建线程池，最好通过 ThreadPoolExecutor 手动创建线程池
-		ExecutorService executorService = Executors.newFixedThreadPool(2);
+		ExecutorService executorService = Executors.newFixedThreadPool(1);
 
 		executorService.submit(() -> {
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} finally {
@@ -26,7 +26,7 @@ public class CountDownLatchExample {
 
 		executorService.submit(() -> {
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(6000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} finally {

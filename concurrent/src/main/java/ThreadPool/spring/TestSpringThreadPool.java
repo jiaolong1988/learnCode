@@ -1,4 +1,4 @@
-package ThreadPool;
+package ThreadPool.spring;
 
 import java.util.concurrent.TimeUnit;
 
@@ -6,13 +6,13 @@ import java.util.concurrent.TimeUnit;
  * @author: jiaolong
  * @date: 2024/03/13 16:51
  **/
-public class ThreadTest {
+public class TestSpringThreadPool {
     public static void main(String[] args) throws InterruptedException {
 
         //非法参数
-       // IllegalThreadStateErrorTest();
+        IllegalThreadStateErrorTest();
 
-        threadPoolShutdown();
+    //    threadPoolShutdown();
     }
 
     private static void threadPoolShutdown() throws InterruptedException {
@@ -21,7 +21,6 @@ public class ThreadTest {
 
         t.doService();
         TimeUnit.SECONDS.sleep(10);
-        t.close();
 
         System.out.println("wait......");
 
@@ -38,13 +37,15 @@ public class ThreadTest {
      * @return: void
      **/
     private static void IllegalThreadStateErrorTest() throws InterruptedException {
+
+        //这是一个线程类，多次start 会出错
         ThreadPoolTaskTestError t=  new ThreadPoolTaskTestError();
 
         t.doService();
         TimeUnit.SECONDS.sleep(10);
         t.close();
 
-        System.out.println("wait......");
+        System.out.println("---> 第一次执行 doService 完毕。 线程状态："+ t.getState());
 
         //第二次执行 Exception in thread "main" java.lang.IllegalThreadStateException
         t.doService();
