@@ -1,4 +1,4 @@
-package thread;
+package thread.interrupt;
 
 /**
  * 增加标志位，用于控制线程的退出。

@@ -1,4 +1,4 @@
-package thread;
+package thread.interrupt;
 
 /**
  * 当调用第三方代码 没有处理中断异常时，Thread.isInterrupted(),是无法判断线程是否被总段。
