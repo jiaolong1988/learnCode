@@ -1,4 +1,4 @@
-package org.example;
+package org.example.sync;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 

@@ -1,4 +1,4 @@
-package org.example.locak;
+package org.example.lock;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
