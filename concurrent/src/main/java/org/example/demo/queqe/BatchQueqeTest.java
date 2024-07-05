@@ -1,4 +1,4 @@
-package org.example.queqe;
+package org.example.demo.queqe;
 
 
 import java.util.LinkedList;
