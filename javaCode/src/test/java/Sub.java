@@ -1,0 +1,31 @@
+/**
+ * @author: jiaolong
+ * @date: 2024/08/23 16:01
+ **/
+class Parent{
+    public static String parentStr= "parent static string";
+    static{
+        System.out.println("parent static fields");
+        System.out.println(parentStr);
+    }
+    public Parent(){
+        System.out.println("parent instance initialization");
+    }
+}
+
+public class Sub extends Parent{
+    public static String subStr= "sub static string";
+    static{
+        System.out.println("sub static fields");
+        System.out.println(subStr);
+    }
+
+    public Sub(){
+        System.out.println("sub instance initialization");
+    }
+
+    public static void main(String[] args){
+        System.out.println("sub main");
+        new Sub();
+    }
+}
