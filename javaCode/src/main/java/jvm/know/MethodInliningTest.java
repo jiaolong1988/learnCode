@@ -1,4 +1,4 @@
-package jvm;
+package jvm.know;
 
 /**
  * 方法内联（method inlining）

@@ -1,4 +1,4 @@
-package jvm;
+package jvm.know;
 
 /**
  * 逃逸分析（Escape Analysis）是判断一个对象是否被外部方法引用或外部线程访问的分析技术，编译器会根据逃逸分析的结果对代码进行优化。
