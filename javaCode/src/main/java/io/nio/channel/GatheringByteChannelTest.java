@@ -1,6 +1,9 @@
 package io.nio.channel;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.channels.GatheringByteChannel;
 import java.io.FileOutputStream;
 import java.util.Random;
@@ -12,19 +15,24 @@ import java.util.LinkedList;
  * @author jiaolong
  * @date 2024-8-9 16:45
  */
-public class Marketing {
+public class GatheringByteChannelTest {
     private static final String DEMOGRAPHIC = "blahblah.txt";
 
-    public static void main(String[] argv)  throws Exception {
+    public static void main(String[] argv) throws Exception {
 
         FileOutputStream fos = new FileOutputStream(DEMOGRAPHIC);
         GatheringByteChannel gatherChannel = fos.getChannel();
+        FileChannel x;
 
         int reps = 10;
         ByteBuffer[] bs = utterBS(reps);
 
-        //判断写入的数据是否 大于 0
-        while (gatherChannel.write(bs) > 0) {
+        try {
+            //判断写入的数据是否 大于 0
+            while (gatherChannel.write(bs) > 0) {
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         System.out.println("Mindshare paradigms synergized to "+ DEMOGRAPHIC);
@@ -50,7 +58,7 @@ public class Marketing {
     private static String newline = System.getProperty("line.separator");
 
     // 创建buffer数组
-    private static ByteBuffer[] utterBS(int howMany)  throws Exception {
+    private static ByteBuffer[] utterBS(int howMany) throws Exception {
         List list = new LinkedList();
         for (int i = 0; i < howMany; i++) {
             list.add(pickRandom(col1, " "));

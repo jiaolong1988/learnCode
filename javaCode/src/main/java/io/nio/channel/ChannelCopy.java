@@ -1,31 +1,31 @@
 package io.nio.channel;
 
 import java.io.IOException;
+import java.lang.annotation.Target;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 
 /**
+ * channel 进行文件写入
  * @author: jiaolong
  * @date: 2024/08/02 11:51
  **/
-public class ChannelCopy
-{
-    /**
-     * This code copies data from stdin to stdout. Like the 'cat'
-     * command, but without any useful options.
-     */
-    public static void main (String [] argv)
-            throws IOException
-    {
-        ReadableByteChannel source = Channels.newChannel (System.in);
-        WritableByteChannel dest = Channels.newChannel (System.out);
-        channelCopy1 (source, dest);
-// alternatively, call channelCopy2 (source, dest);
-        source.close( );
-        dest.close( );
+public class ChannelCopy {
+
+    public static void main(String[] argv) throws IOException {
+
+        ReadableByteChannel source = Channels.newChannel(System.in);
+        WritableByteChannel dest = Channels.newChannel(System.out);
+
+        channelCopy1(source, dest);
+    //  channelCopy2 (source, dest);
+
+        source.close();
+        dest.close();
     }
+
     /**
      * Channel copy method 1. This method copies data from the src
      * channel and writes it to the dest channel until EOF on src.
@@ -34,27 +34,27 @@ public class ChannelCopy
      * may result in data copying, but minimizes system calls. It also
      * requires a cleanup loop to make sure all the data gets sent.
      */
-    private static void channelCopy1 (ReadableByteChannel src,
-                                      WritableByteChannel dest)
-            throws IOException
-    {
-        ByteBuffer buffer = ByteBuffer.allocateDirect (16 * 1024);
-        while (src.read (buffer) != -1) {
+    private static void channelCopy1(ReadableByteChannel src,
+                                     WritableByteChannel dest)
+            throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocateDirect(16 * 1024);
+        while (src.read(buffer) != -1) {
 // Prepare the buffer to be drained
-            buffer.flip( );
+            buffer.flip();
 // Write to the channel; may block
-            dest.write (buffer);
+            dest.write(buffer);
 // If partial transfer, shift remainder down
 // If buffer is empty, same as doing clear( )
-            buffer.compact( );
+            buffer.compact();
         }
 // EOF will leave buffer in fill state
-        buffer.flip( );
+        buffer.flip();
 // Make sure that the buffer is fully drained
-        while (buffer.hasRemaining( )) {
-            dest.write (buffer);
+        while (buffer.hasRemaining()) {
+            dest.write(buffer);
         }
     }
+
     /**
      * Channel copy method 2. This method performs the same copy, but
      * assures the temp buffer is empty before reading more data. This
@@ -62,20 +62,19 @@ public class ChannelCopy
      * No post-loop cleanup is needed because the buffer will be empty
      * when the loop is exited.
      */
-    private static void channelCopy2 (ReadableByteChannel src,
-                                      WritableByteChannel dest)
-            throws IOException
-    {
-        ByteBuffer buffer = ByteBuffer.allocateDirect (16 * 1024);
-        while (src.read (buffer) != -1) {
+    private static void channelCopy2(ReadableByteChannel src,
+                                     WritableByteChannel dest)
+            throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocateDirect(16 * 1024);
+        while (src.read(buffer) != -1) {
 // Prepare the buffer to be drained
-            buffer.flip( );
+            buffer.flip();
 // Make sure that the buffer was fully drained
-            while (buffer.hasRemaining( )) {
-                dest.write (buffer);
+            while (buffer.hasRemaining()) {
+                dest.write(buffer);
             }
 // Make the buffer empty, ready for filling
-            buffer.clear( );
+            buffer.clear();
         }
     }
 }
