@@ -14,6 +14,18 @@ public class GCLogIngTest {
         OutOfMemoryErrorDumpFile();
     }
 
+    //生成GC日志
+    public static void printGcLog() {
+        /*
+            -XX:+PrintGCDetails 输出GC 的详细日志
+            -XX:+PrintGCDateStamps 输出GC 的时间戳（以日期的形式，如 2013-05-04T21:53:59.234+0800）
+            -XX:+PrintHeapAtGC 在进行GC的前后打印出堆的信息
+            -Xloggc:./logs/gc.log 日志文件的输出路径
+
+            -XX:+PrintGCDateStamps -XX:+PrintGCDetails -Xloggc:./logs/gc-%t.log
+         */
+    }
+
     public static void OutOfMemoryErrorDumpFile() {
         for(int i=0;i<100000000;i++){
             int[] a = new int[SIZE];
@@ -26,20 +38,12 @@ public class GCLogIngTest {
             -XX:+HeapDumpBeforeFullGC              当JVM 执行 FullGC 前执行 dump
             -XX:+HeapDumpAfterFullGC               当JVM 执行 FullGC 后执行 dump
 
+            -Xmx12m -Xms12m -XX:+HeapDumpOnOutOfMemoryError  -XX:+HeapDumpBeforeFullGC  -XX:+HeapDumpAfterFullGC
             -Xmx12m -Xms12m -XX:+HeapDumpOnOutOfMemoryError  -XX:HeapDumpPath=./logs/jvm.hprof
             -Xmx13m -Xms13m -XX:+HeapDumpBeforeFullGC  -XX:HeapDumpPath=./logs/jvm.hprof
 
         */
     }
-    public static void printGcLog() {
-        /*
-            -XX:+PrintGCDetails 输出GC 的详细日志
-            -XX:+PrintGCDateStamps 输出GC 的时间戳（以日期的形式，如 2013-05-04T21:53:59.234+0800）
-            -XX:+PrintHeapAtGC 在进行GC的前后打印出堆的信息
-            -Xloggc:./logs/gc.log 日志文件的输出路径
 
-            -XX:+PrintGCDateStamps -XX:+PrintGCDetails -Xloggc:./logs/gc-%t.log
-         */
-    }
 
 }
