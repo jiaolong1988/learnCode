@@ -1,3 +1,5 @@
+import java.nio.file.Paths;
+
 /**
  * ++i : 先自增，再赋值
  * i++ : 先赋值，再自增
@@ -6,25 +8,48 @@
  **/
 public class Test {
     public static void main(String[] args) {
-      /*  i++: 先自增，然后返回 自增之前的值
-          ++i: 先自增，然后返回 自增之后的值
-         本质上都是执行了 i = i + 1 操作，只是返回值不同而已
-      */
-
-        int a=1, b=1;
-        System.out.println("a:"+ ++a);  //2
-        System.out.println("a:"+ a);    //2
-        System.out.println("b:"+ b++);  //1
-        System.out.println("b:"+ b);    //2
-
-        System.out.println("================");
-
-        int i = 0;
-        int j = 0;
-        i = i++;  //等同于 i=i
-        System.out.println("i="+i);
-        j = i++;
-        System.out.println("i = " + i + ", j = " + j);
+        int[] a = new int[]{1,2,3};
+        insertionSort(a, a.length);
+        for (int b:a){
+            System.out.println(b);
+        }
     }
 
+    // 插入排序，a 表示数组，n 表示数组大小
+    public static void insertionSort(int[] a, int n) {
+        if (n <= 1) return;
+
+        for (int i = 1; i < n; ++i) {
+            int value = a[i];
+            int j = i - 1;
+            // 查找插入的位置
+            for (; j >= 0; j--) {
+                if (a[j] > value) {
+                    a[j+1] = a[j];  // 数据移动
+                } else {
+                    break;
+                }
+            }
+            a[j+1] = value; // 插入数据
+        }
+    }
+
+    // 冒泡排序，a 表示数组，n 表示数组大小
+    public static void bubbleSort(int[] a, int n) {
+        if (n <= 1) return;
+
+        for (int i = 0; i < n; ++i) {
+            // 提前退出冒泡循环的标志位
+            boolean flag = false;
+            for (int j = 0; j < n - i - 1; ++j) {
+                if (a[j] > a[j+1]) { // 交换
+                    int tmp = a[j];
+                    a[j] = a[j+1];
+                    a[j+1] = tmp;
+                    flag = true;  // 表示有数据交换
+                }
+            }
+            if (!flag) break;  // 没有数据交换，提前退出
+        }
+    }
 }
