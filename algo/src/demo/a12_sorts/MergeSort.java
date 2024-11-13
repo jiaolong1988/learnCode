@@ -4,6 +4,11 @@ package demo.a12_sorts;
  * Created by wangzheng on 2018/10/16.
  */
 public class MergeSort {
+  public static void main(String[] args) {
+      int[] arr = {3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5};
+      mergeSort(arr, arr.length);
+      System.out.println(java.util.Arrays.toString(arr));
+  }
 
   // 归并排序算法, a是数组，n表示数组大小
   public static void mergeSort(int[] a, int n) {
