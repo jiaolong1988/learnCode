@@ -8,10 +8,12 @@ import java.nio.file.Paths;
  **/
 public class Test {
     public static void main(String[] args) {
-        int[] a = new int[]{1,2,3};
-        insertionSort(a, a.length);
-        for (int b:a){
-            System.out.println(b);
+        for (int i = 0; i < 3; i++) {
+            System.out.println(i);
+        }
+        System.out.println("=====");
+        for (int i = 0; i < 3; ++i) {
+            System.out.println(i);
         }
     }
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 单链表反序
  * @author: jiaolong
  * @date: 2024/11/12 10:27
  **/

@@ -1,6 +1,7 @@
 package demo.a12_sorts;
 
 /**
+ * 归并排序
  * Created by wangzheng on 2018/10/16.
  */
 public class MergeSort {
