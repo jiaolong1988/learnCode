@@ -1,4 +1,4 @@
-package reflect;
+package reflect.util;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * ÊôĞÔ´¦ÀíÊµÏÖÀà
+ * å±æ€§å¤„ç†å®ç°ç±»
  * 
  */
 public class BeanObjectSetValueUtil  {
@@ -15,11 +15,11 @@ public class BeanObjectSetValueUtil  {
 
 	public void executeMethod(Object object, Object argBean, Method method) {
 		try {
-			//»ñÈ¡·½·¨µÄ²ÎÊıÀàĞÍ
+			//è·å–æ–¹æ³•çš„å‚æ•°ç±»å‹
 			Class<?>[] parameterTypes = method.getParameterTypes();
-			//Èç¹û²ÎÊıÊıÁ¿²»Îª1£¬Ôò²»Ö´ĞĞ¸Ã·½·¨
+			//å¦‚æœå‚æ•°æ•°é‡ä¸ä¸º1ï¼Œåˆ™ä¸æ‰§è¡Œè¯¥æ–¹æ³•
 			if (parameterTypes.length == 1) {
-				//Èç¹û²ÎÊıÀàĞÍ²»Ò»Ñù, Ôò²»Ö´ĞĞ·½·¨
+				//å¦‚æœå‚æ•°ç±»å‹ä¸ä¸€æ ·, åˆ™ä¸æ‰§è¡Œæ–¹æ³•
 				if (isMethodArgs(method, parameterTypes[0])) {
 					method.invoke(object, argBean);
 				}
@@ -30,12 +30,12 @@ public class BeanObjectSetValueUtil  {
 	}
 
 	/**
-	 * ÉèÖÃ¶ÔÏóµÄÊôĞÔÖµ
+	 * è®¾ç½®å¯¹è±¡çš„å±æ€§å€¼
 	 * @param: obj
 	 * @param: properties
 	 * @return: T
 	 **/
-	public <T> T setProperties(T obj, Map<String, String> properties) {
+	public <T> T setProperties(T obj, Map<String, Object> properties) {
 		Class<?> clazz = obj.getClass();
 		try {
 			for (String key : properties.keySet()) {
@@ -65,14 +65,14 @@ public class BeanObjectSetValueUtil  {
 	}
 
 	/**
-	 * ·½·¨¼¯ºÏÖĞÑ°ÕÒ²ÎÊıÀàĞÍÊÇinterfacesÆäÖĞÒ»¸öµÄ·½·¨
-	 * @param argClass ²ÎÊıÀàĞÍ
-	 * @param methods ·½·¨¼¯ºÏ
+	 * æ–¹æ³•é›†åˆä¸­å¯»æ‰¾å‚æ•°ç±»å‹æ˜¯interfaceså…¶ä¸­ä¸€ä¸ªçš„æ–¹æ³•
+	 * @param argClass å‚æ•°ç±»å‹
+	 * @param methods æ–¹æ³•é›†åˆ
 	 * @return
 	 */
 	private Method findMethod(Class<?> argClass, List<Method> methods) {
 		for (Method m : methods) {
-			//ÅĞ¶Ï²ÎÊıÀàĞÍÓë·½·¨µÄ²ÎÊıÀàĞÍÊÇ·ñÒ»ÖÂ
+			//åˆ¤æ–­å‚æ•°ç±»å‹ä¸æ–¹æ³•çš„å‚æ•°ç±»å‹æ˜¯å¦ä¸€è‡´
 			if (isMethodArgs(m, argClass)) {
 				return m;
 			}
@@ -81,7 +81,7 @@ public class BeanObjectSetValueUtil  {
 	}
 	
 	/**
-	 * ÅĞ¶Ï²ÎÊıÀàĞÍ(argClass)ÊÇ·ñÊÇ¸Ã·½·¨(m)µÄ²ÎÊıÀàĞÍ
+	 * åˆ¤æ–­å‚æ•°ç±»å‹(argClass)æ˜¯å¦æ˜¯è¯¥æ–¹æ³•(m)çš„å‚æ•°ç±»å‹
 	 * @param m
 	 * @param argClass
 	 * @return
@@ -90,7 +90,7 @@ public class BeanObjectSetValueUtil  {
 		Class<?>[] c = m.getParameterTypes();
 		if (c.length == 1) {
 			try {
-				//½«²ÎÊıÀàĞÍ(argClass)Óë·½·¨ÖĞµÄ²ÎÊıÀàĞÍ½øĞĞÇ¿ÖÆ×ª»», ²»Å×Òì³£·µ»Ø¸ÃMethod
+				//å°†å‚æ•°ç±»å‹(argClass)ä¸æ–¹æ³•ä¸­çš„å‚æ•°ç±»å‹è¿›è¡Œå¼ºåˆ¶è½¬æ¢, ä¸æŠ›å¼‚å¸¸è¿”å›è¯¥Method
 				argClass.asSubclass(c[0]);
 				return true;
 			} catch (ClassCastException e) {
@@ -101,7 +101,7 @@ public class BeanObjectSetValueUtil  {
 	}
 	
 	/**
-	 * ¸ù¾İ·½·¨ÃûºÍ²ÎÊıÀàĞÍµÃµ½·½·¨, Èç¹ûÃ»ÓĞ¸Ã·½·¨·µ»Ønull
+	 * æ ¹æ®æ–¹æ³•åå’Œå‚æ•°ç±»å‹å¾—åˆ°æ–¹æ³•, å¦‚æœæ²¡æœ‰è¯¥æ–¹æ³•è¿”å›null
 	 * @param objClass
 	 * @param methodName
 	 * @param argClass
@@ -117,15 +117,15 @@ public class BeanObjectSetValueUtil  {
 	}
 	
 	private Method getSetterMethod(Class<?> objClass, String methodName, Class<?> argClass) throws NoSuchMethodException {
-		//Ê¹ÓÃÔ­ÀàĞÍ»ñµÃ·½·¨, Èç¹ûÃ»ÓĞÕÒµ½¸Ã·½·¨, ÔòµÃµ½null
+		//ä½¿ç”¨åŸç±»å‹è·å¾—æ–¹æ³•, å¦‚æœæ²¡æœ‰æ‰¾åˆ°è¯¥æ–¹æ³•, åˆ™å¾—åˆ°null
 		Method argClassMethod = getMethod(objClass, methodName, argClass);
-		//Èç¹ûÕÒ²»µ½Ô­ÀàĞÍµÄ·½·¨, ÔòÕÒ¸ÃÀàĞÍËùÊµÏÖµÄ½Ó¿Ú
+		//å¦‚æœæ‰¾ä¸åˆ°åŸç±»å‹çš„æ–¹æ³•, åˆ™æ‰¾è¯¥ç±»å‹æ‰€å®ç°çš„æ¥å£
 		if (argClassMethod == null) {
-			//µÃµ½ËùÓĞÃû×ÖÎªmethodNameµÄ·½·¨
+			//å¾—åˆ°æ‰€æœ‰åå­—ä¸ºmethodNameçš„æ–¹æ³•
 			List<Method> methods = getMethods(objClass, methodName);
 			Method method = findMethod(argClass, methods);
 			if (method == null) {
-				//ÕÒ²»µ½ÈÎºÎ·½·¨
+				//æ‰¾ä¸åˆ°ä»»ä½•æ–¹æ³•
 				throw new NoSuchMethodException(methodName);
 			}
 			return method;
@@ -135,7 +135,7 @@ public class BeanObjectSetValueUtil  {
 	}
 	
 	/**
-	 * µÃµ½ËùÓĞÃû×ÖÎªmethodName²¢ÇÒÖ»ÓĞÒ»¸ö²ÎÊıµÄ·½·¨
+	 * å¾—åˆ°æ‰€æœ‰åå­—ä¸ºmethodNameå¹¶ä¸”åªæœ‰ä¸€ä¸ªå‚æ•°çš„æ–¹æ³•
 	 * @param objClass
 	 * @param methodName
 	 * @return
@@ -144,7 +144,7 @@ public class BeanObjectSetValueUtil  {
 		List<Method> result = new ArrayList<Method>();
 		for (Method m : objClass.getMethods()) {
 			if (m.getName().equals(methodName)) {
-				//µÃµ½·½·¨µÄËùÓĞ²ÎÊı, Èç¹ûÖ»ÓĞÒ»¸ö²ÎÊı, ÔòÌí¼Óµ½¼¯ºÏÖĞ
+				//å¾—åˆ°æ–¹æ³•çš„æ‰€æœ‰å‚æ•°, å¦‚æœåªæœ‰ä¸€ä¸ªå‚æ•°, åˆ™æ·»åŠ åˆ°é›†åˆä¸­
 				Class<?>[] c = m.getParameterTypes();
 				if (c.length == 1) {
 					result.add(m);
@@ -168,7 +168,7 @@ public class BeanObjectSetValueUtil  {
 	
 
 	/**
-	 * ½«setter·½·¨»¹Ô­, setName×÷Îª²ÎÊı, µÃµ½name
+	 * å°†setteræ–¹æ³•è¿˜åŸ, setNameä½œä¸ºå‚æ•°, å¾—åˆ°name
 	 * @param methodName
 	 * @return
 	 */
@@ -180,7 +180,7 @@ public class BeanObjectSetValueUtil  {
 	}
 
 	/**
-	 * »ñµÃÒ»¸öObjectµÄclass
+	 * è·å¾—ä¸€ä¸ªObjectçš„class
 	 * @param obj
 	 * @return
 	 */
@@ -215,7 +215,7 @@ public class BeanObjectSetValueUtil  {
 //	}
 	
 	/**
-	 * ·µ»ØÒ»¸öÊôĞÔµÄsetter·½·¨
+	 * è¿”å›ä¸€ä¸ªå±æ€§çš„setteræ–¹æ³•
 	 * @param propertyName
 	 * @return
 	 */
@@ -224,7 +224,7 @@ public class BeanObjectSetValueUtil  {
 	}
 	
 	/**
-	 * ½«²ÎÊısµÄÊ××ÖÄ¸±äÎª´óĞ´
+	 * å°†å‚æ•°sçš„é¦–å­—æ¯å˜ä¸ºå¤§å†™
 	 * @param
 	 * @return
 	 */

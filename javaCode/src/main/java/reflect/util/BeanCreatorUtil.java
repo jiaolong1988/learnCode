@@ -1,4 +1,4 @@
-package reflect;
+package reflect.util;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ public class BeanCreatorUtil  {
 	 * @param clazz
 	 * @return
 	 */
-	public <T> T createBeanUseDefaultConstruct(Class<T> clazz) {
+	public  <T> T createBeanUseDefaultConstruct(Class<T> clazz) {
 		try {
 			return clazz.newInstance();
 		}  catch (Exception e) {
@@ -29,7 +29,7 @@ public class BeanCreatorUtil  {
 	 * @param args 参数集合
 	 * @return
 	 */
-	public <T> T createBeanUseDefineConstruce(Class<T> clazz, Object ... args) {
+	public  <T> T createBeanUseDefineConstruce(final Class<T> clazz, Object ... args) {
 		Class<?>[] argsClass = getArgsClasses(args);
 		try {
 			Constructor<T> constructor = findConstructor(clazz, argsClass);
@@ -64,7 +64,7 @@ public class BeanCreatorUtil  {
 	 * @return
 	 * @throws NoSuchMethodException
 	 */
-	private <T> Constructor<T> findConstructor(Class<T> clazz, Class<?>[] argsClass)throws NoSuchMethodException {
+	private  <T> Constructor<T> findConstructor(Class<T> clazz, Class<?>[] argsClass)throws NoSuchMethodException {
 		Constructor<T> constructor = getConstructor(clazz, argsClass);
 		if (constructor == null) {
 			System.out.println("creating object of constructor method does immediate get");
@@ -93,7 +93,7 @@ public class BeanCreatorUtil  {
 	 * @param argsClass 构造参数
 	 * @return
 	 */
-	private <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>[] argsClass) {
+	private   <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>[] argsClass) {
 		try {
 			Constructor<T> constructor = clazz.getConstructor(argsClass);
 			return constructor;
@@ -108,7 +108,7 @@ public class BeanCreatorUtil  {
 	 * @param constructorArgsCLass
 	 * @return
 	 */
-	private boolean isSameArgs(Class<?>[] argsClass, Class<?>[] constructorArgsCLass) {
+	private  boolean isSameArgs(Class<?>[] argsClass, Class<?>[] constructorArgsCLass) {
 		for (int i = 0; i < argsClass.length; i++) {
 			try {
 				//将参数类型与构造器中的参数类型进行强制转换
@@ -131,7 +131,7 @@ public class BeanCreatorUtil  {
 	 * @param obj
 	 * @return
 	 */
-	private Class<?> getClass(Object obj) {
+	private  Class<?> getClass(Object obj) {
 		if (obj instanceof Integer) {
 			return Integer.TYPE;
 		} else if (obj instanceof Boolean) {

@@ -18,6 +18,8 @@ public class StringObjectTest {
         System.out.println(System.identityHashCode(a));
         System.out.println(System.identityHashCode(b));
 
+        System.out.println("======");
+
         //将常量池对象 的引用 赋值给变量(如果对象不存在，会在运行时常量池中创建字符串对象。)
         String e = a.intern();
         String f = b.intern();
