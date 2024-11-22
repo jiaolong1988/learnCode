@@ -3,22 +3,22 @@ package designPatterns.Decorator;
 /**
  * @author jiaolong
  * @date 2024-1-10 10:21
- * Î´Ê¹ÓÃ×°ÊÎÄ£Ê½ÊµÏÖ¹¦ÄÜÀ©Õ¹-»ù´¡°æ±¾
+ * æœªä½¿ç”¨è£…é¥°æ¨¡å¼å®ç°åŠŸèƒ½æ‰©å±•-åŸºç¡€ç‰ˆæœ¬
  */
 public class NoDecoratorTest {
 
 
 	public static void main(String[] args) {
-		Person xc = new Person("Ğ¡²Ë");
+		Person xc = new Person("å°èœ");
         xc.Show();
 
-		System.out.println("µÚÒ»ÖÖ×°°ç£º");
+		System.out.println("ç¬¬ä¸€ç§è£…æ‰®ï¼š");
 		xc.WearTShirts();
 		xc.WearBigTrouser();
 		xc.WearSneakers();
 		xc.Show();
 
-		System.out.println("\nµÚ¶şÖÖ×°°ç£º");
+		System.out.println("\nç¬¬äºŒç§è£…æ‰®ï¼š");
 		xc.WearSuit();
 		xc.WearTie();
 		xc.WearLeatherShoes();
@@ -35,36 +35,36 @@ class Person {
  
     public void WearTShirts()
     {
-       System.out.println("´óTĞô ");
+       System.out.println("å¤§Tæ¤ ");
     }
  
     public void WearBigTrouser()
     {
-       System.out.println("¿å¿ã ");
+       System.out.println("å®è£¤ ");
     }
  
     public void WearSneakers()
     {
-       System.out.println("ÆÆÇòĞ¬ ");
+       System.out.println("ç ´çƒé‹ ");
     }
  
     public void WearSuit()
     {
-       System.out.println("Î÷×° ");
+       System.out.println("è¥¿è£… ");
     }
  
     public void WearTie()
     {
-       System.out.println("Áì´ø ");
+       System.out.println("é¢†å¸¦ ");
     }
  
     public void WearLeatherShoes()
     {
-       System.out.println("Æ¤Ğ¬ ");
+       System.out.println("çš®é‹ ");
     }
  
     public void Show()
     {
-        System.out.println(String.format("×°°çµÄ%1$s", name));
+        System.out.println(String.format("è£…æ‰®çš„%1$s", name));
     }
 }

@@ -3,7 +3,7 @@ package designPatterns.Template;
 /**
  * @author jiaolong
  * @date 2024/01/19 14:26
- * @description: Ä£°å·½·¨Ä£Ê½
+ * @description: æ¨¡æ¿æ–¹æ³•æ¨¡å¼
  */
 public class TemplageMethodPattern {
     public static void main(String[] args) {
@@ -23,30 +23,30 @@ abstract class AbstractClass{
     public void templateMethod(){
         primitiveOperation1();
         primitiveOperation2();
-        System.out.println("Ö´ĞĞ½áÊø¡£¡£¡£");
+        System.out.println("æ‰§è¡Œç»“æŸã€‚ã€‚ã€‚");
     }
 }
-//¾ßÌåÀà
+//å…·ä½“ç±»
 class ConcreteClassA extends AbstractClass{
     @Override
     public void primitiveOperation1() {
-        System.out.println("¾ßÌåÀàA·½·¨1ÊµÏÖ");
+        System.out.println("å…·ä½“ç±»Aæ–¹æ³•1å®ç°");
     }
 
     @Override
     public void primitiveOperation2() {
-        System.out.println("¾ßÌåÀàA·½·¨2ÊµÏÖ");
+        System.out.println("å…·ä½“ç±»Aæ–¹æ³•2å®ç°");
     }
 }
 
 class ConcreteClassB extends AbstractClass{
     @Override
     public void primitiveOperation1() {
-        System.out.println("¾ßÌåÀàB·½·¨1ÊµÏÖ");
+        System.out.println("å…·ä½“ç±»Bæ–¹æ³•1å®ç°");
     }
 
     @Override
     public void primitiveOperation2() {
-        System.out.println("¾ßÌåÀàB·½·¨2ÊµÏÖ");
+        System.out.println("å…·ä½“ç±»Bæ–¹æ³•2å®ç°");
     }
 }

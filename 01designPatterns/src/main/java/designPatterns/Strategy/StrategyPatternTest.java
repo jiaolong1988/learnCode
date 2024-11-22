@@ -3,26 +3,26 @@ package designPatterns.Strategy;
 /**
  * @author jiaolong
  * @date 2024/01/11 16:44
- * @description: ²ßÂÔÄ£Ê½
+ * @description: ç­–ç•¥æ¨¡å¼
  */
 public class StrategyPatternTest {
     public static void main(String[] args) {
 
-        //1.±ê×¼²ßÂÔÄ£Ê½
+        //1.æ ‡å‡†ç­–ç•¥æ¨¡å¼
 //        Context contextA = new Context(new ConcreteStrategyA());
 //        contextA.contextInterface();
 
-        //2.²ßÂÔÄ£Ê½Óë¼òµ¥¹¤³§Ä£Ê½½áºÏ
+        //2.ç­–ç•¥æ¨¡å¼ä¸ç®€å•å·¥å‚æ¨¡å¼ç»“åˆ
         Context context = new Context("A");
         context.contextInterface();
 
-        //3.¼òµ¥¹¤³§Ä£Ê½
+        //3.ç®€å•å·¥å‚æ¨¡å¼
         Strategy strategy = SimpleFactory.createStrategy("A");
         strategy.algorithmInterface();
 
         /*
-         * ¼òµ¥¹¤³§Ä£Ê½ÎÒĞèÒªÈÃ¿Í»§¶ËÈÏÊ¶Á½¸öÀà£¬ StrategyºÍSimpleFactory£¬
-         * ¶ø²ßÂÔÄ£Ê½Óë¼òµ¥¹¤³§½áºÏµÄÓÃ·¨£¬¿Í»§¶Ë¾ÍÖ»ĞèÒªÈÏÊ¶Ò»¸öÀàContext¾Í¿ÉÒÔÁË¡£ñîºÏ¸ü¼Ó½µµÍ¡£¡±
+         * ç®€å•å·¥å‚æ¨¡å¼æˆ‘éœ€è¦è®©å®¢æˆ·ç«¯è®¤è¯†ä¸¤ä¸ªç±»ï¼Œ Strategyå’ŒSimpleFactoryï¼Œ
+         * è€Œç­–ç•¥æ¨¡å¼ä¸ç®€å•å·¥å‚ç»“åˆçš„ç”¨æ³•ï¼Œå®¢æˆ·ç«¯å°±åªéœ€è¦è®¤è¯†ä¸€ä¸ªç±»Contextå°±å¯ä»¥äº†ã€‚è€¦åˆæ›´åŠ é™ä½ã€‚â€
          */
 
     }
@@ -36,26 +36,26 @@ class ConcreteStrategyA implements Strategy{
 
     @Override
     public void algorithmInterface() {
-        System.out.println("Ëã·¨A");
+        System.out.println("ç®—æ³•A");
     }
 }
 class ConcreteStrategyB implements Strategy{
 
     @Override
     public void algorithmInterface() {
-        System.out.println("Ëã·¨B");
+        System.out.println("ç®—æ³•B");
     }
 }
 
 /**
  * @author jiaolong
  * @date 2024-1-11 17:00
- * ²ßÂÔÄ£Ê½
+ * ç­–ç•¥æ¨¡å¼
  */
 class Context{
     private Strategy strategy;
 
-    //²ßÂÔÄ£Ê½Óë¼òµ¥¹¤³§Ä£Ê½½áºÏ »òÕßÓÃ¼¯ºÏµÄ·½Ê½È¡´úifÓï¾ä
+    //ç­–ç•¥æ¨¡å¼ä¸ç®€å•å·¥å‚æ¨¡å¼ç»“åˆ æˆ–è€…ç”¨é›†åˆçš„æ–¹å¼å–ä»£ifè¯­å¥
     Context(String type){
         if(type.equals("A")){
             this.strategy = new ConcreteStrategyA();
@@ -65,7 +65,7 @@ class Context{
         }
     }
 
-    //±ê×¼²ßÂÔÄ£Ê½
+    //æ ‡å‡†ç­–ç•¥æ¨¡å¼
 //    Context(Strategy strategy){
 //        this.strategy = strategy;
 //    }
@@ -78,7 +78,7 @@ class Context{
 /**
  * @author jiaolong
  * @date 2024-1-11 17:06
- * ¼òµ¥¹¤³ÌÄ£Ê½
+ * ç®€å•å·¥ç¨‹æ¨¡å¼
  */
 class SimpleFactory{
 

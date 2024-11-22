@@ -3,13 +3,13 @@ package nand2tetris.vm1;
 import java.io.StringReader;
 
 /**
- * ĞéÄâÄÚ´æ¶Î³õÊ¼µØÖ·
+ * è™šæ‹Ÿå†…å­˜æ®µåˆå§‹åœ°å€
  *
  * @author jiaolong
  * @date 2024-1-25 17:54
  */
 public class PubConst {
-    //Õ»Ö¸Õë ´æ·ÅÊı¾İµÄ »ùµØÖ·
+    //æ ˆæŒ‡é’ˆ å­˜æ”¾æ•°æ®çš„ åŸºåœ°å€
     public static final int STACK_SP_ADDRESS = 256;
     //temp
     public static final int SEGMENT_TEMP = 5;

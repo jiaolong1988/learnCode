@@ -12,17 +12,17 @@ import java.util.Map;
  **/
 public class SymbolTable {
 
-    //Àà¼¶±ğ
+    //ç±»çº§åˆ«
     private Map<String, SymbolTableInfo> staticType = new HashMap<>();
     private  Map<String, SymbolTableInfo> field = new HashMap<>();
-    //·½·¨¼¶±ğ
+    //æ–¹æ³•çº§åˆ«
     private  Map<String, SymbolTableInfo> var = new HashMap<>();
     private  Map<String, SymbolTableInfo> argument = new HashMap<>();
 
     private String subroutineName;
     private String subroutineReturnType;
 
-    //¿ª´´ĞÂµÄ×Ó³ÌĞò×÷ÓÃÓò£¨¼È½«×Ó³ÌĞòµÄ·ûºÅÖØÖÃ£©
+    //å¼€åˆ›æ–°çš„å­ç¨‹åºä½œç”¨åŸŸï¼ˆæ—¢å°†å­ç¨‹åºçš„ç¬¦å·é‡ç½®ï¼‰
     public void startSubroutine(String subroutineReturnType,String subroutineName) {
         this.subroutineReturnType = subroutineReturnType;
         this.subroutineName = subroutineName;
@@ -31,9 +31,9 @@ public class SymbolTable {
     }
 
     /*
-       name:±äÁ¿Ãû³Æ
+       name:å˜é‡åç§°
        type:int String boolean
-       kind£ºstatic field,arg,var
+       kindï¼šstatic field,arg,var
      */
     public void define(String name, String type, String kind) {
         SymbolTableInfo info = new SymbolTableInfo(type);
@@ -57,7 +57,7 @@ public class SymbolTable {
         }
     }
 
-    //µ±Ç°×÷ÓÃÓòÄÚµÄ±äÁ¿ÊıÁ¿
+    //å½“å‰ä½œç”¨åŸŸå†…çš„å˜é‡æ•°é‡
     public int varCount(String kind) {
         if (kind.equals("static")) {
            return staticType.size();
@@ -77,7 +77,7 @@ public class SymbolTable {
         }
     }
 
-    //·µ»Øµ±Ç°×÷ÓÃÓòµÄ µÄ±êÊ¶·ûÖÖÀà
+    //è¿”å›å½“å‰ä½œç”¨åŸŸçš„ çš„æ ‡è¯†ç¬¦ç§ç±»
     public SegmentType kindOf(String name) {
         SegmentType kind = null;
         if (var.containsKey(name)) {

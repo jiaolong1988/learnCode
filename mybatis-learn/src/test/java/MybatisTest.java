@@ -18,25 +18,25 @@ public class MybatisTest {
 
     public static void main(String[] args) throws Exception {
 
-//µÚÒ»²½£º¶ÁÈ¡mybatis-config.xmlÅäÖÃÎÄ¼ş
+//ç¬¬ä¸€æ­¥ï¼šè¯»å–mybatis-config.xmlé…ç½®æ–‡ä»¶
         InputStream inputStream = Resources.getResourceAsStream("mybatis-config.xml");
 
-//µÚ¶ş²½£º¹¹½¨SqlSessionFactory
+//ç¬¬äºŒæ­¥ï¼šæ„å»ºSqlSessionFactory
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
-//µÚÈı²½£º´ò¿ªSqlSession
+//ç¬¬ä¸‰æ­¥ï¼šæ‰“å¼€SqlSession
         SqlSession session = sqlSessionFactory.openSession();
 
-//µÚËÄ²½£º»ñÈ¡Mapper½Ó¿Ú¶ÔÏó
+//ç¬¬å››æ­¥ï¼šè·å–Mapperæ¥å£å¯¹è±¡
         EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
 
-//µÚÎå²½£ºµ÷ÓÃMapper½Ó¿Ú¶ÔÏóµÄ·½·¨²Ù×÷Êı¾İ¿â£»
+//ç¬¬äº”æ­¥ï¼šè°ƒç”¨Mapperæ¥å£å¯¹è±¡çš„æ–¹æ³•æ“ä½œæ•°æ®åº“ï¼›
         List<Employee> employee = mapper.getQuery();
         System.out.println(employee);
 
-//µÚÁù²½£ºÒµÎñ´¦Àí
+//ç¬¬å…­æ­¥ï¼šä¸šåŠ¡å¤„ç†
         for(Employee e :employee){
-            logger.info("²éÑ¯½á¹û: " + e.getId() + "--" + e.getEmail());
+            logger.info("æŸ¥è¯¢ç»“æœ: " + e.getId() + "--" + e.getEmail());
         }
 
     }

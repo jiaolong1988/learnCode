@@ -3,25 +3,25 @@ package designPatterns.Decorator;
 /**
  * @author jiaolong
  * @date 2024-1-10 10:18
- * ×°ÊÎÄ£Ê½µÄ¼ò»¯Ğ´·¨-½«ComponentÓëConcreateComponentºÏ²¢µÄĞ´·¨
+ * è£…é¥°æ¨¡å¼çš„ç®€åŒ–å†™æ³•-å°†Componentä¸ConcreateComponentåˆå¹¶çš„å†™æ³•
  */
 public class DecoratorSimplifiedTest {
 
 	public static void main(String[] args) {
-		//»ù´¡¹¦ÄÜ
+		//åŸºç¡€åŠŸèƒ½
 		PersonN person = new PersonN("jiaolong");
 		
-		//À©Õ¹¹¦ÄÜ
+		//æ‰©å±•åŠŸèƒ½
 		Finery tShirts = new TShirts();
 		Finery trouser = new BigTrouser(); 
 		Finery sneakers = new Sneakers();
 
 
-		//ÔÚpersonµÄ»ù´¡ÉÏÀ©Õ¹¹¦ÄÜ
+		//åœ¨personçš„åŸºç¡€ä¸Šæ‰©å±•åŠŸèƒ½
 		trouser.decorate(person);
-		//ÔÚtrouserµÄ»ù´¡ÉÏÀ©Õ¹¹¦ÄÜ
+		//åœ¨trouserçš„åŸºç¡€ä¸Šæ‰©å±•åŠŸèƒ½
 		sneakers.decorate(trouser);
-		//ÔÚsneakersµÄ»ù´¡ÉÏÀ©Õ¹¹¦ÄÜ
+		//åœ¨sneakersçš„åŸºç¡€ä¸Šæ‰©å±•åŠŸèƒ½
 		tShirts.decorate(sneakers);
 
 		tShirts.show();
@@ -40,7 +40,7 @@ class PersonN {
 	}
 
 	public void show() {
-		System.out.format("×°°çµÄ%1$s \n", name);
+		System.out.format("è£…æ‰®çš„%1$s \n", name);
 	}
 }
 
@@ -54,7 +54,7 @@ class Finery extends PersonN {
 
 	@Override
 	public void show() {
-		//±ØĞëÌí¼ÓÅĞ¶Ï£¬·ñÔò ×ÓÀà¶ÔÏóÖ±½Óµ÷ÓÃ¸Ã·½·¨»á±¨´í£¬ÒòÎªÃ»ÓĞÉèÖÃ ×°ÊÎ¶ÔÏó
+		//å¿…é¡»æ·»åŠ åˆ¤æ–­ï¼Œå¦åˆ™ å­ç±»å¯¹è±¡ç›´æ¥è°ƒç”¨è¯¥æ–¹æ³•ä¼šæŠ¥é”™ï¼Œå› ä¸ºæ²¡æœ‰è®¾ç½® è£…é¥°å¯¹è±¡
 		if (personN != null){
 			personN.show();
 		}
@@ -67,7 +67,7 @@ class TShirts extends Finery {
 	@Override
 	public void show() {
 		super.show();
-		System.out.println("´óTĞô ");
+		System.out.println("å¤§Tæ¤ ");
 		
 	}
 
@@ -78,7 +78,7 @@ class BigTrouser extends Finery {
 	@Override
 	public void show() {
 		super.show();
-		System.out.println("¿å¿ã ");
+		System.out.println("å®è£¤ ");
 		
 	}
 
@@ -89,7 +89,7 @@ class Sneakers extends Finery {
 	@Override
 	public void show() {
 		super.show();
-		System.out.println("ÆÆÇòĞ¬ ");	
+		System.out.println("ç ´çƒé‹ ");	
 		
 	}
 

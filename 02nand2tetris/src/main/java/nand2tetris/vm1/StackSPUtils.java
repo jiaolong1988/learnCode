@@ -6,45 +6,45 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author jiaolong
  * @date 2024/01/23 17:42
  * @description: TODO
- * Õ»Ö¸Õë²Ù×÷
+ * æ ˆæŒ‡é’ˆæ“ä½œ
  */
 public class StackSPUtils {
 
     public static AtomicInteger ramNUm = new AtomicInteger(PubConst.STACK_SP_ADDRESS);
-    //ÖØÖÃ
+    //é‡ç½®
     public static void reset(){
         ramNUm.set(PubConst.STACK_SP_ADDRESS);
     }
 
-    //»ñÈ¡µ±Ç°Öµ
+    //è·å–å½“å‰å€¼
     public static int get(){
        return ramNUm.get();
     }
 
-    //¼Ó1
+    //åŠ 1
     public static void addOne(){
         ramNUm.incrementAndGet();
     }
 
-    //¼õ1
+    //å‡1
     public static void decrementOne(){
         ramNUm.decrementAndGet();
     }
 
 
     /**
-     * »ã±à±êÇ© Î¨Ò»ĞòºÅ
+     * æ±‡ç¼–æ ‡ç­¾ å”¯ä¸€åºå·
      * @author jiaolong
      * @date 2024-1-25 17:43
      */
     public final static class LableIndex{
-        //±êÇ©Ö¸Õë
+        //æ ‡ç­¾æŒ‡é’ˆ
         private static AtomicInteger assemblerLable = new AtomicInteger(-1);
-        //»ñÈ¡»ã±à´úÂë±êÇ©ĞòºÅ
+        //è·å–æ±‡ç¼–ä»£ç æ ‡ç­¾åºå·
         public static int getAssemblerLableIndex(){
             return assemblerLable.incrementAndGet();
         }
-        //ÖØÖÃ»ã±à´úÂë±êÇ©ĞòºÅ
+        //é‡ç½®æ±‡ç¼–ä»£ç æ ‡ç­¾åºå·
         public static void AssemblerLablReset(){
             ramNUm.set(-1);
         }

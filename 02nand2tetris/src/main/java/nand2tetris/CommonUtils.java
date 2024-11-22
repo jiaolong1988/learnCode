@@ -45,10 +45,10 @@ public class CommonUtils {
      *
      * @param: info
      * @return: java.lang.String
-     * »ñÈ¡ÃüÁî£¬¹ıÂËµô//
+     * è·å–å‘½ä»¤ï¼Œè¿‡æ»¤æ‰//
      **/
     public static String getCommand(String info){
-        //»ñÈ¡´úÂë£¬È¥³ı×¢½â
+        //è·å–ä»£ç ï¼Œå»é™¤æ³¨è§£
         String command = info.trim();
         if(info.contains("//")){
             command = info.substring(0,info.indexOf("//")).trim();
@@ -58,7 +58,7 @@ public class CommonUtils {
 
 
     /**
-     * »ñÈ¡Ä¿Â¼ÏÂµÄ×ÓÄ¿Â¼ÎÄ¼ş
+     * è·å–ç›®å½•ä¸‹çš„å­ç›®å½•æ–‡ä»¶
      * @param: sourcePath
      * @return: java.util.List<java.lang.String>
      **/

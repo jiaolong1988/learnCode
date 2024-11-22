@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * ×Ô¶¥ÏòÏÂµÄµİ¹éÓï·¨·ÖÎöÆ÷
+ * è‡ªé¡¶å‘ä¸‹çš„é€’å½’è¯­æ³•åˆ†æå™¨
  * @author jiaolong
  * @date 2024/04/06 11:02
  */
@@ -70,7 +70,7 @@ public class CompilationEngine {
 
 
     /**
-     * ±àÒë¾²Ì¬ÉùÃû»ò×Ö¶ÎÉùÃû
+     * ç¼–è¯‘é™æ€å£°åæˆ–å­—æ®µå£°å
      * @return: void
      * @date 2024/4/6 11:12
      */
@@ -96,7 +96,7 @@ public class CompilationEngine {
 
     }
 
-    //±àÒëÕû¸ö·½·¨¡¢º¯Êı¡¢¹¹Ôìº¯Êı
+    //ç¼–è¯‘æ•´ä¸ªæ–¹æ³•ã€å‡½æ•°ã€æ„é€ å‡½æ•°
     public void compileSubroutline() {
         String lableDec = "subroutineDec";
         String lableDecBody = "subroutineBody";
@@ -114,7 +114,7 @@ public class CompilationEngine {
                 compileParameterList();
             }
             if (getPeekValue().equals("{")) {
-                //¿ªÊ¼±êÇ©
+                //å¼€å§‹æ ‡ç­¾
                 startLableNextElementAddTwoSpace(lableDecBody);
                 addCurrentCode();//{
 
@@ -136,7 +136,7 @@ public class CompilationEngine {
 
     }
 
-    //±àÒë²ÎÊıÁĞ±í²»°üº¬ ( )
+    //ç¼–è¯‘å‚æ•°åˆ—è¡¨ä¸åŒ…å« ( )
     public void compileParameterList(){
         String lableName = "parameterList";
         startLableNextElementAddTwoSpace(lableName);
@@ -359,7 +359,7 @@ public class CompilationEngine {
         String currentType = getPeekType();
         String nextValue = getNextValue();
         if(currentType.equals("identifier") && (nextValue.equals(".") || nextValue.equals("("))){
-            //subroutineCall ´¦Àí
+            //subroutineCall å¤„ç†
             compileSubroutineCall();
         }
         else if(currentType.equals("stringConstant")){
@@ -444,12 +444,12 @@ public class CompilationEngine {
 
     public void startLableNextElementAddTwoSpace(String lableName) {
         startLable(lableName);
-        //¿Õ¸ñ³¤¶È¼Ó2
+        //ç©ºæ ¼é•¿åº¦åŠ 2
         currentSpace = currentSpace+"  ";
     }
 
     public void endLableSpaceLenthSubTwo(String lableName){
-        //¿Õ¸ñ³¤¶È¼õ2
+        //ç©ºæ ¼é•¿åº¦å‡2
         currentSpace = currentSpace.substring(0, currentSpace.length()-2);
         endLable(lableName);
     }

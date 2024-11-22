@@ -16,10 +16,10 @@ import java.util.List;
  */
 public class ReadJackFileUtil {
     public static List<String> readJackFile(File jackFile) {
-        //读取文件内容
+        //璇诲彇鏂囦欢鍐呭
         List<String> jackInfo = CommonUtils.readFile(jackFile.toPath());
 
-        //内容过滤
+        //鍐呭杩囨护
         List<String> list = new ArrayList<>();
         for (String jack : jackInfo) {
 

@@ -3,15 +3,15 @@ package designPatterns.Prototype;
 /**
  * @author jiaolong
  * @date 2024/01/16 15:31
- * @description: Ô­ĞÍÄ£Ê½
- * ¿ËÂ¡¶ÔÏó ±ØĞëÊµÏÖCloneable½Ó¿Ú£¬ÇÒÊµÏÖ ObjectÀàµÄclone·½·¨¡£
+ * @description: åŸå‹æ¨¡å¼
+ * å…‹éš†å¯¹è±¡ å¿…é¡»å®ç°Cloneableæ¥å£ï¼Œä¸”å®ç° Objectç±»çš„cloneæ–¹æ³•ã€‚
  *
- * Êä³ö½á¹û£º
- * »ñÈ¡Ôª¶ÔÏóÓë¿ËÂ¡¶ÔÏóµÄĞÅÏ¢£º
+ * è¾“å‡ºç»“æœï¼š
+ * è·å–å…ƒå¯¹è±¡ä¸å…‹éš†å¯¹è±¡çš„ä¿¡æ¯ï¼š
  * pro1:chenglong
  * pro2:chenglong
  *
- * ÉèÖÃ¿ËÂ¡¶ÔÏóµÄĞÅÏ¢£¬ÓëÔ­¶ÔÏó½øĞĞ±È½Ï£º
+ * è®¾ç½®å…‹éš†å¯¹è±¡çš„ä¿¡æ¯ï¼Œä¸åŸå¯¹è±¡è¿›è¡Œæ¯”è¾ƒï¼š
  * pro1:chenglong
  * pro2:jiaolong
  */
@@ -22,11 +22,11 @@ public class PrototypePatternTest {
         pro1.setName("chenglong");
         ConcretePrototype pro2 = (ConcretePrototype) pro1.clone();
 
-        System.out.println("»ñÈ¡Ôª¶ÔÏóÓë¿ËÂ¡¶ÔÏóµÄĞÅÏ¢£º");
+        System.out.println("è·å–å…ƒå¯¹è±¡ä¸å…‹éš†å¯¹è±¡çš„ä¿¡æ¯ï¼š");
         System.out.println("pro1:"+pro1.getName());
         System.out.println("pro2:"+pro2.getName());
 
-        System.out.println("\nÉèÖÃ¿ËÂ¡¶ÔÏóµÄĞÅÏ¢£¬ÓëÔ­¶ÔÏó½øĞĞ±È½Ï£º");
+        System.out.println("\nè®¾ç½®å…‹éš†å¯¹è±¡çš„ä¿¡æ¯ï¼Œä¸åŸå¯¹è±¡è¿›è¡Œæ¯”è¾ƒï¼š");
         pro2.setName("jiaolong");
         System.out.println("pro1:"+pro1.getName());
         System.out.println("pro2:"+pro2.getName());
@@ -37,7 +37,7 @@ public class PrototypePatternTest {
 /**
  * @author jiaolong
  * @date 2024-1-17 15:54
- * ¿ËÂ¡¶ÔÏó±ØĞëÊµÏÖCloneable½Ó¿Ú£¬ÇÒÊµÏÖ ObjectÀàµÄclone·½·¨
+ * å…‹éš†å¯¹è±¡å¿…é¡»å®ç°Cloneableæ¥å£ï¼Œä¸”å®ç° Objectç±»çš„cloneæ–¹æ³•
  */
 class Prototype implements Cloneable {
     @Override

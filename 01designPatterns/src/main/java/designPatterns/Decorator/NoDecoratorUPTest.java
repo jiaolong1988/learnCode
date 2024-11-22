@@ -4,7 +4,7 @@ package designPatterns.Decorator;
 /**
  * @author jiaolong
  * @date 2024-1-10 15:02
- * Î´Ê¹ÓÃ×°ÊÎÄ£Ê½ÊµÏÖ¹¦ÄÜÀ©Õ¹-¸ÄÁ¼°æ
+ * æœªä½¿ç”¨è£…é¥°æ¨¡å¼å®ç°åŠŸèƒ½æ‰©å±•-æ”¹è‰¯ç‰ˆ
  */
 public class NoDecoratorUPTest {
     public static void main(String[] args) {
@@ -28,7 +28,7 @@ class PersonX {
 
     public void show()
     {
-        System.out.println(String.format("×°°çµÄ%1$s", name));
+        System.out.println(String.format("è£…æ‰®çš„%1$s", name));
     }
 }
 
@@ -40,13 +40,13 @@ abstract class FineryX {
 class TShirtsX extends FineryX {
     @Override
     public void show() {
-        System.out.println("´óTĞô ");
+        System.out.println("å¤§Tæ¤ ");
     }
 }
 
 class WearBigTrouserX extends FineryX {
     @Override
     public void show() {
-        System.out.println("¿å¿ã ");
+        System.out.println("å®è£¤ ");
     }
 }

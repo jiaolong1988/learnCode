@@ -1,4 +1,3 @@
-import jdk.nashorn.internal.runtime.linker.Bootstrap;
 
 /**
  * @author: jiaolong
@@ -6,7 +5,7 @@ import jdk.nashorn.internal.runtime.linker.Bootstrap;
  **/
 public class ClassLoaderTest {
     public static void main(String[] args) {
-/*      Ë³ĞòÊÇ£º
+/*      é¡ºåºæ˜¯ï¼š
         1. Bootstrap CLassloder
         2. Extention ClassLoader
         3. AppClassLoader
@@ -14,7 +13,7 @@ public class ClassLoaderTest {
 
         //AppClassLoader
         System.out.println(ClassLoaderTest.class.getClassLoader());
-        //ExtClassLoaderµÄ¸¸¼ÓÔØÆ÷ÊÇnull£¨ÒòÎªÊÇCÓïÑÔÊµÏÖµÄ£¬ËùÒÔ´ò²»³öÃû×Ö£©;
+        //ExtClassLoaderçš„çˆ¶åŠ è½½å™¨æ˜¯nullï¼ˆå› ä¸ºæ˜¯Cè¯­è¨€å®ç°çš„ï¼Œæ‰€ä»¥æ‰“ä¸å‡ºåå­—ï¼‰;
         System.out.println(String.class.getClassLoader());
 
         System.out.println("================");

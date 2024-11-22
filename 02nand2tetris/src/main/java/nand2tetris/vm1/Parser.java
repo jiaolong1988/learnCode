@@ -9,23 +9,23 @@ import java.util.*;
 /**
  * @author jiaolong
  * @date 2024/01/22 10:19
- * @description: ¶ÔvmÃüÁî½øĞĞ½âÎö
+ * @description: å¯¹vmå‘½ä»¤è¿›è¡Œè§£æ
  */
 public class Parser {
-    //vmÃüÁî¼¯ºÏµü´úÆ÷
+    //vmå‘½ä»¤é›†åˆè¿­ä»£å™¨
     private Iterator<String> iterator = null;
-    //µ±Ç°ÃüÁî
+    //å½“å‰å‘½ä»¤
     private String currentCommand = "";
 
-    //¹¹Ôìº¯Êı³õÊ¼»¯
+    //æ„é€ å‡½æ•°åˆå§‹åŒ–
     public Parser(String file){
         Path filePath = Paths.get(file);
         System.out.println(file);
 
-        //¶ÁÈ¡vmÎÄ¼şÄÚÈİ
+        //è¯»å–vmæ–‡ä»¶å†…å®¹
         List<String> vmInfo = CommonUtils.readFile(filePath);
 
-        //»ñÈ¡ÕæÕıµÄÃüÁî¼¯ºÏ
+        //è·å–çœŸæ­£çš„å‘½ä»¤é›†åˆ
         List<String> list = new ArrayList<>();
         for(String tempVmInfo :vmInfo){
             String command = CommonUtils.getCommand(tempVmInfo);
@@ -37,25 +37,25 @@ public class Parser {
         iterator = list.iterator();
     }
 
-    //ÊÇ·ñÓĞÃüÁî
+    //æ˜¯å¦æœ‰å‘½ä»¤
     private boolean hasMoreCommands(){
        return iterator.hasNext();
     }
 
-    //¶ÁÈ¡ÏÂÒ»ÌõÖ¸Áî£¬²¢½«ÆäÉèÖÃÎªµ±Ç°ÃüÁî
+    //è¯»å–ä¸‹ä¸€æ¡æŒ‡ä»¤ï¼Œå¹¶å°†å…¶è®¾ç½®ä¸ºå½“å‰å‘½ä»¤
     public boolean advance(){
         boolean flag = hasMoreCommands();
         if(flag){
             currentCommand  = iterator.next().trim();
-            System.out.println("Ö¸ÁîĞÅÏ¢£º"+currentCommand);
+            System.out.println("æŒ‡ä»¤ä¿¡æ¯ï¼š"+currentCommand);
         }
         return flag;
     }
 
-    //·µ»Øµ±Ç°vmÃüÁîµÄÀàĞÍ
+    //è¿”å›å½“å‰vmå‘½ä»¤çš„ç±»å‹
     public CmomandType commandType(){
         if(!InnerUtil.arithmeticList.containsKey(currentCommand)){
-            new RuntimeException("µ±Ç°ÃüÁîÀàĞÍ²»´æÔÚ£¬ÃüÁî£º"+currentCommand);
+            new RuntimeException("å½“å‰å‘½ä»¤ç±»å‹ä¸å­˜åœ¨ï¼Œå‘½ä»¤ï¼š"+currentCommand);
         }
 
         String operationCommand  = currentCommand.split(" ")[0];
@@ -78,10 +78,10 @@ public class Parser {
     public String arg1(){
         String result = "";
         if(CmomandType.C_ARITHMETIC == commandType()){
-            //ËãÊõÔËËã·ûÖ±½Ó·µ»ØÃüÁî±¾Éí
+            //ç®—æœ¯è¿ç®—ç¬¦ç›´æ¥è¿”å›å‘½ä»¤æœ¬èº«
             result = currentCommand;
         }else{
-            //ÃüÁîµÄµÚÒ»¸ö²ÎÊı
+            //å‘½ä»¤çš„ç¬¬ä¸€ä¸ªå‚æ•°
             result = currentCommand.split(" ")[1];
         }
         return result;
@@ -90,7 +90,7 @@ public class Parser {
     public String arg2(){
         String result = "";
         if(CmomandType.C_PUSH == commandType() || CmomandType.C_POP == commandType()){
-            //ÃüÁîµÄµÚ¶ş¸ö²ÎÊı
+            //å‘½ä»¤çš„ç¬¬äºŒä¸ªå‚æ•°
             result = currentCommand.split(" ")[2];
         }
         return result;

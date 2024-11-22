@@ -10,7 +10,7 @@ public class FactoryMethodPatternTest {
     public static void main(String[] args) {
 
         /*
-         * ¸ù¾İÖ¸ ¶¨µÄ¹¤³§ÊµÏÖÀà ÕÒ³ö ¾ßÌåµÄÊµÏÖÀà¡£
+         * æ ¹æ®æŒ‡ å®šçš„å·¥å‚å®ç°ç±» æ‰¾å‡º å…·ä½“çš„å®ç°ç±»ã€‚
          *
          */
         IFactory addFactory = new AddFactory();

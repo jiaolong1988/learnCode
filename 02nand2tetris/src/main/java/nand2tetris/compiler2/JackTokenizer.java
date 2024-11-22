@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * ×ÖÔª×ª»»Æ÷
+ * å­—å…ƒè½¬æ¢å™¨
  *
  * @author jiaolong
  * @date 2024/04/06 11:01
@@ -29,9 +29,9 @@ public class JackTokenizer {
     );
 
 
-    //µ±Ç°JackÄÚÈİ
+    //å½“å‰Jackå†…å®¹
     private String currentCommand;
-    //StringÀàĞÍ±ê¼Ç
+    //Stringç±»å‹æ ‡è®°
     private boolean stringTypeFlag = false;
 
     private ArrayDeque<String> tockens = new ArrayDeque<>();
@@ -50,7 +50,7 @@ public class JackTokenizer {
         return !tockens.isEmpty();
     }
 
-    //¶ÁÈ¡ÏÂÒ»ÌõÖ¸Áî£¬²¢½«ÆäÉèÖÃÎªµ±Ç°ÃüÁî
+    //è¯»å–ä¸‹ä¸€æ¡æŒ‡ä»¤ï¼Œå¹¶å°†å…¶è®¾ç½®ä¸ºå½“å‰å‘½ä»¤
     public void advance(){
         boolean flag = hasMoreTokens();
         if(flag){
@@ -71,7 +71,7 @@ public class JackTokenizer {
             return TokenType.KEYWORD;
         }
 
-        //ÓÉÊı×Ö×ÖÄ¸ÏÂ»®Ïß×é³É£¬ÆäÖĞ£¬²»ÄÜÒÔÊı×Ö¿ªÍ·
+        //ç”±æ•°å­—å­—æ¯ä¸‹åˆ’çº¿ç»„æˆï¼Œå…¶ä¸­ï¼Œä¸èƒ½ä»¥æ•°å­—å¼€å¤´
         if (currentCommand.matches("^[a-zA-Z_]{1}[a-zA-Z0-9_]*")) {
             return TokenType.IDENTIFIER;
         }
@@ -104,27 +104,27 @@ public class JackTokenizer {
         return "";
     }
 
-    //×ÖÔªµÄ5ÖĞÀàĞÍ1
+    //å­—å…ƒçš„5ä¸­ç±»å‹1
     public String keyword() {
             return currentCommand;
     }
 
-    //·ûºÅ
+    //ç¬¦å·
     public String symbol() {
             return currentCommand;
     }
 
-    //±êÊ¶·û£ºÀàÃû ·½·¨Ãû ±äÁ¿Ãû
+    //æ ‡è¯†ç¬¦ï¼šç±»å æ–¹æ³•å å˜é‡å
     public String identifier() {
             return  currentCommand ;
     }
 
-    //ÕûÊı³£Á¿
+    //æ•´æ•°å¸¸é‡
     public String inVal() {
         return currentCommand;
     }
 
-    //×Ö·û³£Á¿
+    //å­—ç¬¦å¸¸é‡
     public String stringVal() {
         if(tokenType() == TokenType.STRING_CONST){
             return currentCommand.replace("\"","") ;
@@ -134,7 +134,7 @@ public class JackTokenizer {
 
 
     /**
-     * ¶ÁÈ¡µ±Ç°ÔªËØÊı¾İ£¬²»É¾³ı¸ÃÔªËØ
+     * è¯»å–å½“å‰å…ƒç´ æ•°æ®ï¼Œä¸åˆ é™¤è¯¥å…ƒç´ 
      * @param: null
      * @return:
      **/
@@ -142,10 +142,10 @@ public class JackTokenizer {
         return tockens.peek();
     }
     public String getNextValue(){
-        //È¡³öµ±Ç°Öµ£¬²¢É¾³ıÔªËØ
+        //å–å‡ºå½“å‰å€¼ï¼Œå¹¶åˆ é™¤å…ƒç´ 
         String temp = tockens.poll();
         String returnValue = tockens.peek();
-        //Õ»²Ù×÷£¬ºó½øÈëÏÈ³ö
+        //æ ˆæ“ä½œï¼Œåè¿›å…¥å…ˆå‡º
         tockens.push(temp);
 
         return returnValue;
@@ -167,19 +167,19 @@ public class JackTokenizer {
                 char c = jackCode.charAt(i);
                 info.append(c);
 
-                //¿Õ¸ñ
+                //ç©ºæ ¼
                 if (Character.isWhitespace(c) && stringTypeFlag==false) {
                     printInfo(info.toString());
                     info.setLength(0);
 
                 }
-                //·ûºÅ
+                //ç¬¦å·
                 else if(symbols.contains(String.valueOf(c))&& stringTypeFlag==false){
                     printSymbols(info.toString());
                     info.setLength(0);
 
                 }
-                //×Ö·û´®
+                //å­—ç¬¦ä¸²
                 else if("\"".equals(String.valueOf(c)) || stringTypeFlag==true){
                     if (stringTypeFlag==true &&  String.valueOf(c).equals("\"") ){
                         printInfo(info.toString());

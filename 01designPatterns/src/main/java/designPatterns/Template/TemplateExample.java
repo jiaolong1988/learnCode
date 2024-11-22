@@ -5,17 +5,17 @@ import java.io.Console;
 /**
  * @author jiaolong
  * @date 2024/01/19 14:01
- * @description: Ä£°å·½·¨°¸Àı
+ * @description: æ¨¡æ¿æ–¹æ³•æ¡ˆä¾‹
  */
 public class TemplateExample {
     public static void main(String[] args) {
-        System.out.println("Ñ§Éú¼×³­µÄÊÔ¾í£º");
+        System.out.println("å­¦ç”Ÿç”²æŠ„çš„è¯•å·ï¼š");
         TestPaperA studentA = new TestPaperA();
         studentA.TestQuestion1();
         studentA.TestQuestion2();
         studentA.TestQuestion3();
 
-        System.out.println("\nÑ§ÉúÒÒ³­µÄÊÔ¾í£º");
+        System.out.println("\nå­¦ç”Ÿä¹™æŠ„çš„è¯•å·ï¼š");
         TestPaperB studentB = new TestPaperB();
         studentB.TestQuestion1();
         studentB.TestQuestion2();
@@ -26,22 +26,22 @@ public class TemplateExample {
 
 abstract class TestPaper {
     public void TestQuestion1() {
-        System.out.println(" Ñî¹ıµÃµ½£¬ºóÀ´¸øÁË¹ù¾¸£¬Á¶³ÉÒĞÌì½£¡¢ÍÀÁúµ¶µÄĞşÌú¿ÉÄÜÊÇ[ ] a.ÇòÄ¥ÖıÌú b.Âí¿ÚÌú c.¸ßËÙºÏ½ğ¸Ö d.Ì¼ËØÏËÎ¬ ");
-        //Ä£°å·½·¨µÄ¹Ø¼ü
-        System.out.println(" ´ğ°¸£º"+answer1());
+        System.out.println(" æ¨è¿‡å¾—åˆ°ï¼Œåæ¥ç»™äº†éƒ­é–ï¼Œç‚¼æˆå€šå¤©å‰‘ã€å± é¾™åˆ€çš„ç„é“å¯èƒ½æ˜¯[ ] a.çƒç£¨é“¸é“ b.é©¬å£é“ c.é«˜é€Ÿåˆé‡‘é’¢ d.ç¢³ç´ çº¤ç»´ ");
+        //æ¨¡æ¿æ–¹æ³•çš„å…³é”®
+        System.out.println(" ç­”æ¡ˆï¼š"+answer1());
     }
 
 
     public void TestQuestion2() {
-        System.out.println(" Ñî¹ı¡¢³ÌÓ¢¡¢Â½ÎŞË«²ù³ıÁËÇé»¨£¬Ôì³É[ ] a.Ê¹ÕâÖÖÖ²Îï²»ÔÙº¦ÈË b.Ê¹Ò»ÖÖÕäÏ¡ÎïÖÖÃğ¾ø c.ÆÆ»µÁËÄÇ¸öÉúÎïÈ¦µÄÉúÌ¬Æ½ºâ d.Ôì³É¸ÃµØÇøÉ³Ä®»¯");
-        //Ä£°å·½·¨µÄ¹Ø¼ü
-        System.out.println(" ´ğ°¸£º"+answer2());
+        System.out.println(" æ¨è¿‡ã€ç¨‹è‹±ã€é™†æ— åŒé“²é™¤äº†æƒ…èŠ±ï¼Œé€ æˆ[ ] a.ä½¿è¿™ç§æ¤ç‰©ä¸å†å®³äºº b.ä½¿ä¸€ç§çç¨€ç‰©ç§ç­ç» c.ç ´åäº†é‚£ä¸ªç”Ÿç‰©åœˆçš„ç”Ÿæ€å¹³è¡¡ d.é€ æˆè¯¥åœ°åŒºæ²™æ¼ åŒ–");
+        //æ¨¡æ¿æ–¹æ³•çš„å…³é”®
+        System.out.println(" ç­”æ¡ˆï¼š"+answer2());
     }
 
     public void TestQuestion3() {
-        System.out.println(" À¶·ï»ËÖÂÊ¹»ªÉ½Ê¦Í½¡¢ÌÒ¹ÈÁùÏÉÅ»ÍÂ²»Ö¹£¬Èç¹ûÄãÊÇ´ó·ò£¬»á¸øËûÃÇ¿ªÊ²Ã´Ò©[ ]a.°¢Ë¾Æ¥ÁÖ b.Å£»Æ½â¶¾Æ¬ c.·úßßËá d.ÈÃËûÃÇºÈ´óÁ¿µÄÉúÅ£ÄÌ e.ÒÔÉÏÈ«²»¶Ô");
-        //Ä£°å·½·¨µÄ¹Ø¼ü
-        System.out.println(" ´ğ°¸£º"+answer3());
+        System.out.println(" è“å‡¤å‡°è‡´ä½¿åå±±å¸ˆå¾’ã€æ¡ƒè°·å…­ä»™å‘•åä¸æ­¢ï¼Œå¦‚æœä½ æ˜¯å¤§å¤«ï¼Œä¼šç»™ä»–ä»¬å¼€ä»€ä¹ˆè¯[ ]a.é˜¿å¸åŒ¹æ— b.ç‰›é»„è§£æ¯’ç‰‡ c.æ°Ÿå“Œé…¸ d.è®©ä»–ä»¬å–å¤§é‡çš„ç”Ÿç‰›å¥¶ e.ä»¥ä¸Šå…¨ä¸å¯¹");
+        //æ¨¡æ¿æ–¹æ³•çš„å…³é”®
+        System.out.println(" ç­”æ¡ˆï¼š"+answer3());
     }
 
     abstract String answer1();
@@ -49,7 +49,7 @@ abstract class TestPaper {
     abstract String answer3();
 }
 
-//Ñ§Éú¼×³­µÄÊÔ¾í
+//å­¦ç”Ÿç”²æŠ„çš„è¯•å·
 class TestPaperA extends TestPaper {
     @Override
     String answer1() {
@@ -68,23 +68,23 @@ class TestPaperA extends TestPaper {
     //    @Override
 //    public void TestQuestion1() {
 //        super.TestQuestion1();
-//        System.out.println("´ğ°¸£ºb");
+//        System.out.println("ç­”æ¡ˆï¼šb");
 //    }
 //
 //    @Override
 //    public void TestQuestion2() {
 //        super.TestQuestion2();
-//        System.out.println("´ğ°¸£ºb");
+//        System.out.println("ç­”æ¡ˆï¼šb");
 //    }
 //
 //    @Override
 //    public void TestQuestion3() {
 //        super.TestQuestion3();
-//        System.out.println("´ğ°¸£ºb");
+//        System.out.println("ç­”æ¡ˆï¼šb");
 //    }
 }
 
-//Ñ§Éú¼×³­µÄÊÔ¾í
+//å­¦ç”Ÿç”²æŠ„çš„è¯•å·
 class TestPaperB extends TestPaper {
     @Override
     String answer1() {
@@ -104,19 +104,19 @@ class TestPaperB extends TestPaper {
 //    @Override
 //    public void TestQuestion1() {
 //        super.TestQuestion1();
-//        System.out.println("´ğ°¸£ºc");
+//        System.out.println("ç­”æ¡ˆï¼šc");
 //    }
 //
 //    @Override
 //    public void TestQuestion2() {
 //        super.TestQuestion2();
-//        System.out.println("´ğ°¸£ºc");
+//        System.out.println("ç­”æ¡ˆï¼šc");
 //    }
 //
 //    @Override
 //    public void TestQuestion3() {
 //        super.TestQuestion3();
-//        System.out.println("´ğ°¸£ºc");
+//        System.out.println("ç­”æ¡ˆï¼šc");
 //    }
 
 }

@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * ×ÖÔª×ª»»Æ÷
+ * å­—å…ƒè½¬æ¢å™¨
  *
  * @author jiaolong
  * @date 2024/04/06 11:01
@@ -30,7 +30,7 @@ public class JackTokenizer {
     );
 
 
-    //µ±Ç°JackÄÚÈİ
+    //å½“å‰Jackå†…å®¹
     private String currentCommand;
     private boolean stringTypeFlag = false;
 
@@ -56,19 +56,19 @@ public class JackTokenizer {
             char c = jackCode.charAt(i);
             info.append(c);
 
-            //¿Õ¸ñ
+            //ç©ºæ ¼
             if (Character.isWhitespace(c) && stringTypeFlag==false) {
                 printInfo(info.toString());
                 info.setLength(0);
 
             }
-            //·ûºÅ
+            //ç¬¦å·
             else if(symbols.contains(String.valueOf(c))){
                 printSymbols(info.toString());
                 info.setLength(0);
 
             }
-            //×Ö·û´®
+            //å­—ç¬¦ä¸²
             else if("\"".equals(String.valueOf(c)) || stringTypeFlag==true){
                 if (stringTypeFlag==true &&  String.valueOf(c).equals("\"") ){
                     printInfo(info.toString());
@@ -105,7 +105,7 @@ public class JackTokenizer {
         return lineIterator.hasNext();
     }
 
-    //¶ÁÈ¡ÏÂÒ»ÌõÖ¸Áî£¬²¢½«ÆäÉèÖÃÎªµ±Ç°ÃüÁî
+    //è¯»å–ä¸‹ä¸€æ¡æŒ‡ä»¤ï¼Œå¹¶å°†å…¶è®¾ç½®ä¸ºå½“å‰å‘½ä»¤
     public boolean advance(){
         boolean flag = hasMoreTokens();
         if(flag){
@@ -131,7 +131,7 @@ public class JackTokenizer {
             return  TokenType.KEYWORD;
         }
 
-        //ÓÉÊı×Ö×ÖÄ¸ÏÂ»®Ïß×é³É£¬ÆäÖĞ£¬²»ÄÜÒÔÊı×Ö¿ªÍ·
+        //ç”±æ•°å­—å­—æ¯ä¸‹åˆ’çº¿ç»„æˆï¼Œå…¶ä¸­ï¼Œä¸èƒ½ä»¥æ•°å­—å¼€å¤´
        if( currentCommand.matches("^[a-zA-Z_]{1}[a-zA-Z0-9_]*")){
            tockens.add(identifier());
            return TokenType.IDENTIFIER;
@@ -146,7 +146,7 @@ public class JackTokenizer {
         return null;
     }
 
-    //×ÖÔªµÄ5ÖĞÀàĞÍ1
+    //å­—å…ƒçš„5ä¸­ç±»å‹1
  //   public Keyword keyword() {
     public String keyword() {
     //<keyword>  </keyword>
@@ -154,7 +154,7 @@ public class JackTokenizer {
       //  return Keyword.BOOLEAN;
     }
 
-    //·ûºÅ
+    //ç¬¦å·
     public String symbol() {
     //<symbol>  </symbol>
         String schar="";
@@ -171,19 +171,19 @@ public class JackTokenizer {
         return "<symbol> " + schar + " </symbol>";
     }
 
-    //±êÊ¶·û£ºÀàÃû ·½·¨Ãû ±äÁ¿Ãû
+    //æ ‡è¯†ç¬¦ï¼šç±»å æ–¹æ³•å å˜é‡å
     public String identifier() {
     //<identifier>  </identifier>
         return "<identifier> " + currentCommand + " </identifier>";
     }
 
-    //ÕûÊı³£Á¿
+    //æ•´æ•°å¸¸é‡
     public String inVal() {
     //<integerConstant>  </integerConstant>
         return "<integerConstant> " + currentCommand + " </integerConstant>";
     }
 
-    //×Ö·û³£Á¿
+    //å­—ç¬¦å¸¸é‡
     public String StringVal() {
         //<stringConstant> </stringConstant>
         return "<stringConstant> " + currentCommand.replace("\"","") + " </stringConstant>";

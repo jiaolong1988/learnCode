@@ -5,21 +5,21 @@ package designPatterns.Decorator;
  * @date 2024-1-10 10:18
  * @version 1.0
  *
- * ×°ÊÎÄ£Ê½µÄ±ê×¼Ğ´·¨
+ * è£…é¥°æ¨¡å¼çš„æ ‡å‡†å†™æ³•
  */
 public class DecoratorStandardTest {
 		
 	public static void main(String[] args) {
 
-		//»ù´¡¹¦ÄÜ
+		//åŸºç¡€åŠŸèƒ½
 		Component cc = new ConcreteComponent("jiaolong");
 
-		//À©Õ¹¹¦ÄÜ
+		//æ‰©å±•åŠŸèƒ½
 		Decorator tshirt = new TShirtsA();
 		Decorator trouse = new BigTrouserA();
 		Decorator sneak = new SneakersA();
 
-		//±ØĞëÏÈÀ©Õ¹component»ù´¡¹¦ÄÜ£¬ÒòÎª¶¼ÊÇÔÚ´Ë¹¦ÄÜÉÏ½øĞĞÀ©Õ¹µÄ
+		//å¿…é¡»å…ˆæ‰©å±•componentåŸºç¡€åŠŸèƒ½ï¼Œå› ä¸ºéƒ½æ˜¯åœ¨æ­¤åŠŸèƒ½ä¸Šè¿›è¡Œæ‰©å±•çš„
 		tshirt.setComponent(cc);
 		trouse.setComponent(tshirt);
 		sneak.setComponent(trouse);
@@ -43,7 +43,7 @@ class ConcreteComponent implements Component {
 
 	@Override
 	public void show() {
-		System.out.format("×°°çµÄ%1$s \n", name);
+		System.out.format("è£…æ‰®çš„%1$s \n", name);
 	}
 
 }
@@ -54,7 +54,7 @@ abstract class Decorator implements Component{
 	
 	@Override
 	public void show() {
-		//±ØĞëÌí¼ÓÅĞ¶Ï£¬·ñÔò ×ÓÀà¶ÔÏóÖ±½Óµ÷ÓÃ¸Ã·½·¨»á±¨´í£¬ÒòÎªÃ»ÓĞÉèÖÃ ×°ÊÎ¶ÔÏó
+		//å¿…é¡»æ·»åŠ åˆ¤æ–­ï¼Œå¦åˆ™ å­ç±»å¯¹è±¡ç›´æ¥è°ƒç”¨è¯¥æ–¹æ³•ä¼šæŠ¥é”™ï¼Œå› ä¸ºæ²¡æœ‰è®¾ç½® è£…é¥°å¯¹è±¡
 		if (component != null){
 			component.show();
 		}
@@ -73,7 +73,7 @@ class TShirtsA extends Decorator {
 	@Override
 	public void show() {
 		super.show();
-		System.out.println("´óTĞô ");
+		System.out.println("å¤§Tæ¤ ");
 		
 	}
 
@@ -84,7 +84,7 @@ class BigTrouserA extends Decorator {
 	@Override
 	public void show() {
 		super.show();
-		System.out.println("¿å¿ã ");
+		System.out.println("å®è£¤ ");
 		
 	}
 
@@ -95,7 +95,7 @@ class SneakersA extends Decorator {
 	@Override
 	public void show() {
 		super.show();
-		System.out.println("ÆÆÇòĞ¬ ");	
+		System.out.println("ç ´çƒé‹ ");	
 		
 	}
 

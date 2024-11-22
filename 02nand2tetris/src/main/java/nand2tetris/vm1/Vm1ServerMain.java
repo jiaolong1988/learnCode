@@ -7,12 +7,12 @@ public class Vm1ServerMain {
         Vm1ServerMain.ParserSingle(file);
     }
     /**
-     * µ¥ÎÄ¼ş½âÎö
+     * å•æ–‡ä»¶è§£æ
      * @param: file
      * @return: void
      **/
     public static void ParserSingle(String file){
-        //ÖØÖÃ¶ÑÕ»Ö¸Õë
+        //é‡ç½®å †æ ˆæŒ‡é’ˆ
         StackSPUtils.reset();
 
         Parser parser = new Parser(file);
@@ -25,16 +25,16 @@ public class Vm1ServerMain {
                 break;
             }
 
-            //vm ·­ÒëÎª »ã±à
+            //vm ç¿»è¯‘ä¸º æ±‡ç¼–
             String arg1 = parser.arg1().trim();
             String arg2 = parser.arg2();
 
-            //push ºÍ pop
+            //push å’Œ pop
             CmomandType currentCommantType = parser.commandType();
             if(currentCommantType == CmomandType.C_PUSH || currentCommantType == CmomandType.C_POP){
                 codeWriter.writePushPop(parser.commandType(), arg1, arg2);
             }
-            //ËãÊõÀàĞÍÖ¸Áî
+            //ç®—æœ¯ç±»å‹æŒ‡ä»¤
             if(currentCommantType == CmomandType.C_ARITHMETIC){
                 codeWriter.writerArithmetic(arg1);
             }

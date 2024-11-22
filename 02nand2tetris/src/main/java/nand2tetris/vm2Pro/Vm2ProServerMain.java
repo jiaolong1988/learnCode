@@ -18,25 +18,25 @@ import java.util.List;
 public class Vm2ProServerMain {
     public static void main(String[] args) {
 
-        //Ö¸¶¨Ä¿Â¼
+        //æŒ‡å®šç›®å½•
         String fibonacciElementDir = "D:\\test\\08\\FunctionCalls\\FibonacciElement";
         String staticTestDir = "D:\\test\\08\\FunctionCalls\\StaticsTest";
         mergeCompileTest(staticTestDir);
     }
 
     public static void mergeCompileTest(String dir) {
-        //Ö¸Áî½áºÏ
+        //æŒ‡ä»¤ç»“åˆ
         List<String> infoList = new ArrayList();
 
-        //³õÊ¼»¯
+        //åˆå§‹åŒ–
         StringBuilder sb = init();
-        //Ìí¼Ó³õÊ¼»¯Ö¸Áî
+        //æ·»åŠ åˆå§‹åŒ–æŒ‡ä»¤
         List info = Arrays.asList(sb.toString().split(" "));
         infoList.addAll(info);
 
         mergeCompile(dir, infoList);
 
-        //»ã±àÊä³ö
+        //æ±‡ç¼–è¾“å‡º
         File dirFile = new File(dir);
         String ourFileAddress = String.join(File.separator, dir, dirFile.getName() + ".vm");
         Path filePath = Paths.get(ourFileAddress);
@@ -45,9 +45,9 @@ public class Vm2ProServerMain {
 
     /**
      *
-     * ³õÊ¼»¯²Ù×÷
-     *  1.¶ÑÕ»³õÊ¼ÖµÎª£º256
-     *  2.µÚÒ»¸öÖ´ĞĞ³ÌĞò±ØĞëÎª£ºSys.init
+     * åˆå§‹åŒ–æ“ä½œ
+     *  1.å †æ ˆåˆå§‹å€¼ä¸ºï¼š256
+     *  2.ç¬¬ä¸€ä¸ªæ‰§è¡Œç¨‹åºå¿…é¡»ä¸ºï¼šSys.init
      **/
     private static StringBuilder init() {
         //init-start
@@ -77,9 +77,9 @@ public class Vm2ProServerMain {
 
     public static void mergeCompile(String dir, List<String> infoList) {
 
-        //Ä¿Â¼
+        //ç›®å½•
         File dirFile = new File(dir);
-        //»ñÈ¡Ä¿Â¼ÏÂµÄ vmÎÄ¼ş
+        //è·å–ç›®å½•ä¸‹çš„ vmæ–‡ä»¶
         List<String> vmList = new ArrayList();
         for (File fp : dirFile.listFiles()) {
             if (fp.getName().endsWith(".vm")) {
@@ -87,7 +87,7 @@ public class Vm2ProServerMain {
             }
         }
 
-        //»ñÈ¡½âÎöĞÅÏ¢
+        //è·å–è§£æä¿¡æ¯
         for (String vmFile : vmList) {
             CodeWriter cw = vmParserMerge(vmFile);
             List<String> info = cw.getVmInfo();
@@ -97,7 +97,7 @@ public class Vm2ProServerMain {
 
 
     /**
-     * ÎÄ¼ş¼Ğ vmÎÄ¼şºÏ²¢½âÎö
+     * æ–‡ä»¶å¤¹ vmæ–‡ä»¶åˆå¹¶è§£æ
      *
      * @param: file
      * @return: void
@@ -120,15 +120,15 @@ public class Vm2ProServerMain {
                 codeWriter.wirteReturn();
 
             } else {
-                //vm ·­ÒëÎª »ã±à
+                //vm ç¿»è¯‘ä¸º æ±‡ç¼–
                 String arg1 = parser.arg1().trim();
                 String arg2 = parser.arg2();
 
-                //push ºÍ pop
+                //push å’Œ pop
                 if (currentCommantType == CmomandType.C_PUSH || currentCommantType == CmomandType.C_POP) {
                     codeWriter.writePushPop(parser.commandType(), arg1, arg2);
                 }
-                //ËãÊõÀàĞÍÖ¸Áî
+                //ç®—æœ¯ç±»å‹æŒ‡ä»¤
                 if (currentCommantType == CmomandType.C_ARITHMETIC) {
                     codeWriter.writerArithmetic(arg1);
                 }

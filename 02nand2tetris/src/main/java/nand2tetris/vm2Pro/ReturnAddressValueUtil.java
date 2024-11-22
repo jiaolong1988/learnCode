@@ -8,12 +8,12 @@ import java.util.concurrent.atomic.AtomicInteger;
  **/
 public class ReturnAddressValueUtil {
     private static AtomicInteger returnAddressValue = new AtomicInteger(0);
-    //ÖØÖÃ
+    //é‡ç½®
     public static void reset(){
         returnAddressValue.set(0);
     }
 
-    //»ñÈ¡·µ»ØµØÖ·µÄÎ¨Ò»Öµ
+    //è·å–è¿”å›åœ°å€çš„å”¯ä¸€å€¼
     public static int getOnlyValue(){
        return returnAddressValue.incrementAndGet();
     }

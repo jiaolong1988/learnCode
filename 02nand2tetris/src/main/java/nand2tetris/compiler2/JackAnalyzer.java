@@ -10,11 +10,11 @@ import java.util.List;
 public class JackAnalyzer {
     public static void main(String[] args) {
 
-        //目录
+        //鐩綍
         String dir = "D:\\test\\11\\Square";
         File dirFile = new File(dir);
 
-        //获取目录下的 jack文件
+        //鑾峰彇鐩綍涓嬬殑 jack鏂囦欢
         List<File> jackList = new ArrayList();
         for(File fp : dirFile.listFiles()){
             if(fp.getName().endsWith(".jack")){
@@ -22,7 +22,7 @@ public class JackAnalyzer {
             }
         }
 
-        //获取解析信息
+        //鑾峰彇瑙ｆ瀽淇℃伅
         for(File jackFile: jackList){
            // String file  = "D:\\test\\11\\Square\\Square.jack";
            // File inputFile = new File(file);
