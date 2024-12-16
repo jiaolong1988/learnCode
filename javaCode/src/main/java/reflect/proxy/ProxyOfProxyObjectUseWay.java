@@ -14,7 +14,7 @@ class Student implements People {
 
 	@Override
 	public People work(String workName) {
-		System.out.println("¹¤×÷ÄÚÈİÊÇ" + workName);
+		System.out.println("å·¥ä½œå†…å®¹æ˜¯" + workName);
 		return this;
 	}
 
@@ -25,7 +25,7 @@ class Student implements People {
 }
 
 class WorkHandler implements InvocationHandler {
-	// ±»´úÀí¶ÔÏó
+	// è¢«ä»£ç†å¯¹è±¡
 	private Object obj;
 
 	public WorkHandler(Object obj) {
@@ -34,16 +34,16 @@ class WorkHandler implements InvocationHandler {
 
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-		System.out.println("	before ¶¯Ì¬´úÀí...");
-		System.out.println("	´úÀí¶ÔÏóÃû³Æ£º" + proxy.getClass().getName());
-		System.out.println("	±»´úÀí¶ÔÏóÃû³Æ" + this.obj.getClass().getName());
+		System.out.println("	before åŠ¨æ€ä»£ç†...");
+		System.out.println("	ä»£ç†å¯¹è±¡åç§°ï¼š" + proxy.getClass().getName());
+		System.out.println("	è¢«ä»£ç†å¯¹è±¡åç§°" + this.obj.getClass().getName());
 		if (method.getName().equals("work")) {
 			method.invoke(this.obj, args);
-			System.out.println("	work() after ¶¯Ì¬´úÀí...");
-			//this´ú±íµÄÊÇInvocationHandler½Ó¿ÚÊµÏÖÀà±¾Éí£¬²¢²»ÊÇÕæÊµµÄ´úÀí¶ÔÏó¡£
+			System.out.println("	work() after åŠ¨æ€ä»£ç†...");
+			//thisä»£è¡¨çš„æ˜¯InvocationHandleræ¥å£å®ç°ç±»æœ¬èº«ï¼Œå¹¶ä¸æ˜¯çœŸå®çš„ä»£ç†å¯¹è±¡ã€‚
 			return proxy;
 		} else {
-			System.out.println("	time() after ¶¯Ì¬´úÀí...");
+			System.out.println("	time() after åŠ¨æ€ä»£ç†...");
 			return method.invoke(this.obj, args);
 		}
 	}
@@ -54,8 +54,8 @@ public class ProxyOfProxyObjectUseWay {
 
 	public static void main(String[] args) {
 		/**
-		 * ±¾°¸ÀıÖ÷ÒªÓÃÓÚinvoke(Object proxy, Method method, Object[] args)ÖĞ proxy¶ÔÏóÈçºÎÊ¹ÓÃ
-		 * ²Î¿´£ºhttps://www.jianshu.com/p/f4159d53a0c0
+		 * æœ¬æ¡ˆä¾‹ä¸»è¦ç”¨äºinvoke(Object proxy, Method method, Object[] args)ä¸­ proxyå¯¹è±¡å¦‚ä½•ä½¿ç”¨
+		 * å‚çœ‹ï¼šhttps://www.jianshu.com/p/f4159d53a0c0
 		 */
 		People people = new Student();
 		InvocationHandler handler = new WorkHandler(people);
@@ -64,9 +64,9 @@ public class ProxyOfProxyObjectUseWay {
 				people.getClass().getClassLoader(),
 				people.getClass().getInterfaces(), 
 				handler);
-		People p = proxy.work("Ğ´´úÂë").work("¿ª»á").work("ÉÏ¿Î");
+		People p = proxy.work("å†™ä»£ç ").work("å¼€ä¼š").work("ä¸Šè¯¾");
 
-		System.out.println("-----------------´òÓ¡·µ»ØµÄ¶ÔÏó" + p.getClass());
+		System.out.println("-----------------æ‰“å°è¿”å›çš„å¯¹è±¡" + p.getClass());
 		System.out.println("");
 
 		String time = proxy.time();

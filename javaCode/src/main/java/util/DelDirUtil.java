@@ -58,9 +58,13 @@ public class DelDirUtil {
 	 * @param: filePath
 	 * @throws
 	 */
-	public static void deleteFolders(String filePath) {
-
+	public static boolean deleteFolders(String filePath) {
 		Path path = Paths.get(filePath);
+
+		if (!path.toFile().exists()) {
+			return true;
+		}
+
 		try {
 			Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
 				@Override
@@ -75,9 +79,11 @@ public class DelDirUtil {
 					return FileVisitResult.CONTINUE;
 				}
 			});
+			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return false;
 	}
 
 }

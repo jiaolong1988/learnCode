@@ -22,21 +22,21 @@ class ChinaPerson implements Person{
 	}
 }
 
-//¼Ì³ĞĞ´·¨
+//ç»§æ‰¿å†™æ³•
 class BaseInvokationHandler implements InvocationHandler {
 	/*
-	 * proxy£º	ÒÑ´´½¨µÄ´úÀí¶ÔÏó
-	 * method£º	´ú±íÕıÔÚÖ´ĞĞµÄ·½·¨
-	 * args£º	ÕıÔÚÖ´ĞĞ·½·¨µÄ²ÎÊı¡£
+	 * proxyï¼š	å·²åˆ›å»ºçš„ä»£ç†å¯¹è±¡
+	 * methodï¼š	ä»£è¡¨æ­£åœ¨æ‰§è¡Œçš„æ–¹æ³•
+	 * argsï¼š	æ­£åœ¨æ‰§è¡Œæ–¹æ³•çš„å‚æ•°ã€‚
 	 */
 	public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
-		System.out.print("----ÕıÔÚÖ´ĞĞµÄ·½·¨:" + method);
+		System.out.print("----æ­£åœ¨æ‰§è¡Œçš„æ–¹æ³•:" + method);
 		if(args != null) 
-			System.out.print("  ²ÎÊı:" + args[0].toString()+"\n");
+			System.out.print("  å‚æ•°:" + args[0].toString()+"\n");
 		else
-			System.out.print(" ÎŞ²ÎÊı: \n" );
+			System.out.print(" æ— å‚æ•°: \n" );
 			
-		//ĞèÒª±»´úÀíµÄ¶ÔÏó
+		//éœ€è¦è¢«ä»£ç†çš„å¯¹è±¡
 		ChinaPerson cp = new ChinaPerson();
 		Object result = method.invoke(cp, args);	
 		
@@ -44,9 +44,9 @@ class BaseInvokationHandler implements InvocationHandler {
 	}
 }
 
-//ÖÕ¼«Ğ´·¨
+//ç»ˆæå†™æ³•
 class AopInvokationHandler implements InvocationHandler {
-	//ĞèÒª±»´úÀíµÄ¶ÔÏó
+	//éœ€è¦è¢«ä»£ç†çš„å¯¹è±¡
     private Object target = null;
     
     AopInvokationHandler(){}
@@ -56,24 +56,24 @@ class AopInvokationHandler implements InvocationHandler {
 
     public Object bind(Object target) {
         this.target = target;
-        return Proxy.newProxyInstance(target.getClass().getClassLoader(), 	  //±»´úÀí¶ÔÏóµÄÀà¼ÓÔØÆ÷
-        							  target.getClass().getInterfaces(),	  //±»´úÀí¶ÔÏóµÄ½Ó¿ÚĞÅÏ¢
-        							  this);								  //InvocationHandlerÊµÏÖÀà
+        return Proxy.newProxyInstance(target.getClass().getClassLoader(), 	  //è¢«ä»£ç†å¯¹è±¡çš„ç±»åŠ è½½å™¨
+        							  target.getClass().getInterfaces(),	  //è¢«ä»£ç†å¯¹è±¡çš„æ¥å£ä¿¡æ¯
+        							  this);								  //InvocationHandlerå®ç°ç±»
     }
 
 	/*
-	 * proxy£º	ÒÑ´´½¨µÄ´úÀí¶ÔÏó
-	 * method£º	´ú±íÕıÔÚÖ´ĞĞµÄ·½·¨
-	 * args£º	ÕıÔÚÖ´ĞĞ·½·¨µÄ²ÎÊı¡£
+	 * proxyï¼š	å·²åˆ›å»ºçš„ä»£ç†å¯¹è±¡
+	 * methodï¼š	ä»£è¡¨æ­£åœ¨æ‰§è¡Œçš„æ–¹æ³•
+	 * argsï¼š	æ­£åœ¨æ‰§è¡Œæ–¹æ³•çš„å‚æ•°ã€‚
 	 */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        System.out.println("´úÀíÇ°...");
+        System.out.println("ä»£ç†å‰...");
         Object obj = method.invoke(target, args);
-        System.out.println(obj==null?"Ã»ÓĞ·µ»ØÖµ" :"·µ»ØÖµ"+(String)obj);
-        System.out.println("´úÀíºó...");
+        System.out.println(obj==null?"æ²¡æœ‰è¿”å›å€¼" :"è¿”å›å€¼"+(String)obj);
+        System.out.println("ä»£ç†å...");
         
-        //ÉèÖÃ´úÀíµÄ·µ»Ø½á¹û
+        //è®¾ç½®ä»£ç†çš„è¿”å›ç»“æœ
         return "jiao_val";
     }
 }
@@ -82,56 +82,56 @@ class AopInvokationHandler implements InvocationHandler {
 
 public class ProxyBaseUse {
 	/**
-	 * »ù´¡ÓÃ·¨
+	 * åŸºç¡€ç”¨æ³•
 	 * @throws SecurityException 
 	 * @throws NoSuchMethodException 
 	 */
 	public static void baseUseWay() throws Exception {
 				
 		
-//Ğ´·¨1-´´½¨´úÀí¶ÔÏóµÄ¹ı³Ì		
+//å†™æ³•1-åˆ›å»ºä»£ç†å¯¹è±¡çš„è¿‡ç¨‹		
 		
-//		  //»ñÈ¡personµÄ´úÀíclass ×¢Òâ£ºµÚ¶ş¸ö²ÎÊıÒ»¶¨ÒªĞ´½Ó¿ÚÀà 
+//		  //è·å–personçš„ä»£ç†class æ³¨æ„ï¼šç¬¬äºŒä¸ªå‚æ•°ä¸€å®šè¦å†™æ¥å£ç±» 
 //		  Class<?> proxyClass = Proxy.getProxyClass(Person.class.getClassLoader(), Person.class);
-//		  //ÉèÖÃ´úÀíÀàµÄ¹¹Ôì·½·¨ 
+//		  //è®¾ç½®ä»£ç†ç±»çš„æ„é€ æ–¹æ³• 
 //		  Constructor<?> constructor = proxyClass.getConstructor(InvocationHandler.class); 
-//		  //´´½¨Ò»¸ö¶¯Ì¬´úÀí¶ÔÏó 
+//		  //åˆ›å»ºä¸€ä¸ªåŠ¨æ€ä»£ç†å¯¹è±¡ 
 //		  Person p = (Person) constructor.newInstance(handler);
 		 
 
-//Ğ´·¨2-´´½¨´úÀí¶ÔÏó(Ğ´·¨1µÄ¼òĞ´)				
-		//´úÀí¶ÔÏóµÄÒµÎñ´¦ÀíÂß¼­
+//å†™æ³•2-åˆ›å»ºä»£ç†å¯¹è±¡(å†™æ³•1çš„ç®€å†™)				
+		//ä»£ç†å¯¹è±¡çš„ä¸šåŠ¡å¤„ç†é€»è¾‘
 		InvocationHandler handler = new BaseInvokationHandler();
 		
-		//Àà¼ÓÔØÆ÷-½Ó¿Ú
+		//ç±»åŠ è½½å™¨-æ¥å£
 		ClassLoader personInterfaceLoader = Person.class.getClassLoader();
-		//Àà¼ÓÔØÆ÷-½Ó¿ÚÊµÏÖÀà
+		//ç±»åŠ è½½å™¨-æ¥å£å®ç°ç±»
 		ClassLoader interfaceImplClassLoader = ChinaPerson.class.getClassLoader();
-		//Àà¼ÓÔØÆ÷-½Ó¿ÚÊµÏÖÀàµÄÊµÀı
+		//ç±»åŠ è½½å™¨-æ¥å£å®ç°ç±»çš„å®ä¾‹
 		ClassLoader interfaceImplClassObjectLoader = new ChinaPerson().getClass().getClassLoader();
 		
-		//Ê¹ÓÃÖ¸¶¨µÄInvocationHandlerÀ´Éú³ÉÒ»¸ö¶¯Ì¬´úÀí¶ÔÏó
-		Person p = (Person)Proxy.newProxyInstance(interfaceImplClassObjectLoader,  	 	//Àà¼ÓÔØÆ÷-Ê¹ÓÃ½Ó¿ÚµÄÀà¼ÓÔØÆ÷¼´¿É
-											    //new Class[]{Person.class},     		//½Ó¿Ú
+		//ä½¿ç”¨æŒ‡å®šçš„InvocationHandleræ¥ç”Ÿæˆä¸€ä¸ªåŠ¨æ€ä»£ç†å¯¹è±¡
+		Person p = (Person)Proxy.newProxyInstance(interfaceImplClassObjectLoader,  	 	//ç±»åŠ è½½å™¨-ä½¿ç”¨æ¥å£çš„ç±»åŠ è½½å™¨å³å¯
+											    //new Class[]{Person.class},     		//æ¥å£
 												  ChinaPerson.class.getInterfaces(),
-												  handler);						 	    //ÒµÎñ·½·¨
+												  handler);						 	    //ä¸šåŠ¡æ–¹æ³•
 		
-		//Í¨¹ı´úÀí¶ÔÏóÌõÓÃwalk()ºÍsayHello()·½·¨
+		//é€šè¿‡ä»£ç†å¯¹è±¡æ¡ç”¨walk()å’ŒsayHello()æ–¹æ³•
 		String val = p.walk();
-		System.out.println("===·µ»ØÖµ"+val);
+		System.out.println("===è¿”å›å€¼"+val);
 		
 		System.out.println("");
-		p.sayHello("ËïÎò¿Õ");
+		p.sayHello("å­™æ‚Ÿç©º");
 	}
 	
 	/**
-	 * ¶¯Ì¬´úÀíAOPµÄÊµÏÖ
+	 * åŠ¨æ€ä»£ç†AOPçš„å®ç°
 	 */
 	public static void aopUseWay() {
 		AopInvokationHandler dpih = new AopInvokationHandler();
 		Person p = (Person)dpih.bind(new ChinaPerson());
 		
-		System.out.println("Ö´ĞĞwalk·½·¨µÄ·µ»Ø½á¹û£º"+p.walk());
+		System.out.println("æ‰§è¡Œwalkæ–¹æ³•çš„è¿”å›ç»“æœï¼š"+p.walk());
 		System.out.println("");
 		p.sayHello("aop");
 		
@@ -139,7 +139,7 @@ public class ProxyBaseUse {
 	
 	public static void main(String[] args) throws Exception {
 		/**
-		 * ¶¯Ì¬´úÀíµÄ»ù±¾Ê¹ÓÃÓëAOPµÄÊµÏÖ°¸Àı
+		 * åŠ¨æ€ä»£ç†çš„åŸºæœ¬ä½¿ç”¨ä¸AOPçš„å®ç°æ¡ˆä¾‹
 		 */
 		baseUseWay();
 		System.out.println(" \r\n----------------- \r\n");
