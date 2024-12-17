@@ -71,7 +71,7 @@ public class SeqExecFunctionUtiil {
         try {
             clazzObj = clazz.newInstance();
         } catch (Exception e) {
-            logger.info(clazz.getName() + " instance failed");
+            logger.info(clazz.getName() + " create instance failed");
         }
 
         //创建function list
@@ -91,16 +91,17 @@ public class SeqExecFunctionUtiil {
      **/
     private static Function<Boolean, Boolean> createFunction(Method execMethod, Object clazzObj) {
         return (checkInfo) -> {
+            String execMethodName = clazzObj.getClass().getName()+ "."+ execMethod.getName();
             if (checkInfo) {
                 try {
-                    logger.info(execMethod.getName() + ": method start exec.");
+                    logger.info(execMethodName + ": method start exec.");
 
                     return (boolean) execMethod.invoke(clazzObj, null);
                 } catch (Exception e) {
-                    logger.info(execMethod.getName() + " method exec failed", e);
+                    logger.info(execMethodName + " method exec failed,possible the method contains parameters.", e);
                 }
             }else{
-                logger.info(execMethod.getName() + ":  no have exec.");
+                logger.info(execMethodName + ":  no have exec.");
             }
             return false;
         };

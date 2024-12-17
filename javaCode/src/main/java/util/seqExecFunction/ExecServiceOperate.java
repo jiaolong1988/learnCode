@@ -1,6 +1,10 @@
 package util.seqExecFunction;
 
 import org.apache.log4j.Logger;
+import util.seqExecFunction.base.BaseServiceOperate;
+
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * 顺序执行的业务逻辑
@@ -9,29 +13,51 @@ import org.apache.log4j.Logger;
  * @author jiaolong
  * @date 2024/12/16 15:56
  **/
-public class ExecServiceOperate {
+public class ExecServiceOperate extends BaseServiceOperate {
     private static final Logger logger = Logger.getLogger(ExecServiceOperate.class);
-    private LoadDao load = new LoadDao();
+    private InterruptStatusRecordUtil  interruptStatus = new InterruptStatusRecordUtil("ExecTaskStatus.flag");
 
+    public boolean exec0() {
+        return interruptStatus.createConfigFile(ExecTaskStatus.class);
+    }
+    
     public boolean exec1() {
-        load.loadData();
-        logger.info("a");
-        return true;
+        StatusInfoCheck statusInfoCheck = initCheck(ExecTaskStatus.taskEndFlag,"exec1", interruptStatus);
+
+        Supplier<Boolean> func = ()->{
+            System.out.println("exec exec1 func.......");
+            return true;
+        } ;
+
+        return commonExec(func, statusInfoCheck);
     }
 
     public boolean exec2() {
-        logger.info("b");
-        return false;
+        StatusInfoCheck statusInfoCheck = initCheck(ExecTaskStatus.renameList,"exec2", interruptStatus);
+
+        Supplier<Boolean> func = ()->{
+            System.out.println("exec exec2 func.......");
+            return true;
+        } ;
+
+        return commonExec(func, statusInfoCheck);
     }
+
+
 
     public boolean exec3() {
-        logger.info("c");
-        return true;
+        StatusInfoCheck statusInfoCheck = initCheck(ExecTaskStatus.createCheckDataFile,"exec3", interruptStatus);
+
+        Supplier<Boolean> func = ()->{
+            System.out.println("exec exec3 func.......");
+            return true;
+        } ;
+
+        return commonExec(func, statusInfoCheck);
+    }
+
+    interface ServiceMethod{
+        boolean exec();
     }
 }
 
-class LoadDao {
-    public void loadData() {
-        System.out.println("LoadDao.loadData(), load data init ....");
-    }
-}
