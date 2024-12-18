@@ -13,25 +13,24 @@ import java.util.*;
 public class OrderedPropertiesUtil{
 	private static final Logger logger = Logger.getLogger(OrderedPropertiesUtil.class);
 
-	private OrderedProperties prop ;
+	private final OrderedProperties prop ;
 	//属性文件的绝对地址
-	private String propertyFilePath ;
+	private final String propertyFilePath ;
 
 	/**
-	 * 
-	 * @param: propertyFilePath
-	 * @return: 
+	 * @param propertyFilePath - 配置文件路径
 	 **/
 	public OrderedPropertiesUtil(String propertyFilePath) {
 		this.propertyFilePath = propertyFilePath;
 		this.prop = new OrderedProperties();
 	}
 
+
 	/**
 	 * 创建Properties 文件
-	 * @param values
-	 * @return
-	 */
+	 * @param values - 属性信息
+	 * @return boolean
+	 **/
 	public synchronized boolean createProperFile(Map<String, String> values) {
 		for (Map.Entry<String, String> entry : values.entrySet()) {
 			String key = entry.getKey();
@@ -46,8 +45,8 @@ public class OrderedPropertiesUtil{
 
 	/**
 	 * 修改属性至文件中
-	 * @param propName
-	 * @param newValue
+	 * @param propName 属性名称
+	 * @param newValue 属性值
 	 */
 	public synchronized boolean setValToFile(String propName, String newValue) {
 		loadFile();
@@ -58,23 +57,23 @@ public class OrderedPropertiesUtil{
 	}
 
 	/**
-	 * 获取指定属性的值
-	 * @param propName
-	 * @return
-	 */
+	 *
+	 * @param propName - 获取指定属性的值
+	 * @return java.lang.String
+	 **/
 	public synchronized String getVal(String propName) {
-
 		loadFile();
+
 		String val = prop.getProperty(propName);
 		if(val == null) {
 			logger.error("=====================>>>>>>>>>>>>>>>>>> read interrupt file info is null. attrName:"+propName +"  filePath:"+propertyFilePath);
-
 			for (Map.Entry<Object, Object> entry :prop.entrySet()) {
 				Object key = entry.getKey();
 				Object value = entry.getValue();
 
 				logger.error("getVal ["+key+"] ==> key:"+key+" value:"+value);
 			}
+
 			System.exit(0);
 		}
 
@@ -83,7 +82,7 @@ public class OrderedPropertiesUtil{
 
 	/**
 	 * 获取指定属性的值
-	 * @return
+	 * @return 返回单项属性的所有值
 	 */
 	public synchronized Map<String,String> getAllVal() {
 
@@ -102,14 +101,14 @@ public class OrderedPropertiesUtil{
 	}
 
 	private synchronized boolean outPropFile() {
-		boolean flag = false;
-		try(OutputStream out = new FileOutputStream(propertyFilePath);) {
+		try(OutputStream out = new FileOutputStream(propertyFilePath)) {
 			prop.store(out, "Project configuration file");
-			flag = true;
+			return true;
 		} catch (IOException e) {
 			logger.error(" Interrupt file write fail, filePath:"+propertyFilePath,e);
+			System.exit(0);
 		}
-		return flag;
+		return false;
 	}
 
 
@@ -132,81 +131,55 @@ public class OrderedPropertiesUtil{
 		return false;
 	}
 
-}
+	class OrderedProperties extends Properties{
 
-/**
- *
- * @author jiaolong
- * @date 2023-11-16 04:24:37
- */
-class OrderedProperties extends Properties {
+		private static final long serialVersionUID = 4710927773256743817L;
 
-	private static final long serialVersionUID = 4710927773256743817L;
+		private final LinkedHashSet<Object> keys = new LinkedHashSet<>();
 
-	private final LinkedHashSet<Object> keys = new LinkedHashSet<>();
-
-	@Override
-	public Enumeration<Object> keys() {
-		return Collections.<Object> enumeration(keys);
-	}
-
-	@Override
-	public synchronized Object put(Object key, Object value) {
-		keys.add(key);
-		return super.put(key, value);
-	}
-
-	@Override
-	public Set<Object> keySet() {
-		return keys;
-	}
-
-	@Override
-	public Collection<Object> values() {
-		Set<Object> set = new LinkedHashSet<>();
-
-		for (Object key : this.keys) {
-			set.add(this.getProperty((String) key));
+		@Override
+		public Enumeration<Object> keys() {
+			return Collections.enumeration(keys);
 		}
 
-		return set;
-	}
-
-	@Override
-	public synchronized Object remove(Object key) {
-		keys.remove(key);
-		return super.remove(key);
-	}
-
-	@Override
-	public Set<String> stringPropertyNames() {
-		Set<String> set = new LinkedHashSet<>();
-
-		for (Object key : this.keys) {
-			set.add((String) key);
+		@Override
+		public synchronized Object put(Object key, Object value) {
+			keys.add(key);
+			return super.put(key, value);
 		}
 
-		return set;
+		@Override
+		public Set<Object> keySet() {
+			return keys;
+		}
+
+		@Override
+		public Collection<Object> values() {
+			Set<Object> set = new LinkedHashSet<>();
+
+			for (Object key : this.keys) {
+				set.add(this.getProperty((String) key));
+			}
+
+			return set;
+		}
+
+		@Override
+		public synchronized Object remove(Object key) {
+			keys.remove(key);
+			return super.remove(key);
+		}
+
+		@Override
+		public Set<String> stringPropertyNames() {
+			Set<String> set = new LinkedHashSet<>();
+
+			for (Object key : this.keys) {
+				set.add((String) key);
+			}
+
+			return set;
+		}
 	}
-
-//	@Override
-//	public synchronized int hashCode() {
-//		final int prime = 31;
-//		int result = super.hashCode();
-//		result = prime * result + Objects.hash(keys);
-//		return result;
-//	}
-//
-//	@Override
-//	public synchronized boolean equals(Object obj) {
-//		if (this == obj)
-//			return true;
-//		if (!super.equals(obj))
-//			return false;
-//		if (getClass() != obj.getClass())
-//			return false;
-//		OrderedProperties other = (OrderedProperties) obj;
-//		return Objects.equals(keys, other.keys);
-//	}
-
 }
+
