@@ -15,6 +15,7 @@ public class SeqExecFunctionUtiil {
     private static final Logger logger = Logger.getLogger(SeqExecFunctionUtiil.class);
 
     private static final String EXEC_PREFIX = "exec";
+    public static final boolean PRINT_LOG_FLAG = false;
 
     /**
      *  获取顺序执行function的执行结果
@@ -94,8 +95,9 @@ public class SeqExecFunctionUtiil {
             String execMethodName = clazzObj.getClass().getName()+ "."+ execMethod.getName();
             if (checkInfo) {
                 try {
-                    logger.info(execMethodName + ": method start exec.");
-
+                    if(PRINT_LOG_FLAG){
+                        logger.info(execMethodName + ": method start exec.");
+                    }
                     return (boolean) execMethod.invoke(clazzObj, null);
                 } catch (Exception e) {
                     logger.info(execMethodName + " method exec failed,possible the method contains parameters.", e);
