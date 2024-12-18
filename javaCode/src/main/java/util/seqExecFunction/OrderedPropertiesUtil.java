@@ -1,4 +1,4 @@
-package util;
+package util.seqExecFunction;
 
 import org.apache.log4j.Logger;
 
@@ -75,7 +75,7 @@ public class OrderedPropertiesUtil{
 
 				logger.error("getVal ["+key+"] ==> key:"+key+" value:"+value);
 			}
-			return "";
+			System.exit(0);
 		}
 
 		return val.trim();
@@ -189,24 +189,24 @@ class OrderedProperties extends Properties {
 		return set;
 	}
 
-	@Override
-	public synchronized int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + Objects.hash(keys);
-		return result;
-	}
-
-	@Override
-	public synchronized boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		OrderedProperties other = (OrderedProperties) obj;
-		return Objects.equals(keys, other.keys);
-	}
+//	@Override
+//	public synchronized int hashCode() {
+//		final int prime = 31;
+//		int result = super.hashCode();
+//		result = prime * result + Objects.hash(keys);
+//		return result;
+//	}
+//
+//	@Override
+//	public synchronized boolean equals(Object obj) {
+//		if (this == obj)
+//			return true;
+//		if (!super.equals(obj))
+//			return false;
+//		if (getClass() != obj.getClass())
+//			return false;
+//		OrderedProperties other = (OrderedProperties) obj;
+//		return Objects.equals(keys, other.keys);
+//	}
 
 }

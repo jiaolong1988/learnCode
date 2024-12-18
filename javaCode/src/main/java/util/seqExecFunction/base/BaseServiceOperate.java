@@ -47,7 +47,8 @@ public class BaseServiceOperate {
     public boolean isExecCheck(StatusInfoCheck statusInfoCheck){
         String statusVal= statusInfoCheck.getStatusVal();
         if(statusVal == null || statusVal.isEmpty()){
-            logger.error(statusInfoCheck.getStatusField()+" is null.");
+            String interruptConfigFile = statusInfoCheck.getInterruptStatus().getInterruptConfigFile();
+            logger.error(interruptConfigFile+" : 【"+statusInfoCheck.getStatusField()+"】 field is null.");
             System.exit(0);
         }
 

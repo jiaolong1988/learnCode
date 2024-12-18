@@ -2,7 +2,6 @@ package util.seqExecFunction;
 
 
 import org.apache.log4j.Logger;
-import util.OrderedPropertiesUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,12 +34,21 @@ public class InterruptStatusRecordUtil {
         orderedPropertiesUtil = new OrderedPropertiesUtil(interruptStatusRecordFile.getAbsolutePath());
     }
 
+    /**
+     * 中断配置文件相对路径
+     * @return
+     **/
+    public String getInterruptConfigFile(){
+        return TMP_DIR + File.separator + interruptStatusRecordFile.getName();
+    }
+
     private void init(){
         File fdir = new File(tmpinfoDir);
         if (!fdir.exists()) {
             fdir.mkdirs();
         }
     }
+
     /**
      * 创建中断文件
      * @param c

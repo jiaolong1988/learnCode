@@ -21,12 +21,12 @@ public class ExecServiceOperate extends BaseServiceOperate {
         return interruptStatus.createConfigFile(ExecTaskStatus.class);
     }
     
-    public boolean exec1() {
+    public boolean exec01() {
         StatusInfoCheck statusInfoCheck = initCheck(ExecTaskStatus.taskEndFlag,"exec1", interruptStatus);
 
         Supplier<Boolean> func = ()->{
-            System.out.println("exec exec1 func.......");
-            return true;
+            logger.info("exec exec1 func.......");
+            return false;
         } ;
 
         return commonExec(func, statusInfoCheck);
@@ -36,7 +36,7 @@ public class ExecServiceOperate extends BaseServiceOperate {
         StatusInfoCheck statusInfoCheck = initCheck(ExecTaskStatus.renameList,"exec2", interruptStatus);
 
         Supplier<Boolean> func = ()->{
-            System.out.println("exec exec2 func.......");
+            logger.info("exec exec2 func.......");
             return true;
         } ;
 
@@ -49,15 +49,16 @@ public class ExecServiceOperate extends BaseServiceOperate {
         StatusInfoCheck statusInfoCheck = initCheck(ExecTaskStatus.createCheckDataFile,"exec3", interruptStatus);
 
         Supplier<Boolean> func = ()->{
-            System.out.println("exec exec3 func.......");
+            logger.info("exec exec3 func.......");
             return true;
         } ;
 
         return commonExec(func, statusInfoCheck);
     }
 
-    interface ServiceMethod{
-        boolean exec();
+    public boolean exec9() {
+        logger.info("exec10 func  delete interruptConfig file.......");
+        return true;
     }
 }
 
