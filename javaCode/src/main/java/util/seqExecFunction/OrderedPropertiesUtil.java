@@ -25,7 +25,6 @@ public class OrderedPropertiesUtil{
 		this.prop = new OrderedProperties();
 	}
 
-
 	/**
 	 * 创建Properties 文件
 	 * @param values - 属性信息
@@ -131,7 +130,7 @@ public class OrderedPropertiesUtil{
 		return false;
 	}
 
-	class OrderedProperties extends Properties{
+	static class OrderedProperties extends Properties{
 
 		private static final long serialVersionUID = 4710927773256743817L;
 
