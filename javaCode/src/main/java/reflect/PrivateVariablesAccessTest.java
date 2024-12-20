@@ -2,25 +2,12 @@ package reflect;
 
 import java.lang.reflect.Field;
 
-class User {
-    private String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-}
-
-class Student {
-    private String studentName = "xiaoming";
-    private String studentAge = "18";
-    private String address = "beijing";
-}
-
-public class ReflectTest {
+/**
+ * 通过反射获取私有变量的值
+ * @author jiaolong
+ * @date 2024-12-20 11:08
+ */
+public class PrivateVariablesAccessTest {
     private String testName = "testName";
 
     public static void main(String[] args) throws Exception {
@@ -48,8 +35,23 @@ public class ReflectTest {
 
             System.out.println("获取对象字段的值：" + field.get(student));
         }
+    }
+}
 
+class User {
+    private String name;
 
+    public String getName() {
+        return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+
+class Student {
+    private String studentName = "xiaoming";
+    private String studentAge = "18";
+    private String address = "beijing";
 }
