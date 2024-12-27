@@ -9,5 +9,5 @@ import java.util.List;
  * @date: 2024/06/17 10:11
  **/
 public interface EmployeeMapper {
-    List<Employee> getQuery();
+    List<Employee> getQuery(List  userIds);
 }
