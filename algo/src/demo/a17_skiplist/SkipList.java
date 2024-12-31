@@ -9,6 +9,19 @@ package demo.a17_skiplist;
  */
 public class SkipList {
 
+  public static void main(String[] args) {
+    SkipList list = new SkipList();
+    list.insert(1);
+    list.insert(2);
+    list.insert(3);
+    list.insert(4);
+    list.insert(5);
+    list.insert(6);
+    list.insert(7);
+    list.insert(8);
+    list.printAll();
+  }
+
   private static final float SKIPLIST_P = 0.5f;
   private static final int MAX_LEVEL = 16;
 
@@ -41,6 +54,7 @@ public class SkipList {
       update[i] = head;
     }
 
+    //记录每个级别小于 update[] 中插入值的最大值
     // record every level largest value which smaller than insert value in update[]
     Node p = head;
     for (int i = level - 1; i >= 0; --i) {
@@ -119,7 +133,7 @@ public class SkipList {
       builder.append(data);
       builder.append("; levels: ");
       builder.append(maxLevel);
-      builder.append(" }");
+      builder.append(" }\r\n");
 
       return builder.toString();
     }
