@@ -1,4 +1,4 @@
-package demo.a07_linSkedlist;
+package demo.a07_linkedlist;
 
 /**
  * 1) 单链表反转

@@ -1,5 +1,7 @@
 package util.seqExecFunction;
 
+import util.seqExecFunction.base.ExecParameter;
+
 import java.lang.reflect.Field;
 
 /**
@@ -14,7 +16,8 @@ public class Test {
             System.out.println(info);
         }
 
-        boolean result = SeqExecFunctionUtiil.getExecResult(ExecServiceOperate.class);
+        ExecParameter parameter = new ExecParameter();
+        boolean result = SeqExecFunctionUtiil.getExecResult(ExecServiceOperate.class, parameter);
         System.out.println("执行结果: "+result);
     }
 

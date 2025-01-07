@@ -2,6 +2,7 @@ package util.seqExecFunction;
 
 import org.apache.log4j.Logger;
 import util.seqExecFunction.base.BaseServiceOperate;
+import util.seqExecFunction.base.ExecParameter;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -16,6 +17,11 @@ import java.util.function.Supplier;
 public class ExecServiceOperate extends BaseServiceOperate {
     private static final Logger logger = Logger.getLogger(ExecServiceOperate.class);
     private InterruptStatusRecordUtil  interruptStatus = new InterruptStatusRecordUtil("ExecTaskStatus.flag");
+
+    public ExecServiceOperate(ExecParameter parameter){
+        logger.info("构造函数初始化："+ parameter.getFtpDir());
+        logger.info("构造函数初始化："+ parameter.getTestField());
+    }
 
     public boolean exec0() {
         return interruptStatus.createConfigFile(ExecTaskStatus.class);

@@ -22,8 +22,8 @@ public class SeqExecFunctionUtiil {
      * @param clazz -
      * @return boolean
      **/
-    public static boolean getExecResult(Class clazz) {
-        List<Function<Boolean, Boolean>> execList = getExecListFunction(clazz);
+    public static boolean getExecResult(Class clazz, Object parameter) {
+        List<Function<Boolean, Boolean>> execList = getExecListFunction(clazz, parameter);
         if(execList== null || execList.size() == 0){
             return false;
         }
@@ -49,7 +49,7 @@ public class SeqExecFunctionUtiil {
      * @param clazz -
      * @return java.util.List<java.util.function.Function<java.lang.Boolean,java.lang.Boolean>>
      **/
-    private static List<Function<Boolean, Boolean>> getExecListFunction(Class clazz) {
+    private static List<Function<Boolean, Boolean>> getExecListFunction(Class clazz, Object parameter) {
 
         Method[] methods = clazz.getMethods();
         if(methods == null || methods.length == 0){
@@ -84,9 +84,12 @@ public class SeqExecFunctionUtiil {
         //创建对象
         Object clazzObj = null;
         try {
-            clazzObj = clazz.newInstance();
+            if(parameter == null)
+                clazzObj = clazz.newInstance();
+            else
+                clazzObj = clazz.getConstructor(parameter.getClass()).newInstance(parameter);
         } catch (Exception e) {
-            logger.info(clazz.getName() + " create instance failed");
+            logger.info(clazz.getName() + " create instance failed, have parameter:"+parameter!=null);
         }
 
         //创建function list
