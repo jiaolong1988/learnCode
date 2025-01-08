@@ -42,6 +42,10 @@ public class InterruptStatusRecordUtil {
         return TMP_DIR + File.separator + interruptStatusRecordFile.getName();
     }
 
+    public File getConfigInterruptFile(){
+        return interruptStatusRecordFile;
+    }
+
     private void init(){
         File fdir = new File(tmpinfoDir);
         if (!fdir.exists()) {
@@ -65,6 +69,9 @@ public class InterruptStatusRecordUtil {
             boolean flag = orderedPropertiesUtil.createProperFile(infos);
             logger.debug("create config.flag result:" + flag + "  fileName:" + interruptStatusRecordFile.getName());
             return flag;
+        }else{
+            logger.warn("===>interrupt config file already exists.");
+            orderedPropertiesUtil.getAllValPrint();
         }
         return true;
     }
@@ -105,7 +112,6 @@ public class InterruptStatusRecordUtil {
      */
     public String getConfigFileValue(String attribute) {
         return orderedPropertiesUtil.getVal(attribute);
-
     }
 
 

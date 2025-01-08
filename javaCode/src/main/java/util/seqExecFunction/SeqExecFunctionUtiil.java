@@ -89,7 +89,9 @@ public class SeqExecFunctionUtiil {
             else
                 clazzObj = clazz.getConstructor(parameter.getClass()).newInstance(parameter);
         } catch (Exception e) {
-            logger.info(clazz.getName() + " create instance failed, have parameter:"+parameter!=null);
+            boolean flag = parameter!=null;
+            logger.info("["+clazz.getName() + "] create instance failed, have parameter:"+flag,e);
+            return null;
         }
 
         //创建function list

@@ -99,6 +99,21 @@ public class OrderedPropertiesUtil{
 		return result;
 	}
 
+	public synchronized void getAllValPrint() {
+		loadFile();
+
+		StringBuilder sb = new StringBuilder("config info:\n");
+		Map<String,String> map = getAllVal();
+
+		prop.getSortedKeys().forEach(k->{
+			String v = map.get(k);
+			sb.append(k).append("=").append(v).append("\n");
+		});
+
+		logger.info(sb.toString());
+		sb.setLength(0);
+	}
+
 	private synchronized boolean outPropFile() {
 		try(OutputStream out = new FileOutputStream(propertyFilePath)) {
 			prop.store(out, "Project configuration file");
@@ -130,7 +145,7 @@ public class OrderedPropertiesUtil{
 		return false;
 	}
 
-	static class OrderedProperties extends Properties{
+	 class OrderedProperties extends Properties{
 
 		private static final long serialVersionUID = 4710927773256743817L;
 
@@ -178,6 +193,10 @@ public class OrderedPropertiesUtil{
 			}
 
 			return set;
+		}
+
+		public LinkedHashSet<Object> getSortedKeys() {
+			return keys;
 		}
 	}
 }
