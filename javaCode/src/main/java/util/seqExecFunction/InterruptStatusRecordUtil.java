@@ -70,8 +70,8 @@ public class InterruptStatusRecordUtil {
             logger.debug("create config.flag result:" + flag + "  fileName:" + interruptStatusRecordFile.getName());
             return flag;
         }else{
-            logger.warn("===>interrupt config file already exists.");
-            orderedPropertiesUtil.getAllValPrint();
+            String getAllValue = orderedPropertiesUtil.getAllValPrint();
+            logger.warn("===>interrupt config file already exists. "+ getAllValue);
         }
         return true;
     }

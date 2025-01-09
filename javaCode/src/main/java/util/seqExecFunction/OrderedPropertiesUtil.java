@@ -99,7 +99,7 @@ public class OrderedPropertiesUtil{
 		return result;
 	}
 
-	public synchronized void getAllValPrint() {
+	public synchronized String getAllValPrint() {
 		loadFile();
 
 		StringBuilder sb = new StringBuilder("config info:\n");
@@ -110,8 +110,9 @@ public class OrderedPropertiesUtil{
 			sb.append(k).append("=").append(v).append("\n");
 		});
 
-		logger.info(sb.toString());
-		sb.setLength(0);
+		//logger.info(sb.toString());
+		//sb.setLength(0);
+		return sb.toString();
 	}
 
 	private synchronized boolean outPropFile() {
