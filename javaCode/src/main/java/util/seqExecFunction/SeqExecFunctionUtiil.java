@@ -67,8 +67,8 @@ public class SeqExecFunctionUtiil {
         //根据方法名进行排序
         execMethods.sort((m1, m2) -> {
             try {
-                Integer m1Int = Integer.parseInt(m1.getName().replace(EXEC_PREFIX, ""));
-                Integer m2Int = Integer.parseInt(m2.getName().replace(EXEC_PREFIX, ""));
+                Integer m1Int = Integer.parseInt(execMethodNameOrder(m1));
+                Integer m2Int = Integer.parseInt(execMethodNameOrder(m2));
 
                 return m1Int.compareTo(m2Int);
             } catch (NumberFormatException e) {
@@ -104,6 +104,23 @@ public class SeqExecFunctionUtiil {
     }
 
     /**
+     * exec0_init ==> 0
+     * exec0 ==> 0
+     * @param method -
+     * @return java.lang.String
+     **/
+    private static String execMethodNameOrder(Method method) {
+        String mExecName = method.getName().replace(EXEC_PREFIX, "");
+        int mLastIndex = mExecName.lastIndexOf("_");
+        if(mLastIndex >0){
+            return mExecName.substring(0, mLastIndex);
+        }else{
+            return mExecName;
+        }
+
+    }
+
+    /**
      * 创建 function
      * @param execMethod -
      * @param clazzObj -
@@ -119,7 +136,7 @@ public class SeqExecFunctionUtiil {
                         logger.info(execMethodName + ": method start exec.");
                     }
 
-                    boolean resultFlag = (boolean) execMethod.invoke(clazzObj, null);
+                    boolean resultFlag = (boolean) execMethod.invoke(clazzObj, execMethod.getName());
                     if(!resultFlag){
                         logger.warn(execMethodName+" method exec failed,return false.");
                     }

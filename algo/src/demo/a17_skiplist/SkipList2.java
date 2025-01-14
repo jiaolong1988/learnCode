@@ -289,17 +289,17 @@ public class SkipList2 {
          */
         // 优化后insert()
 
-        SkipList2 list2 = new SkipList2();
-        list2.insert2(1);
-        list2.insert2(2);
-        list2.insert2(6);
-        list2.insert2(7);
-        list2.insert2(8);
-        list2.insert2(3);
-        list2.insert2(4);
-        list2.insert2(5);
-        System.out.println();
-        list2.printAll_beautiful();
+//        SkipList2 list2 = new SkipList2();
+//        list2.insert2(1);
+//        list2.insert2(2);
+//        list2.insert2(6);
+//        list2.insert2(7);
+//        list2.insert2(8);
+//        list2.insert2(3);
+//        list2.insert2(4);
+//        list2.insert2(5);
+//        System.out.println();
+//        list2.printAll_beautiful();
 
 
     }

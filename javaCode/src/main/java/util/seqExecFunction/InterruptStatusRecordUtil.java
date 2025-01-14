@@ -28,8 +28,17 @@ public class InterruptStatusRecordUtil {
     private File interruptStatusRecordFile = null;
     private OrderedPropertiesUtil orderedPropertiesUtil = null;
 
+    public InterruptStatusRecordUtil(){
+        init();
+    }
+
     public InterruptStatusRecordUtil(String fileName){
         init();
+        interruptStatusRecordFile =  new File(tmpinfoDir + File.separator + fileName);
+        orderedPropertiesUtil = new OrderedPropertiesUtil(interruptStatusRecordFile.getAbsolutePath());
+    }
+
+    public void setInterruptConfigFile(String fileName){
         interruptStatusRecordFile =  new File(tmpinfoDir + File.separator + fileName);
         orderedPropertiesUtil = new OrderedPropertiesUtil(interruptStatusRecordFile.getAbsolutePath());
     }

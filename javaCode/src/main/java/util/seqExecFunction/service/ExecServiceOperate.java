@@ -1,7 +1,6 @@
 package util.seqExecFunction.service;
 
 import org.apache.log4j.Logger;
-import util.seqExecFunction.InterruptStatusRecordUtil;
 import util.seqExecFunction.base.BaseServiceOperate;
 
 import java.io.File;
@@ -16,63 +15,112 @@ import java.util.function.Supplier;
  **/
 public class ExecServiceOperate extends BaseServiceOperate {
     private static final Logger logger = Logger.getLogger(ExecServiceOperate.class);
-    private InterruptStatusRecordUtil interruptStatus = new InterruptStatusRecordUtil("ExecTaskStatus.flag");
-    private ExecParameter parameter;
+    private String execTaskStatusFile = "ExecTaskStatus.flag";
+    private ExecParameter execParameter;
+    private boolean interruptFlag = false;
 
-    public ExecServiceOperate(ExecParameter parameter){
-        logger.info("构造函数初始化："+ parameter.getImportFile().getName());
-        this.parameter = parameter;
+    public ExecServiceOperate(ExecParameter execParameter){
+        interruptStatus.setInterruptConfigFile(execTaskStatusFile);
+        this.execParameter = execParameter;
     }
 
-    public boolean exec0() {
-        //固定写法 修改参数，将中断信息同步
+    public boolean exec0_init(String methodName) {
+        //固定写法
         if (interruptStatus.getConfigInterruptFile().exists()) {
-            String ftpFileName = interruptStatus.getConfigFileValue(ExecTaskStatus.ftpFileName);
-            if(!ftpFileName.equals(STATUS_F)){
-                File ftpFile = new File(interruptStatus.getConfigFileValue(ExecTaskStatus.ftpFileName));
-                this.parameter.setImportFile(ftpFile);
-            }
+            interruptFlag = true;
         }
         return interruptStatus.createConfigFile(ExecTaskStatus.class);
     }
     
-    public boolean exec01() {
-        StatusInfoCheck statusInfoCheck = initCheck(ExecTaskStatus.ftpFileName,"exec1", interruptStatus);
-
+    public boolean exec1_ftpFileName(String methodName) {
         Supplier<Boolean> func = ()->{
-            logger.info("exec exec1 func.......");
-            return true;
+            String ftpFileName = interruptStatus.getConfigFileValue(ExecTaskStatus.ftpFileName);
+            if(ftpFileName.equals(STATUS_F)){
+                //设置配置文件 ftp文件名称
+                return interruptStatus.updateConfigFileValue(ExecTaskStatus.ftpFileName, execParameter.getImportFile().getName());
+            }else{
+                //同步ftp文件名称到执行参数中
+                String filePath = String.join(File.separator,"test", ftpFileName);
+                File ftpFile = new File(filePath);
+                execParameter.setImportFile(ftpFile);
+                return true;
+            }
         } ;
-        return commonExecNotUpdateConfigFileValueT(func, statusInfoCheck);
+        return commonExecNotUpdateConfigFileValueT(func, ExecTaskStatus.ftpFileName, methodName);
     }
 
-    public boolean exec2() {
-        StatusInfoCheck statusInfoCheck = initCheck(ExecTaskStatus.ftpFileBak,"exec2", interruptStatus);
-
+    public boolean exec2_ftpFileBak(String methodName) {
         Supplier<Boolean> func = ()->{
-            logger.info("exec exec2 func.......");
             return true;
         } ;
-
-        return commonExecUpdateConfigFileValueT(func, statusInfoCheck);
+        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.ftpFileBak, methodName);
     }
 
 
-
-    public boolean exec3() {
-        StatusInfoCheck statusInfoCheck = initCheck(ExecTaskStatus.createTempTable,"exec3", interruptStatus);
-
+    public boolean exec3_createTempTable(String methodName) {
         Supplier<Boolean> func = ()->{
-            logger.info("exec exec3 func.......");
             return true;
         } ;
-
-        return commonExecUpdateConfigFileValueT(func, statusInfoCheck);
+        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.createTempTable, methodName);
     }
 
-    public boolean exec9() {
-        logger.info("exec10 func  delete interruptConfig file.......");
-        return true;
+    public boolean exec4_importData(String methodName) {
+        Supplier<Boolean> func = ()->{
+            return true;
+        } ;
+        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.importData, methodName);
+    }
+
+    public boolean exec5_bakImportData(String methodName) {
+        Supplier<Boolean> func = ()->{
+            return true;
+        } ;
+        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.bakImportData, methodName);
+    }
+    public boolean exec6_outputPkuuidData(String methodName) {
+        Supplier<Boolean> func = ()->{
+            return true;
+        } ;
+        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.outputPkuuidData, methodName);
+    }
+    public boolean exec7_renameOutputPkuuidDataUniq(String methodName) {
+        Supplier<Boolean> func = ()->{
+            return true;
+        } ;
+        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.renameOutputPkuuidDataUniq, methodName);
+    }
+    public boolean exec8_outputBizData(String methodName) {
+        Supplier<Boolean> func = ()->{
+            return true;
+        } ;
+        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.outputBizData, methodName);
+    }
+
+    public boolean exec9_outputPageData(String methodName) {
+        Supplier<Boolean> func = ()->{
+            return true;
+        } ;
+        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.outputPageData, methodName);
+    }
+
+    public boolean exec10_batchNumUpdate(String methodName) {
+        Supplier<Boolean> func = ()->{
+            return true;
+        } ;
+        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.batchNumUpdate, methodName);
+    }
+    public boolean exec11_dropTempTable(String methodName) {
+        Supplier<Boolean> func = ()->{
+            return true;
+        } ;
+        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.dropTempTable, methodName);
+    }
+
+    public boolean exec9_delInterruptedFile(String methodName) {
+        Supplier<Boolean> func = ()->{
+            return true;
+        } ;
+        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.delInterruptedFile, methodName);
     }
 }
 
