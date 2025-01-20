@@ -17,6 +17,7 @@ public class ExecServiceOperate extends BaseServiceOperate {
     private static final Logger logger = Logger.getLogger(ExecServiceOperate.class);
     private String execTaskStatusFile = "ExecTaskStatus.flag";
     private ExecParameter execParameter;
+    //是否中断
     private boolean interruptFlag = false;
 
     public ExecServiceOperate(ExecParameter execParameter){

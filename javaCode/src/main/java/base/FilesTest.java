@@ -1,13 +1,10 @@
-package files;
+package base;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileStore;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,18 +15,23 @@ import java.util.List;
 public class FilesTest {
     public static void main(String[] args) throws Exception{
 
-
        // baseTest(sourcePath,target);
-        readWriteListTest();
-       // readWriteStringTest();
+       // readWriteListTest();
+        readWriteStringTest();
     }
+
     /**
      * 字符串文件读写
      * @return void
      **/
     public static void readWriteStringTest() throws Exception {
         Path writeStringPath= Paths.get("writeString.txt");
-        Files.write(writeStringPath, "14".getBytes(StandardCharsets.UTF_8));
+        // 不追加-自动创建文件
+        Files.write(writeStringPath, "15".getBytes(StandardCharsets.UTF_8));
+
+        // 追加-不自动创建文件
+        Files.write(writeStringPath, "16".getBytes(), StandardOpenOption.APPEND);
+
 
         String content = new String(Files.readAllBytes(writeStringPath), StandardCharsets.UTF_8);
         System.out.println("读取文件中的字符串："+content);

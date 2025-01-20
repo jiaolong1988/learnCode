@@ -3,6 +3,9 @@ package util.seqExecFunction.base;
 import org.apache.log4j.Logger;
 import util.seqExecFunction.InterruptStatusRecordUtil;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.function.Supplier;
 
 /**
@@ -116,6 +119,95 @@ public class BaseServiceOperate {
             return true;
         }
 
+        return false;
+    }
+
+    /**
+     *
+     * @param attribute -   属性名
+     * @param batchNumFile - 计数器文件
+     * @return boolean
+     **/
+    private boolean updateBatchNum(String attribute, File batchNumFile) {
+        String batchNumUpdateFlag = interruptStatus.getConfigFileValue(attribute);
+        //中断处理
+        if (!batchNumUpdateFlag.equals(STATUS_F) && !batchNumUpdateFlag.equals(STATUS_T)) {
+            if (batchNumFile.exists()) {
+                //读取batchNum计数器 批次号
+                int locTotal = readBatchNum(batchNumFile);
+                //读取配置文件中的计数器
+                String configLocTotal = interruptStatus.getConfigFileValue(attribute);
+                //待更新的计数器值
+                int updateLocTotal = Integer.valueOf(configLocTotal) + 1;
+                if (updateLocTotal == locTotal) {
+                    return true;
+                } else {
+                    if ((updateLocTotal - 1) == locTotal) {
+                        boolean flagIncre = writeBatchNum(batchNumFile, String.valueOf(updateLocTotal));
+                        if (flagIncre) {
+                            return true;
+                        }
+                    }
+                }
+            } else {
+                logger.error(batchNumFile.getName() + " file not exist or already delete o, please manual create.");
+                System.exit(0);
+            }
+        }
+
+        //正常流程
+        if (batchNumUpdateFlag.equals(STATUS_F)) {
+            if (batchNumFile.exists()) {
+                //当前批次号
+                int locTotal = readBatchNum(batchNumFile);
+                //待更新的批次号
+                String updateTotal = String.valueOf(locTotal + 1);
+                logger.info(" --> update new batchNum:" + updateTotal);
+
+                //先向配置文件（config.Flag）写入旧值，
+                interruptStatus.updateConfigFileValue(attribute, String.valueOf(locTotal));
+                //向（batchNumFile.flag）写入批次的新值
+                boolean flagIncre = writeBatchNum(batchNumFile, updateTotal);
+                if (flagIncre) {
+                    String configLocTotal = interruptStatus.getConfigFileValue(attribute);
+                    int updateLocTotal = readBatchNum(batchNumFile);
+
+                    if ((Integer.valueOf(configLocTotal) + 1) == updateLocTotal) {
+                        return true;
+                    }
+                } else {
+                    logger.error(" update local counters fail.");
+                }
+
+            } else {
+                logger.error(batchNumFile.getName() + " file not exist or already delete o, please manual create.");
+                System.exit(0);
+            }
+        }
+
+        return false;
+    }
+
+    public int readBatchNum(File batchNumFile){
+        try {
+            String content = new String(Files.readAllBytes(batchNumFile.toPath()));
+            return Integer.parseInt(content);
+        }catch (IOException e) {
+            logger.error("read batchNum file fail."+batchNumFile.getName());
+
+        }catch (NumberFormatException e) {
+           logger.error("batchNum file content is not a number."+batchNumFile.getName());
+        }
+        System.exit(0);
+        return -1;
+    }
+    public boolean writeBatchNum(File batchNumFile, String num) {
+        try {
+            Files.write(batchNumFile.toPath(), num.getBytes());
+            return true;
+        } catch (IOException e) {
+            logger.error("write batchNum file fail."+batchNumFile.getName());
+        }
         return false;
     }
 

@@ -8,7 +8,7 @@ import java.io.IOException;
  * @author: jiaolong
  * @date: 2024/06/13 14:23
  **/
-public class FetchCurrentPathTest {
+public class GetCurrentPathTest {
     public static void main(String[] args) throws IOException {
 
         System.out.println("===获取当前项目路径");
