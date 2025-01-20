@@ -18,6 +18,12 @@ public class BaseServiceOperate {
     protected static final String STATUS_F = InterruptStatusRecordUtil.F_STATUS;
     protected static final String STATUS_T = InterruptStatusRecordUtil.T_STATUS;
 
+    public boolean commonExecUpdateConfigFileValueOfMiddenValT(Supplier<Boolean> sm, String statusField, String execMethodName) {
+        StatusInfoCheck statusInfoCheck = getStatusInfo(statusField, execMethodName, interruptStatus);
+        statusInfoCheck.setStatusValIsMiddleStatus(true);
+        return commonExec(sm, statusInfoCheck, true);
+    }
+
     public boolean commonExecUpdateConfigFileValueT(Supplier<Boolean> sm, String statusField, String execMethodName) {
         StatusInfoCheck statusInfoCheck = getStatusInfo(statusField, execMethodName, interruptStatus);
         return commonExec(sm, statusInfoCheck, true);
@@ -95,22 +101,19 @@ public class BaseServiceOperate {
              * 处理所有非T状态的情况
              * 当状态为值为非F时，且字段必须修改为T时，报错返回false.
              * */
-            if (!statusVal.equals(InterruptStatusRecordUtil.F_STATUS) && isUpdateConfigFileValueT) {
+            if (!statusVal.equals(InterruptStatusRecordUtil.F_STATUS) && isUpdateConfigFileValueT && !statusInfoCheck.isStatusValIsMiddleStatus()) {
                 logger.error("==> status filed value is not F or T, please check it. filedName:" + statusInfoCheck.getStatusField() + "  filedValue:" + statusVal);
                 return false;
             }
 
             if(isUpdateConfigFileValueT){
-               // logger.info(statusInfoCheck.getMethodName() + ": method start exec.");
                 String log = String.format("%1$-100s :method start exec." ,statusInfoCheck.getMethodName());
                 logger.info(log);
             }else{
                 if(!statusVal.equals(InterruptStatusRecordUtil.F_STATUS)){
-                  //  logger.info(statusInfoCheck.getMethodName() + ": method already exec.");
                   String log = String.format("%1$-100s :method already exec." ,statusInfoCheck.getMethodName());
                   logger.info(log);
                 }else{
-                    //logger.info(statusInfoCheck.getMethodName() + ": method start exec.");
                    String log =String.format("%1$-100s :method start exec." ,statusInfoCheck.getMethodName());
                    logger.info(log);
                 }
@@ -128,7 +131,7 @@ public class BaseServiceOperate {
      * @param batchNumFile - 计数器文件
      * @return boolean
      **/
-    private boolean updateBatchNum(String attribute, File batchNumFile) {
+    public boolean updateBatchNum(String attribute, File batchNumFile) {
         String batchNumUpdateFlag = interruptStatus.getConfigFileValue(attribute);
         //中断处理
         if (!batchNumUpdateFlag.equals(STATUS_F) && !batchNumUpdateFlag.equals(STATUS_T)) {
@@ -188,7 +191,7 @@ public class BaseServiceOperate {
         return false;
     }
 
-    public int readBatchNum(File batchNumFile){
+    private int readBatchNum(File batchNumFile){
         try {
             String content = new String(Files.readAllBytes(batchNumFile.toPath()));
             return Integer.parseInt(content);
@@ -216,6 +219,8 @@ public class BaseServiceOperate {
         private String statusField;
         private String statusVal;
         private String methodName;
+        //状态值是否 有中间状态
+        private boolean statusValIsMiddleStatus = false;
         private InterruptStatusRecordUtil interruptStatus;
 
         public String getStatusField() {
@@ -252,6 +257,14 @@ public class BaseServiceOperate {
 
         public void setInterruptStatus(InterruptStatusRecordUtil interruptStatus) {
             this.interruptStatus = interruptStatus;
+        }
+
+        public boolean isStatusValIsMiddleStatus() {
+            return statusValIsMiddleStatus;
+        }
+
+        public void setStatusValIsMiddleStatus(boolean statusValIsMiddleStatus) {
+            this.statusValIsMiddleStatus = statusValIsMiddleStatus;
         }
     }
 

@@ -105,10 +105,13 @@ public class ExecServiceOperate extends BaseServiceOperate {
     }
 
     public boolean exec10_batchNumUpdate(String methodName) {
+
         Supplier<Boolean> func = ()->{
-            return true;
+            File batchNumFile = new File("batchNum.flag");
+            writeBatchNum(batchNumFile,"0");
+            return  updateBatchNum(ExecTaskStatus.batchNumUpdate, batchNumFile);
         } ;
-        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.batchNumUpdate, methodName);
+        return commonExecUpdateConfigFileValueOfMiddenValT(func, ExecTaskStatus.batchNumUpdate, methodName);
     }
     public boolean exec11_dropTempTable(String methodName) {
         Supplier<Boolean> func = ()->{
