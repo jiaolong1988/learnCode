@@ -2,6 +2,8 @@ package base;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * 获取当前项目的路径
@@ -11,23 +13,22 @@ import java.io.IOException;
 public class GetCurrentPathTest {
     public static void main(String[] args) throws IOException {
 
-        System.out.println("===获取当前项目路径");
+        // 当前路径\aa\xx.txt
+        Path path = Paths.get("aa","xx.txt");
+        String currentPath = path.toAbsolutePath().toString();
+        System.out.println("Paths 获取当前路径：" + currentPath);
+
         File f = new File("");
-        System.out.println(f.getAbsolutePath());
+        System.out.println("File 获取当前路径：" +f.getAbsolutePath());
 
+        System.out.println("\n===File获取绝对路径");
+        File dir = new File("javaCode/Main.jack");
+        System.out.println("File 获取当前路径：" +dir.getAbsolutePath());//获取绝对路径
+        System.out.println("File 获取当前路径：" +dir.getPath());  //获取指定的路径，既File类指定的路径
 
-        System.out.println("\n===根据相对路径 获取标准地址： ./javaCode/Main.jack");
-        //获取相对路径
-        File directory = new File("./javaCode/Main.jack");
-        File fFile = directory.getCanonicalFile();
-        String fString = directory.getCanonicalPath();
-        System.out.println(fFile.getAbsolutePath());
-
-
-
-        System.out.println("\n===获取绝对路径");
-        File dir = new File("aa");
-        System.out.println(dir.getAbsolutePath());//获取绝对路径
-        System.out.println(dir.getPath());  //获取指定的路径，既File类指定的路径
+        System.out.println("\n===File 与Path相互转换");
+        Path p = f.toPath();
+        File file = path.toFile();
+        System.out.println(p.toAbsolutePath()+"  ==> "+file.getAbsolutePath());
     }
 }

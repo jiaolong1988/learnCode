@@ -94,7 +94,6 @@ public class BaseServiceOperate {
         }
 
         if (statusVal.trim().equals(InterruptStatusRecordUtil.T_STATUS)) {
-          //  logger.info(statusInfoCheck.getMethodName() + ": method already exec.");
             logger.info(String.format("%1$-100s :method already exec." ,statusInfoCheck.getMethodName()));
         } else {
             /*

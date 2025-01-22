@@ -14,7 +14,6 @@ import java.util.List;
  **/
 public class FilesTest {
     public static void main(String[] args) throws Exception{
-
        // baseTest(sourcePath,target);
        // readWriteListTest();
         readWriteStringTest();
