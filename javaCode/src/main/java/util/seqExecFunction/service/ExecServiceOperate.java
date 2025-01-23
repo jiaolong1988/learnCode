@@ -1,6 +1,7 @@
 package util.seqExecFunction.service;
 
 import org.apache.log4j.Logger;
+import util.seqExecFunction.TmpInfoConfig;
 import util.seqExecFunction.base.BaseServiceOperate;
 
 import java.io.File;
@@ -15,13 +16,14 @@ import java.util.function.Supplier;
  **/
 public class ExecServiceOperate extends BaseServiceOperate {
     private static final Logger logger = Logger.getLogger(ExecServiceOperate.class);
-    private String execTaskStatusFile = "ExecTaskStatus.flag";
+    private String execTaskStatusFile = TmpInfoConfig.execTaskStatusFileName;
     private ExecParameter execParameter;
     //是否中断
     private boolean interruptFlag = false;
 
     public ExecServiceOperate(ExecParameter execParameter){
-        interruptStatus.setInterruptConfigFile(execTaskStatusFile);
+        //固定写法 初始化中断文件
+        interruptStatus.interruptConfigFileInit(TmpInfoConfig.tmpinfoDir,execTaskStatusFile);
         this.execParameter = execParameter;
     }
 
@@ -107,9 +109,9 @@ public class ExecServiceOperate extends BaseServiceOperate {
     public boolean exec10_batchNumUpdate(String methodName) {
 
         Supplier<Boolean> func = ()->{
-            File batchNumFile = new File("batchNum.flag");
-            writeBatchNum(batchNumFile,"0");
-            return  updateBatchNum(ExecTaskStatus.batchNumUpdate, batchNumFile);
+            //模拟创建批量号文件
+            writeBatchNum(TmpInfoConfig.getBatchNumFile(),"0");
+            return  updateBatchNum(ExecTaskStatus.batchNumUpdate, TmpInfoConfig.getBatchNumFile());
         } ;
         return commonExecUpdateConfigFileValueOfMiddenValT(func, ExecTaskStatus.batchNumUpdate, methodName);
     }

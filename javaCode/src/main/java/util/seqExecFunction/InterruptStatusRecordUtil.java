@@ -22,25 +22,30 @@ public class InterruptStatusRecordUtil {
     public static final String F_STATUS = "F";
     public static final String T_STATUS = "T";
 
-    public static final String TMP_DIR = "tmpinfo";
-    public static String tmpinfoDir = Paths.get(TMP_DIR).toAbsolutePath().toString();
-
+    private String TMP_DIR = null;
+    private String tmpinfoDir = null;
     private File interruptStatusRecordFile = null;
     private OrderedPropertiesUtil orderedPropertiesUtil = null;
 
-    public InterruptStatusRecordUtil(){
-        init();
-    }
 
-    public InterruptStatusRecordUtil(String fileName){
+    public void interruptConfigFileInit(String tmpinfoDirName, String fileName){
+        this.TMP_DIR = tmpinfoDirName;
+        this.tmpinfoDir = Paths.get(TMP_DIR).toAbsolutePath().toString();
         init();
-        interruptStatusRecordFile =  new File(tmpinfoDir + File.separator + fileName);
+
+        interruptStatusRecordFile = Paths.get(tmpinfoDir,fileName).toFile();
         orderedPropertiesUtil = new OrderedPropertiesUtil(interruptStatusRecordFile.getAbsolutePath());
     }
 
-    public void setInterruptConfigFile(String fileName){
-        interruptStatusRecordFile =  new File(tmpinfoDir + File.separator + fileName);
-        orderedPropertiesUtil = new OrderedPropertiesUtil(interruptStatusRecordFile.getAbsolutePath());
+    /**
+     * 创建初始化目录
+     * @return void
+     **/
+    private void init(){
+        File fdir = new File(tmpinfoDir);
+        if (!fdir.exists()) {
+            fdir.mkdirs();
+        }
     }
 
     /**
@@ -55,12 +60,7 @@ public class InterruptStatusRecordUtil {
         return interruptStatusRecordFile;
     }
 
-    private void init(){
-        File fdir = new File(tmpinfoDir);
-        if (!fdir.exists()) {
-            fdir.mkdirs();
-        }
-    }
+
 
     /**
      * 创建中断文件
