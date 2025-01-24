@@ -30,6 +30,10 @@ public class BaseServiceOperate {
         return interruptStatus.createConfigFile(statusClass);
     }
 
+    public boolean exec99() {
+        return  interruptStatus.delConfigFile();
+    }
+
     public boolean commonExecUpdateConfigFileValueOfMiddenValT(Supplier<Boolean> sm, String statusField, String execMethodName) {
         StatusInfoCheck statusInfoCheck = getStatusInfo(statusField, execMethodName, interruptStatus);
         statusInfoCheck.setStatusValIsMiddleStatus(true);

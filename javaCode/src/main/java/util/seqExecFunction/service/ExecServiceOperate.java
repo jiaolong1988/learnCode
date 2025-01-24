@@ -18,8 +18,6 @@ public class ExecServiceOperate extends BaseServiceOperate {
     private static final Logger logger = Logger.getLogger(ExecServiceOperate.class);
     private String execTaskStatusFile = TmpInfoConfig.execTaskStatusFileName;
     private ExecParameter execParameter;
-    //是否中断
-  //  private boolean interruptFlag = false;
 
     public ExecServiceOperate(ExecParameter execParameter){
         //固定写法 初始化中断文件
@@ -27,14 +25,6 @@ public class ExecServiceOperate extends BaseServiceOperate {
         this.execParameter = execParameter;
     }
 
-//    public boolean exec0(Class statusClass) {
-//        //固定写法
-//        if (interruptStatus.getConfigInterruptFile().exists()) {
-//            interruptFlag = true;
-//        }
-//        return interruptStatus.createConfigFile(statusClass);
-//    }
-    
     public boolean exec1_ftpFileName(String methodName, String statusName) {
         Supplier<Boolean> func = ()->{
             String ftpFileName = interruptStatus.getConfigFileValue(ExecTaskStatus.ftpFileName);
@@ -122,8 +112,6 @@ public class ExecServiceOperate extends BaseServiceOperate {
         return commonExecUpdateConfigFileValueT(func, statusName, methodName);
     }
 
-    public boolean exec12_delInterruptedFile() {
-        return  interruptStatus.delConfigFile();
-    }
+
 }
 
