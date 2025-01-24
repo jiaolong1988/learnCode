@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 
@@ -15,14 +16,15 @@ public class SeqExecFunctionUtiil {
     private static final Logger logger = Logger.getLogger(SeqExecFunctionUtiil.class);
 
     private static final String EXEC_PREFIX = "exec";
+    private static final String METHOD_NAME_SPLIT_CHAR = "_";
 
     /**
      *  获取顺序执行function的执行结果
-     * @param clazz -
+     * @param execOperate -
      * @return boolean
      **/
-    public static boolean getExecResult(Class clazz, Object parameter) {
-        List<Function<Boolean, Boolean>> execList = getExecListFunction(clazz, parameter);
+    public static boolean getExecResult(Class execOperate, Class execStatus, Object parameter) {
+        List<Function<Boolean, Boolean>> execList = getExecListFunction(execOperate, execStatus, parameter);
         if(execList== null || execList.size() == 0){
             return false;
         }
@@ -48,7 +50,7 @@ public class SeqExecFunctionUtiil {
      * @param clazz -
      * @return java.util.List<java.util.function.Function<java.lang.Boolean,java.lang.Boolean>>
      **/
-    private static List<Function<Boolean, Boolean>> getExecListFunction(Class clazz, Object parameter) {
+    private static List<Function<Boolean, Boolean>> getExecListFunction(Class clazz, Class execStatus, Object parameter) {
 
         Method[] methods = clazz.getMethods();
         if(methods == null || methods.length == 0){
@@ -73,7 +75,8 @@ public class SeqExecFunctionUtiil {
             } catch (NumberFormatException e) {
                 String m1AllName = clazz.getName()+"."+m1.getName();
                 String m2AllName = clazz.getName()+"."+m2.getName();
-                logger.error("【"+m1AllName + "】 or 【" + m2AllName + "】 method name format error, exec method name must be start with exec and end with number.",e);
+                logger.error("【"+m1AllName + "】 or 【" + m2AllName + "】 method name format error, exec method name must be start with exec and number." +
+                        " [exec num _ statusName] or[exec num] eg: exec0_init or exec0",e);
                 System.exit(1);
             }
 
@@ -93,10 +96,32 @@ public class SeqExecFunctionUtiil {
             return null;
         }
 
+        //获取方法名称 与 状态的对应关系
+        HashMap<String, String> execMethodAndParam = new HashMap();
+        for (Method method : execMethods) {
+            String methodStatus = method.getName();
+            if(methodStatus.contains(METHOD_NAME_SPLIT_CHAR)){
+                methodStatus = method.getName().split(METHOD_NAME_SPLIT_CHAR)[1];
+            }
+
+            try {
+                execStatus.getField(methodStatus);
+                execMethodAndParam.put(method.getName(), methodStatus);
+            } catch (NoSuchFieldException e) {
+            }
+        }
+
+        //正确性校验
+        if(execStatus.getDeclaredFields().length != execMethodAndParam.size()){
+            logger.error("exec method and exec status not match. "+execMethodAndParam);
+            System.exit(1);
+        }
+
+
         //创建function list
         List<Function<Boolean, Boolean>> list = new ArrayList<>(execMethods.size());
         for (Method method : execMethods) {
-            list.add(createFunction(method, clazzObj));
+            list.add(createFunction(method, clazzObj, execMethodAndParam.get(method.getName())));
         }
 
         return list;
@@ -110,7 +135,7 @@ public class SeqExecFunctionUtiil {
      **/
     private static String execMethodNameOrder(Method method) {
         String mExecName = method.getName().replace(EXEC_PREFIX, "");
-        int mLastIndex = mExecName.lastIndexOf("_");
+        int mLastIndex = mExecName.lastIndexOf(METHOD_NAME_SPLIT_CHAR);
         if(mLastIndex >0){
             return mExecName.substring(0, mLastIndex);
         }else{
@@ -125,13 +150,19 @@ public class SeqExecFunctionUtiil {
      * @param clazzObj -
      * @return java.util.function.Function<java.lang.Boolean,java.lang.Boolean>
      **/
-    private static Function<Boolean, Boolean> createFunction(Method execMethod, Object clazzObj) {
+    private static Function<Boolean, Boolean> createFunction(Method execMethod, Object clazzObj, String execStatusName) {
         return (checkInfo) -> {
             String execMethodName = clazzObj.getClass().getName()+ "."+ execMethod.getName();
             //上一个方法执行成功才执行当前方法
             if (checkInfo) {
                 try {
-                    boolean resultFlag = (boolean) execMethod.invoke(clazzObj, execMethod.getName());
+                    boolean resultFlag = false;
+                    if(execMethod.getParameterCount() ==2){
+                         resultFlag = (boolean) execMethod.invoke(clazzObj, execMethod.getName(),execStatusName);
+                    }else{
+                         resultFlag = (boolean) execMethod.invoke(clazzObj);
+                    }
+                   // boolean resultFlag = (boolean) execMethod.invoke(clazzObj, execMethod.getName());
                     if(!resultFlag){
                         logger.warn(execMethodName+" method exec failed,return false.");
                     }

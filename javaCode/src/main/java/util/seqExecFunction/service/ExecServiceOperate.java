@@ -27,7 +27,7 @@ public class ExecServiceOperate extends BaseServiceOperate {
         this.execParameter = execParameter;
     }
 
-    public boolean exec0_init(String methodName) {
+    public boolean exec0() {
         //固定写法
         if (interruptStatus.getConfigInterruptFile().exists()) {
             interruptFlag = true;
@@ -35,7 +35,7 @@ public class ExecServiceOperate extends BaseServiceOperate {
         return interruptStatus.createConfigFile(ExecTaskStatus.class);
     }
     
-    public boolean exec1_ftpFileName(String methodName) {
+    public boolean exec1_ftpFileName(String methodName, String statusName) {
         Supplier<Boolean> func = ()->{
             String ftpFileName = interruptStatus.getConfigFileValue(ExecTaskStatus.ftpFileName);
             if(ftpFileName.equals(STATUS_F)){
@@ -49,84 +49,84 @@ public class ExecServiceOperate extends BaseServiceOperate {
                 return true;
             }
         } ;
-        return commonExecNotUpdateConfigFileValueT(func, ExecTaskStatus.ftpFileName, methodName);
+        return commonExecNotUpdateConfigFileValueT(func, statusName, methodName);
     }
 
-    public boolean exec2_ftpFileBak(String methodName) {
+    public boolean exec2_ftpFileBak(String methodName, String statusName) {
         Supplier<Boolean> func = ()->{
             return true;
         } ;
-        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.ftpFileBak, methodName);
+        return commonExecUpdateConfigFileValueT(func,statusName, methodName);
     }
 
 
-    public boolean exec3_createTempTable(String methodName) {
+    public boolean exec3_createTempTable(String methodName, String statusName) {
         Supplier<Boolean> func = ()->{
             return true;
         } ;
-        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.createTempTable, methodName);
+        return commonExecUpdateConfigFileValueT(func,statusName, methodName);
     }
 
-    public boolean exec4_importData(String methodName) {
+    public boolean exec4_importData(String methodName, String statusName) {
         Supplier<Boolean> func = ()->{
             return true;
         } ;
-        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.importData, methodName);
+        return commonExecUpdateConfigFileValueT(func, statusName, methodName);
     }
 
-    public boolean exec5_bakImportData(String methodName) {
+    public boolean exec5_bakImportData(String methodName, String statusName) {
         Supplier<Boolean> func = ()->{
             return true;
         } ;
-        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.bakImportData, methodName);
+        return commonExecUpdateConfigFileValueT(func, statusName, methodName);
     }
-    public boolean exec6_outputPkuuidData(String methodName) {
+    public boolean exec6_outputPkuuidData(String methodName, String statusName) {
         Supplier<Boolean> func = ()->{
             return true;
         } ;
-        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.outputPkuuidData, methodName);
+        return commonExecUpdateConfigFileValueT(func, statusName, methodName);
     }
-    public boolean exec7_renameOutputPkuuidDataUniq(String methodName) {
+    public boolean exec7_renameOutputPkuuidDataUniq(String methodName, String statusName) {
         Supplier<Boolean> func = ()->{
             return true;
         } ;
-        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.renameOutputPkuuidDataUniq, methodName);
+        return commonExecUpdateConfigFileValueT(func, statusName, methodName);
     }
-    public boolean exec8_outputBizData(String methodName) {
+    public boolean exec8_outputBizData(String methodName, String statusName) {
         Supplier<Boolean> func = ()->{
             return true;
         } ;
-        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.outputBizData, methodName);
-    }
-
-    public boolean exec9_outputPageData(String methodName) {
-        Supplier<Boolean> func = ()->{
-            return true;
-        } ;
-        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.outputPageData, methodName);
+        return commonExecUpdateConfigFileValueT(func, statusName, methodName);
     }
 
-    public boolean exec10_batchNumUpdate(String methodName) {
+    public boolean exec9_outputPageData(String methodName, String statusName) {
+        Supplier<Boolean> func = ()->{
+            return true;
+        } ;
+        return commonExecUpdateConfigFileValueT(func, statusName, methodName);
+    }
+
+    public boolean exec10_batchNumUpdate(String methodName, String statusName) {
 
         Supplier<Boolean> func = ()->{
             //模拟创建批量号文件
             writeBatchNum(TmpInfoConfig.getBatchNumFile(),"0");
             return  updateBatchNum(ExecTaskStatus.batchNumUpdate, TmpInfoConfig.getBatchNumFile());
         } ;
-        return commonExecUpdateConfigFileValueOfMiddenValT(func, ExecTaskStatus.batchNumUpdate, methodName);
+        return commonExecUpdateConfigFileValueOfMiddenValT(func, statusName, methodName);
     }
-    public boolean exec11_dropTempTable(String methodName) {
+    public boolean exec11_dropTempTable(String methodName, String statusName) {
         Supplier<Boolean> func = ()->{
             return true;
         } ;
-        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.dropTempTable, methodName);
+        return commonExecUpdateConfigFileValueT(func, statusName, methodName);
     }
 
-    public boolean exec9_delInterruptedFile(String methodName) {
+    public boolean exec12_delInterruptedFile(String methodName, String statusName) {
         Supplier<Boolean> func = ()->{
             return true;
         } ;
-        return commonExecUpdateConfigFileValueT(func, ExecTaskStatus.delInterruptedFile, methodName);
+        return commonExecUpdateConfigFileValueT(func, statusName, methodName);
     }
 }
 

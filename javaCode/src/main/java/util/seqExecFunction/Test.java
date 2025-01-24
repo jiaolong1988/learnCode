@@ -22,8 +22,9 @@ public class Test {
         ExecParameter parameter = new ExecParameter();
         File file = new File("D:\\test.txt");
         parameter.setImportFile(file);
-        boolean result = SeqExecFunctionUtiil.getExecResult(ExecServiceOperate.class, parameter);
+        boolean result = SeqExecFunctionUtiil.getExecResult(ExecServiceOperate.class, ExecTaskStatus.class, parameter);
         System.out.println("执行结果: "+result);
+
     }
 
 }
