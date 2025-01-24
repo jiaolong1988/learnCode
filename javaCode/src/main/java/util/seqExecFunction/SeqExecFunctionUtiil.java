@@ -15,7 +15,6 @@ public class SeqExecFunctionUtiil {
     private static final Logger logger = Logger.getLogger(SeqExecFunctionUtiil.class);
 
     private static final String EXEC_PREFIX = "exec";
-    public static final boolean PRINT_LOG_FLAG = false;
 
     /**
      *  获取顺序执行function的执行结果
@@ -132,10 +131,6 @@ public class SeqExecFunctionUtiil {
             //上一个方法执行成功才执行当前方法
             if (checkInfo) {
                 try {
-                    if(PRINT_LOG_FLAG){
-                        logger.info(execMethodName + ": method start exec.");
-                    }
-
                     boolean resultFlag = (boolean) execMethod.invoke(clazzObj, execMethod.getName());
                     if(!resultFlag){
                         logger.warn(execMethodName+" method exec failed,return false.");

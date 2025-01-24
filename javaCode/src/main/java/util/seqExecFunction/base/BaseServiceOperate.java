@@ -93,8 +93,10 @@ public class BaseServiceOperate {
             System.exit(0);
         }
 
+        String logX = "%1$-100s :method %2$-7s exec." ;
+
         if (statusVal.trim().equals(InterruptStatusRecordUtil.T_STATUS)) {
-            logger.info(String.format("%1$-100s :method already exec." ,statusInfoCheck.getMethodName()));
+            logger.info(String.format(logX ,statusInfoCheck.getMethodName(),"already"));
         } else {
             /*
              * 处理所有非T状态的情况
@@ -106,15 +108,13 @@ public class BaseServiceOperate {
             }
 
             if(isUpdateConfigFileValueT){
-                String log = String.format("%1$-100s :method start exec." ,statusInfoCheck.getMethodName());
-                logger.info(log);
+                logger.info(String.format(logX ,statusInfoCheck.getMethodName(),"start"));
+
             }else{
                 if(!statusVal.equals(InterruptStatusRecordUtil.F_STATUS)){
-                  String log = String.format("%1$-100s :method already exec." ,statusInfoCheck.getMethodName());
-                  logger.info(log);
+                    logger.info(String.format(logX ,statusInfoCheck.getMethodName(),"already"));
                 }else{
-                   String log =String.format("%1$-100s :method start exec." ,statusInfoCheck.getMethodName());
-                   logger.info(log);
+                    logger.info(String.format(logX ,statusInfoCheck.getMethodName(),"start"));
                 }
             }
 
