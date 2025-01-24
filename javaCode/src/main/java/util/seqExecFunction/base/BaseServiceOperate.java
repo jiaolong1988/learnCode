@@ -18,6 +18,18 @@ public class BaseServiceOperate {
     protected static final String STATUS_F = InterruptStatusRecordUtil.F_STATUS;
     protected static final String STATUS_T = InterruptStatusRecordUtil.T_STATUS;
 
+    //是否中断
+    protected boolean interruptFlag = false;
+
+    //第一个执行的方法：创建状态文件
+    public boolean exec0(Class statusClass) {
+        //固定写法
+        if (interruptStatus.getConfigInterruptFile().exists()) {
+            interruptFlag = true;
+        }
+        return interruptStatus.createConfigFile(statusClass);
+    }
+
     public boolean commonExecUpdateConfigFileValueOfMiddenValT(Supplier<Boolean> sm, String statusField, String execMethodName) {
         StatusInfoCheck statusInfoCheck = getStatusInfo(statusField, execMethodName, interruptStatus);
         statusInfoCheck.setStatusValIsMiddleStatus(true);

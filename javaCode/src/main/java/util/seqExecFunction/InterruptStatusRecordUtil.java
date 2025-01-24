@@ -129,20 +129,18 @@ public class InterruptStatusRecordUtil {
      * 删除文件
      */
     public boolean delConfigFile() {
-
-        boolean flag = true;
         if (interruptStatusRecordFile.exists()) {
             logger.debug(interruptStatusRecordFile.getName() + " file is exist.");
             try {
                 Files.delete(interruptStatusRecordFile.toPath());
                 logger.debug("file delete successful. fileName:" + interruptStatusRecordFile.getName());
+                return true;
             } catch (IOException e) {
-                flag = false;
                 logger.error("file delete fail. fileName:" + interruptStatusRecordFile.getName() + "reason:" + e.getMessage(), e);
             }
         }
 
-        return flag;
+        return false;
     }
 
 

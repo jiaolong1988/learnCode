@@ -121,7 +121,7 @@ public class SeqExecFunctionUtiil {
         //创建function list
         List<Function<Boolean, Boolean>> list = new ArrayList<>(execMethods.size());
         for (Method method : execMethods) {
-            list.add(createFunction(method, clazzObj, execMethodAndParam.get(method.getName())));
+            list.add(createFunction(execStatus, method, clazzObj, execMethodAndParam.get(method.getName())));
         }
 
         return list;
@@ -150,19 +150,22 @@ public class SeqExecFunctionUtiil {
      * @param clazzObj -
      * @return java.util.function.Function<java.lang.Boolean,java.lang.Boolean>
      **/
-    private static Function<Boolean, Boolean> createFunction(Method execMethod, Object clazzObj, String execStatusName) {
+    private static Function<Boolean, Boolean> createFunction(Class statusClass, Method execMethod, Object clazzObj, String execStatusName) {
         return (checkInfo) -> {
             String execMethodName = clazzObj.getClass().getName()+ "."+ execMethod.getName();
             //上一个方法执行成功才执行当前方法
             if (checkInfo) {
                 try {
                     boolean resultFlag = false;
-                    if(execMethod.getParameterCount() ==2){
-                         resultFlag = (boolean) execMethod.invoke(clazzObj, execMethod.getName(),execStatusName);
+                    if(execMethod.getParameterCount() == 2){
+                         resultFlag = (boolean) execMethod.invoke(clazzObj, execMethod.getName(), execStatusName);
+
+                    }else if(execMethod.getParameterCount() == 1){
+                        resultFlag = (boolean) execMethod.invoke(clazzObj, statusClass);
+
                     }else{
-                         resultFlag = (boolean) execMethod.invoke(clazzObj);
+                        resultFlag = (boolean) execMethod.invoke(clazzObj);
                     }
-                   // boolean resultFlag = (boolean) execMethod.invoke(clazzObj, execMethod.getName());
                     if(!resultFlag){
                         logger.warn(execMethodName+" method exec failed,return false.");
                     }

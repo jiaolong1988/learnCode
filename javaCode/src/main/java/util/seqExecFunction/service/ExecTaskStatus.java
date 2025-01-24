@@ -21,7 +21,6 @@ public class ExecTaskStatus extends BaseTaskStatus {
 
     public static String batchNumUpdate;
     public static String dropTempTable;
-    public static String delInterruptedFile;
 
     static {
         setAutoClassStaticFieldValue(ExecTaskStatus.class);
