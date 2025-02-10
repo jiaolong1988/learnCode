@@ -1,4 +1,4 @@
-package reflect;
+package base;
 
 /**
  * 判断实例的类型，判断类的子类，判断Integer.type与Integer.class的区别
