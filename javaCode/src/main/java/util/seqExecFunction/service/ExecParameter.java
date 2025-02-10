@@ -8,6 +8,7 @@ import java.io.File;
  **/
 public class ExecParameter {
     private File importFile;
+    private boolean isDelStatus = true;
 
     public File getImportFile() {
         return importFile;
@@ -15,5 +16,13 @@ public class ExecParameter {
 
     public void setImportFile(File importFile) {
         this.importFile = importFile;
+    }
+
+    public boolean isDelStatus() {
+        return isDelStatus;
+    }
+
+    public void setDelStatus(boolean delStatus) {
+        isDelStatus = delStatus;
     }
 }

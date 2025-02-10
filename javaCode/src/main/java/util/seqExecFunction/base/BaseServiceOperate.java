@@ -17,6 +17,8 @@ public class BaseServiceOperate {
     protected InterruptStatusRecordUtil interruptStatus = new InterruptStatusRecordUtil();
     protected static final String STATUS_F = InterruptStatusRecordUtil.F_STATUS;
     protected static final String STATUS_T = InterruptStatusRecordUtil.T_STATUS;
+    //true:删除状态文件，false：不删除
+    protected static boolean isDelStatus = true;
 
     //是否中断
     protected boolean interruptFlag = false;
@@ -31,7 +33,11 @@ public class BaseServiceOperate {
     }
 
     public boolean exec99() {
-        return  interruptStatus.delConfigFile();
+        if(isDelStatus){
+            return interruptStatus.delConfigFile();
+        }
+
+        return true;
     }
 
     public boolean commonExecUpdateConfigFileValueOfMiddenValT(Supplier<Boolean> sm, String statusField, String execMethodName) {
@@ -220,7 +226,7 @@ public class BaseServiceOperate {
         System.exit(0);
         return -1;
     }
-    public boolean writeBatchNum(File batchNumFile, String num) {
+    public static boolean writeBatchNum(File batchNumFile, String num) {
         try {
             Files.write(batchNumFile.toPath(), num.getBytes());
             return true;

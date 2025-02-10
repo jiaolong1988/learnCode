@@ -23,14 +23,15 @@ public class ExecServiceOperate extends BaseServiceOperate {
         //固定写法 初始化中断文件
         interruptStatus.interruptConfigFileInit(TmpInfoConfig.tmpinfoDir,execTaskStatusFile);
         this.execParameter = execParameter;
+        this.isDelStatus = execParameter.isDelStatus();
     }
 
     public boolean exec1_ftpFileName(String methodName, String statusName) {
         Supplier<Boolean> func = ()->{
-            String ftpFileName = interruptStatus.getConfigFileValue(ExecTaskStatus.ftpFileName);
+            String ftpFileName = interruptStatus.getConfigFileValue(statusName);
             if(ftpFileName.equals(STATUS_F)){
                 //设置配置文件 ftp文件名称
-                return interruptStatus.updateConfigFileValue(ExecTaskStatus.ftpFileName, execParameter.getImportFile().getName());
+                return interruptStatus.updateConfigFileValue(statusName, execParameter.getImportFile().getName());
             }else{
                 //同步ftp文件名称到执行参数中
                 String filePath = String.join(File.separator,"test", ftpFileName);
@@ -96,22 +97,21 @@ public class ExecServiceOperate extends BaseServiceOperate {
         return commonExecUpdateConfigFileValueT(func, statusName, methodName);
     }
 
-    public boolean exec10_batchNumUpdate(String methodName, String statusName) {
-
-        Supplier<Boolean> func = ()->{
-            //模拟创建批量号文件
-            writeBatchNum(TmpInfoConfig.getBatchNumFile(),"0");
-            return  updateBatchNum(ExecTaskStatus.batchNumUpdate, TmpInfoConfig.getBatchNumFile());
-        } ;
-        return commonExecUpdateConfigFileValueOfMiddenValT(func, statusName, methodName);
-    }
-    public boolean exec11_dropTempTable(String methodName, String statusName) {
+    public boolean exec10_dropTempTable(String methodName, String statusName) {
         Supplier<Boolean> func = ()->{
             return true;
         } ;
         return commonExecUpdateConfigFileValueT(func, statusName, methodName);
     }
 
+    public boolean exec11_batchNumUpdate(String methodName, String statusName) {
+       // Supplier<Boolean> func = () -> updateBatchNum(statusName, TmpInfoConfig.getBatchNumFile());
+        Supplier<Boolean> func = ()->{
+            return updateBatchNum(statusName, TmpInfoConfig.getBatchNumFile());
+        } ;
+
+        return commonExecUpdateConfigFileValueOfMiddenValT(func, statusName, methodName);
+    }
 
 }
 

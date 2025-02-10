@@ -113,7 +113,9 @@ public class SeqExecFunctionUtiil {
 
         //正确性校验
         if(execStatus.getDeclaredFields().length != execMethodAndParam.size()){
-            logger.error("exec method and exec status not match. "+execMethodAndParam);
+            int length = execStatus.getDeclaredFields().length;
+            logger.error("exec method and exec status not match, execStatus.size !=execMethodAndParam.size, execStatus.size:"+length
+                    +"execMethodAndParam: "+execMethodAndParam);
             System.exit(1);
         }
 

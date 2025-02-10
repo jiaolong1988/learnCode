@@ -1,5 +1,6 @@
 package util.seqExecFunction;
 
+import util.seqExecFunction.base.BaseServiceOperate;
 import util.seqExecFunction.service.ExecParameter;
 import util.seqExecFunction.service.ExecServiceOperate;
 import util.seqExecFunction.service.ExecTaskStatus;
@@ -19,9 +20,17 @@ public class Test {
 //            System.out.println(info);
 //        }
 
+        //1.执行参数
         ExecParameter parameter = new ExecParameter();
-        File file = new File("D:\\test.txt");
-        parameter.setImportFile(file);
+        parameter.setImportFile(new File("D:\\test.txt"));
+        parameter.setDelStatus(false);
+
+        //2.batchNum文件初始化
+        if (!TmpInfoConfig.getBatchNumFile().exists()) {
+            BaseServiceOperate.writeBatchNum(TmpInfoConfig.getBatchNumFile(),"0");
+        }
+
+        //3.执行
         boolean result = SeqExecFunctionUtiil.getExecResult(ExecServiceOperate.class, ExecTaskStatus.class, parameter);
         System.out.println("执行结果: "+result);
 
