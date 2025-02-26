@@ -1,13 +1,17 @@
 package org.example.sync;
+import org.apache.log4j.Logger;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * CountDownLatch(倒计时门闩)
  * 线程协调，根据条件执行不同的并发任务。
  * @author jiaolong
  * @date 2023-01-19 03:28:18
  */
 public class CountDownLatchSample {
+	private static Logger logger = Logger.getLogger(CountDownLatchSample.class);
 	public static void main(String[] args) throws InterruptedException {
 		//当CountDownLatch等与0时，所有等待的线程开始工作
 		CountDownLatch latch = new CountDownLatch(5);

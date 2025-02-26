@@ -1,14 +1,19 @@
 package org.example.sync;
+import org.apache.log4j.Logger;
+import org.example.lock.StampedLockTest;
+
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
 /**
- * 用于线程间的批量协调，也就是说一批一批的执行任务
- * 相等于批量执行相同的任务
+ * CyclicBarrier(循环屏障)
+ * 	1.用于线程间的批量协调，也就是说一批一批的执行任务
+ *  2.相等于批量执行相同的任务
  * @author jiaolong
  * @date 2023-01-19 03:56:21
  */
 public class CyclicBarrierSample {
+	private static Logger logger = Logger.getLogger(CyclicBarrierSample.class);
 	public static void main(String[] args) throws Exception {
 		//障碍触发前,调用await的线程数量
 		int parties = 5;

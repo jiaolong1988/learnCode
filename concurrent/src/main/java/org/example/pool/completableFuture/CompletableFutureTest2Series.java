@@ -18,7 +18,7 @@ import java.util.function.Function;
  * @author: jiaolong
  * @date: 2024/07/03 13:53
  **/
-public class CompletableFutureSeriesTest {
+public class CompletableFutureTest2Series {
 
     public static void main(String[] args) throws Exception {
        seriesExecMethodTest();
@@ -72,7 +72,7 @@ public class CompletableFutureSeriesTest {
          * thenCompose() 直接 function函数的结果，用于简化返回结果
          */
 
-        CompletableFutureSeriesTest ct = new CompletableFutureSeriesTest();
+        CompletableFutureTest2Series ct = new CompletableFutureTest2Series();
 
         //方式2
         CompletableFuture<CompletableFuture<Double>> result = ct.getUsersDetail("xxx")

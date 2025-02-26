@@ -1,5 +1,7 @@
 package org.example.pool;
 
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -11,19 +13,19 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @author jiaolong
  * @date 2023-06-29 01:54:59
  */
-public class MyThreadPool{
-
+public class ThreadPoolCore {
+    private static Logger logger = Logger.getLogger(ThreadPoolCore.class);
     public static void main(String[] args) throws InterruptedException {
         // 创建有界阻塞队列
         BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(2);
         // 创建线程池
-        MyThreadPool pool = new MyThreadPool(3, workQueue);
+        ThreadPoolCore pool = new ThreadPoolCore(3, workQueue);
 
         // 提交任务
         for (int i = 0; i <20 ; i++) {
             int x = i;
             pool.execute(()->{
-                System.out.println(Thread.currentThread().getName()+" hello"+x);
+                logger.info(Thread.currentThread().getName()+" hello"+x);
             });
         }
 
@@ -36,7 +38,7 @@ public class MyThreadPool{
     List<WorkerThread> threads = new ArrayList<>();
 
     // 构造方法
-    MyThreadPool(int poolSize,  BlockingQueue<Runnable> workQueue){
+    ThreadPoolCore(int poolSize, BlockingQueue<Runnable> workQueue){
         this.workQueue = workQueue;
 
         // 创建工作线程

@@ -1,5 +1,7 @@
 package org.example.lock;
 
+import org.apache.log4j.Logger;
+
 import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.StampedLock;
@@ -13,23 +15,23 @@ import java.util.concurrent.locks.StampedLock;
  * @date 2025/02/26 11:59
  **/
 public class StampedLockTest {
+    private static Logger logger = Logger.getLogger(StampedLockTest.class);
     public static void main(String[] args) {
         Point point = new Point();
 
-        //写锁
-        new Thread(()->{
-            while(true)
-                point.move(1, 2);
-        }).start();
+//        //写锁
+//        new Thread(()->{
+//            while(true)
+//                point.move(1, 2);
+//        }).start();
 
         //乐观读转换为悲观读锁
         new Thread(()->{
             while(true) {
                 double res = point.distanceFromOrigin();
-                System.out.println("result:"+res);
+                logger.info("result:"+res);
             }
         }).start();
-
 
         point.waitTime(3);
 
@@ -56,7 +58,7 @@ public class StampedLockTest {
         void move(double deltaX, double deltaY) {
             //an exclusively locked method,写锁是一个独占锁,不可用时一直阻塞
             long stamp = sl.writeLock();	//获取写锁
-            System.out.println("move-获得写锁："+printLog());
+            logger.info("move-获得写锁："+printLog());
             try {
                 x += deltaX;
                 y += deltaY;
@@ -76,13 +78,13 @@ public class StampedLockTest {
             /**
              * 不是独占锁返回true,。否则返回false.
              */
-            System.out.println("检查乐观读："+sl.validate(stamp));
+            logger.info("检查乐观读："+sl.validate(stamp));
             if (!sl.validate(stamp)) {				 //检查 乐观读后 是否有其他写锁发生，有独占锁 则返回false
                 stamp = sl.readLock();				 //获取一个悲观读锁
                 try {
                     currentX = x;
                     currentY = y;
-                    System.out.println("获取读锁currentX:"+currentX+" currentY:"+currentY+printLog());
+                    logger.info("获取读锁currentX:"+currentX+" currentY:"+currentY+printLog());
                     waitTime(10);
                 } finally {
                     sl.unlockRead(stamp); 				//释放悲观读锁
@@ -106,14 +108,14 @@ public class StampedLockTest {
                      */
                     long ws = sl.tryConvertToWriteLock(stamp);	//读锁转换为写锁
                     if (ws != 0L) {
-                        System.out.println("moveIfAtOrigin-获得写锁"+printLog());
+                        logger.info("moveIfAtOrigin-获得写锁"+printLog());
                         stamp = ws;							 	//票据更新,否则不会释放新锁
 
                         x = newX;
                         y = newY;
                         break;
                     } else {
-                        System.out.println("没获得写锁-释放读锁"+printLog());
+                        logger.info("没获得写锁-释放读锁"+printLog());
                         sl.unlockRead(stamp);					//转换失败 释放读锁
                         stamp = sl.writeLock();					//强制获取写锁
                     }

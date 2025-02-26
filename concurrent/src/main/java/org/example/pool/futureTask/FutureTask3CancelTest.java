@@ -9,7 +9,7 @@ import java.util.concurrent.*;
  * @author: jiaolong
  * @date: 2024/07/02 14:31
  **/
-public class FutureTaskCancelTest3 {
+public class FutureTask3CancelTest {
 
     //内部类-状态控制
     static class ControlStop{

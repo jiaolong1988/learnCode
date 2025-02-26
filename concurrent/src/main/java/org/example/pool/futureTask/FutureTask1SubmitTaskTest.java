@@ -9,7 +9,7 @@ import java.util.concurrent.FutureTask;
  * @author: jiaolong
  * @date: 2024/07/02 14:23
  **/
-public class FutureTaskSubmitTaskTest1 {
+public class FutureTask1SubmitTaskTest {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         // 创建 FutureTask
         FutureTask<Integer> futureTask = new FutureTask<>(() -> {

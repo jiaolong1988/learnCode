@@ -1,11 +1,18 @@
 package org.example.sync;
 
+import org.apache.log4j.Logger;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * CountDownLatch(倒计时门闩) 简单使用方法
+ * @author jiaolong
+ * @date 2025-2-26 13:54
+ */
 public class CountDownLatchExample {
-
+	private static Logger logger = Logger.getLogger(CountDownLatchExample.class);
 	private static CountDownLatch countDownLatch = new CountDownLatch(2);
 
 	public static void main(String[] args) throws InterruptedException {

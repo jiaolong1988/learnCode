@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
  * @author: jiaolong
  * @date: 2024/07/03 13:48
  **/
-public class CompletableFutureCreateTest {
+public class CompletableFutureTest1Create {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         // 任务 1：洗水壶 -> 烧开水 没有返回结果
