@@ -4,8 +4,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * 非重入锁：自旋锁就
- * 重入锁：线程 可以重复 获取同一把锁。如：synchronized、ReentrantLock
+ * 仅使用ReentrantLock的 lock() 和 unlock()方法，没有使用Condition。
+ *      - 重入锁：线程 可以重复 获取同一把锁。如：synchronized、ReentrantLock
+ *      - 非重入锁：自旋锁就
  * @author: jiaolong
  * @date: 2024/06/25 17:11
  **/

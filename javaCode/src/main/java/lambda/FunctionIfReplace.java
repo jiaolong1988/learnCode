@@ -9,7 +9,6 @@ import java.util.function.Consumer;
  * Function接口 消灭if...else
  *
  * @author jiaolong
- *
  */
 public class FunctionIfReplace {
     public static void main(String[] args) {
@@ -18,16 +17,26 @@ public class FunctionIfReplace {
         VUtils.isTure(false).throwMessage("11111111111");
 
         // 2.处理if分支操作
-        VUtils.isTureOrFalse(false).trueOrFalseHandle(() -> {
+        VUtils.isTureOrFalse(false).trueOrFalseHandle(
+        //第一个参数
+        () -> {
             System.out.println("true , statr...");
-        }, () -> {
+        } ,
+        //第二个参数
+        () -> {
             System.out.println("false, end...");
         });
 
         // 3.如果存在值执行消费操作，否则执行基于空的操作
-        VUtils.isBlankOrNoBlank("有字符").presentOrElseHandle(System.out::println, () -> {
-            System.out.println("空字符串");
-        });
+        VUtils.isBlankOrNoBlank("有字符").presentOrElseHandle(
+            //第一个参数
+            System.out::println
+            ,
+            //第二个参数
+            () -> {
+                System.out.println("空字符串");
+            }
+        );
 
     }
 }
