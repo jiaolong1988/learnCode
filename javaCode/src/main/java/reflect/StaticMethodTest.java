@@ -15,7 +15,7 @@ public class StaticMethodTest {
 	public static void main(String[] args) throws Exception {
 		fieldTest();
 		System.out.println("====");
-		methodTest();
+		methodUseTest();
 	}
 
 	public static void fieldTest() throws Exception {
@@ -35,10 +35,13 @@ public class StaticMethodTest {
 		
 	}
 
-	public static void methodTest() throws Exception {
+	public static void methodUseTest() throws Exception {
+		//根据方法名称参数 获取 Mehtod对象
 		Method method = Mtest.class.getDeclaredMethod("replace", String.class, List.class);
 		// 调用静态方法
 		method.invoke(null, "jiaolong", new ArrayList<String>());
+
+
 		System.out.println("方法的名字：" + method.getName());
 		System.out.println("方法的泛型描述：" + method.toGenericString());
 		System.out.println("方法的return类型：" + method.getReturnType());

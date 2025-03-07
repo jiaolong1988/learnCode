@@ -18,6 +18,38 @@ public class FilesTest {
        // readWriteListTest();
         readWriteStringTest();
     }
+    /**
+     * 日常操作
+     * @return void
+     **/
+    public static void baseTest() throws Exception {
+        Path sourcePath = Paths.get("a.txt").toAbsolutePath();
+        Path target = Paths.get("b.txt").toAbsolutePath();
+        System.out.println("源文件路径："+sourcePath);
+
+        target.toFile().delete();
+        // 复制文件
+        Files.move(sourcePath, target);
+        Files.copy(target, new FileOutputStream("a.txt"));
+
+        // 判断FilesTest.java文件是否为隐藏文件
+        System.out.println("\nFilesTest.java是否为隐藏文件：" + Files.isHidden(sourcePath));
+        // 判断指定文件的大小
+        System.out.println("\nFilesTest.java的大小为：" + Files.size(sourcePath));
+
+        System.out.println("\n读取当前目录下所有文件和子目录");
+        // 使用Java 8新增的Stream API列出当前目录下所有文件和子目录
+        Files.list(Paths.get(".")).forEach(path -> System.out.println(path));
+
+
+        // 使用Java 8新增的Stream API读取文件内容
+        Files.lines(sourcePath, Charset.forName("utf-8")).forEach(line -> System.out.println(line));
+
+        FileStore cStore = Files.getFileStore(Paths.get("C:"));
+        // 判断C盘的总空间，可用空间
+        System.out.println("C:共有空间：" + cStore.getTotalSpace());
+        System.out.println("C:可用空间：" + cStore.getUsableSpace());
+    }
 
     /**
      * 字符串文件读写
@@ -67,36 +99,5 @@ public class FilesTest {
 
     }
 
-    /**
-     * 日常操作
-     * @return void
-     **/
-    public static void baseTest() throws Exception {
-        Path sourcePath = Paths.get("a.txt").toAbsolutePath();
-        Path target = Paths.get("b.txt").toAbsolutePath();
-        System.out.println("源文件路径："+sourcePath);
 
-        target.toFile().delete();
-        // 复制文件
-        Files.move(sourcePath, target);
-        Files.copy(target, new FileOutputStream("a.txt"));
-
-        // 判断FilesTest.java文件是否为隐藏文件
-        System.out.println("\nFilesTest.java是否为隐藏文件：" + Files.isHidden(sourcePath));
-        // 判断指定文件的大小
-        System.out.println("\nFilesTest.java的大小为：" + Files.size(sourcePath));
-
-        System.out.println("\n读取当前目录下所有文件和子目录");
-        // 使用Java 8新增的Stream API列出当前目录下所有文件和子目录
-        Files.list(Paths.get(".")).forEach(path -> System.out.println(path));
-
-
-        // 使用Java 8新增的Stream API读取文件内容
-        Files.lines(sourcePath, Charset.forName("utf-8")).forEach(line -> System.out.println(line));
-
-        FileStore cStore = Files.getFileStore(Paths.get("C:"));
-        // 判断C盘的总空间，可用空间
-        System.out.println("C:共有空间：" + cStore.getTotalSpace());
-        System.out.println("C:可用空间：" + cStore.getUsableSpace());
-    }
 }
