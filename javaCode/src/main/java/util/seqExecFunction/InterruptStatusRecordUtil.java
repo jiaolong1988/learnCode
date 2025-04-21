@@ -2,6 +2,7 @@ package util.seqExecFunction;
 
 
 import org.apache.log4j.Logger;
+import util.seqExecFunction.base.BaseServiceOperate;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,19 +63,23 @@ public class InterruptStatusRecordUtil {
     }
 
 
-
     /**
      * 创建中断文件
      * @param c
      */
-    public boolean createConfigFileExpand(Class<?> c, List<String> expandStatusList) {
+    public boolean createConfigFileExpand(Class<?> c, Map<String, String> expandStatusMap) {
         if (!interruptStatusRecordFile.exists()) {
             Map<String, String> infos = new LinkedHashMap<>();
 
             //额外扩展字段
-            if(expandStatusList != null){
-                for (String status: expandStatusList){
-                    infos.put(status, F_STATUS);
+            if(expandStatusMap.size() > 0){
+                for (String status: expandStatusMap.keySet()){
+                    if(expandStatusMap.get(status).equals(BaseServiceOperate.nullValue)){
+                        infos.put(status, F_STATUS);
+                    }else{
+                        String value = expandStatusMap.get(status);
+                        infos.put(status, value);
+                    }
                 }
             }
 

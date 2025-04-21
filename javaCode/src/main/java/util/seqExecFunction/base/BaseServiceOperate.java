@@ -6,9 +6,7 @@ import util.seqExecFunction.InterruptStatusRecordUtil;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -23,14 +21,17 @@ public class BaseServiceOperate {
     protected static final String STATUS_T = InterruptStatusRecordUtil.T_STATUS;
     //true:删除状态文件，false：不删除
     protected static boolean isDelStatus = true;
-
     //是否中断
     protected boolean interruptFlag = false;
 
-    //是否增加扩展状态的标识
-    protected static boolean expandInterruptStatusFlag = false;
-    //增加扩展状态的信息
-    protected List<String> expandInterruptStatusList = new ArrayList<>();
+    private Map<String, String> expandInterruptStatusMap = new LinkedHashMap<>();
+    public static final String nullValue = "";
+    protected void addAttribute(String attributeName){
+        expandInterruptStatusMap.put(attributeName,nullValue);
+    }
+    protected void addAttributeAndValue(String attributeName,String value){
+        expandInterruptStatusMap.put(attributeName,value);
+    }
 
     //第一个执行的方法：创建状态文件
     public boolean exec0(Class statusClass) {
@@ -38,12 +39,8 @@ public class BaseServiceOperate {
         if (interruptStatus.getConfigInterruptFile().exists()) {
             interruptFlag = true;
         }
-        if(!expandInterruptStatusFlag){
-            return interruptStatus.createConfigFileExpand(statusClass,null);
-        }else{
-            return interruptStatus.createConfigFileExpand(statusClass, expandInterruptStatusList);
-        }
 
+        return interruptStatus.createConfigFileExpand(statusClass, expandInterruptStatusMap);
     }
 
     public boolean exec99() {
@@ -303,5 +300,6 @@ public class BaseServiceOperate {
             this.statusValIsMiddleStatus = statusValIsMiddleStatus;
         }
     }
+
 
 }
