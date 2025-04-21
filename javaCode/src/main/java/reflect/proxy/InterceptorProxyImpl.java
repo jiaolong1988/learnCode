@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-//À¹½ØÆ÷¹æÔò
+//æ‹¦æˆªå™¨è§„åˆ™
 interface Interceptor {
 	public boolean before(Object proxy, Object target, Method method, Object[] args);
 
@@ -13,7 +13,7 @@ interface Interceptor {
 	public void after(Object proxy, Object target, Method method, Object[] args);
 }
 
-//±»´úÀí¶ÔÏó
+//è¢«ä»£ç†å¯¹è±¡
 interface Shopping {
 	void learn();
 	void play();
@@ -21,30 +21,30 @@ interface Shopping {
 
 class Client implements Shopping {
 	public void learn() {
-		System.out.println("ÎÒÏëÂòÕâ¼şÉÌÆ·");
+		System.out.println("æˆ‘æƒ³ä¹°è¿™ä»¶å•†å“");
 	}
 	public void play() {
-		System.out.println("ÎÒÏëÈ¥ÂÃĞĞ");
+		System.out.println("æˆ‘æƒ³å»æ—…è¡Œ");
 	}
 }
 
 class MyInterceptor implements Interceptor {
 
 	/**
-	 * proxy 	´´½¨µÄ´úÀí¶ÔÏó
-	 * target 	±»´úÀíµÄ¶ÔÏó
-	 * method	Ö´ĞĞµÄ·½·¨
-	 * args 	Ö´ĞĞµÄ·½·¨²ÎÊı
+	 * proxy 	åˆ›å»ºçš„ä»£ç†å¯¹è±¡
+	 * target 	è¢«ä»£ç†çš„å¯¹è±¡
+	 * method	æ‰§è¡Œçš„æ–¹æ³•
+	 * args 	æ‰§è¡Œçš„æ–¹æ³•å‚æ•°
 	 */
 	@Override
 	public boolean before(Object proxy, Object target, Method method, Object[] args) {
 		System.out.println("before");
 		
 		if(method.getName().equals("learn")) {
-			System.out.println("learn method ¿ÉÒÔÖ´ĞĞ");
+			System.out.println("learn method å¯ä»¥æ‰§è¡Œ");
 			return true;
 		}else {
-			System.out.println("play method ²»¿ÉÒÔÖ´ĞĞ");
+			System.out.println("play method ä¸å¯ä»¥æ‰§è¡Œ");
 			return false;
 		}
 	}
@@ -62,11 +62,11 @@ class MyInterceptor implements Interceptor {
 
 
 
-//´úÀí¶ÔÏó´¦Àí¹æÔò
+//ä»£ç†å¯¹è±¡å¤„ç†è§„åˆ™
 class InterceptorProxy implements InvocationHandler {
-	//±»´úÀíµÄ¶ÔÏó
+	//è¢«ä»£ç†çš„å¯¹è±¡
 	private Object target = null;
-	//¾ßÓĞÀ¹½Ø¹æÔòµÄµÄ¶ÔÏó
+	//å…·æœ‰æ‹¦æˆªè§„åˆ™çš„çš„å¯¹è±¡
 	Interceptor interceptor = null;
 
 	InterceptorProxy(Interceptor interceptor) {
@@ -79,11 +79,11 @@ class InterceptorProxy implements InvocationHandler {
 	}
 
 	/**
-	 * ´úÀí·½·¨Âß¼­
+	 * ä»£ç†æ–¹æ³•é€»è¾‘
 	 *
-	 * @param proxy  ´úÀí¶ÔÏó
-	 * @param method µ÷¶È·½·¨
-	 * @param args   µ÷¶È·½·¨²ÎÊı
+	 * @param proxy  ä»£ç†å¯¹è±¡
+	 * @param method è°ƒåº¦æ–¹æ³•
+	 * @param args   è°ƒåº¦æ–¹æ³•å‚æ•°
 	 */
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -103,22 +103,22 @@ class InterceptorProxy implements InvocationHandler {
 
 
 /**
- * ¶¯Ì¬´úÀíÊµÏÖÀ¹½ØÆ÷
+ * åŠ¨æ€ä»£ç†å®ç°æ‹¦æˆªå™¨
  */
 public class InterceptorProxyImpl {
 	public static void main(String[] args) {
 		/**
-		 * Ê¹ÓÃ¶¯Ì¬´úÀíÊµÏÖÀ¹½ØÆ÷
+		 * ä½¿ç”¨åŠ¨æ€ä»£ç†å®ç°æ‹¦æˆªå™¨
 		 */
 		
-		//ÉèÖÃÈ¥À¹½ØÆ÷¹æÔò
+		//è®¾ç½®å»æ‹¦æˆªå™¨è§„åˆ™
 		InterceptorProxy interceptor = new InterceptorProxy(new MyInterceptor());
-		//ÉèÖÃ±»´úÀíµÄ¶ÔÏó£¬²¢·µ»Ø´úÀí¶ÔÏó
+		//è®¾ç½®è¢«ä»£ç†çš„å¯¹è±¡ï¼Œå¹¶è¿”å›ä»£ç†å¯¹è±¡
 		Shopping shop = (Shopping) interceptor.bind(new Client());
-		System.out.println("....Ö´ĞĞplay·½·¨");
+		System.out.println("....æ‰§è¡Œplayæ–¹æ³•");
 		shop.play();
 		
-		System.out.println("\n....Ö´ĞĞlearn·½·¨");
+		System.out.println("\n....æ‰§è¡Œlearnæ–¹æ³•");
 		shop.learn();
 	}
 }

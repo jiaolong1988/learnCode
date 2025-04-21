@@ -9,9 +9,9 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * java 集合转换为 stream 流
- * @author 		jiaolong
- * @date 		2022-09-20 11:03:56
+ * java集合转化为stream流的方式
+ * @author jiaolong
+ * @date 2025-4-21 11:14
  */
 public class ConverStreamWay {
 	public static void main(String[] args) {

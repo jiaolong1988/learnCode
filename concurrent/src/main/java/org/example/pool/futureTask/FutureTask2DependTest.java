@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  * @author: jiaolong
  * @date: 2024/07/02 14:24
  **/
-public class FutureTaskDependTest2 {
+public class FutureTask2DependTest {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         // 创建任务 T2 的 FutureTask
         FutureTask<String> ft2 = new FutureTask<>(new T2Task());

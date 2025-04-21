@@ -1,13 +1,12 @@
 package designPatterns.Strategy;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author jiaolong
  * @date 2024/01/15 17:21
- * @description: ²ßÂÔÄ£Ê½Éı¼¶°æ±¾£¬¶Å¾øifÌõ¼şÅĞ¶Ï
+ * @description: ç­–ç•¥æ¨¡å¼å‡çº§ç‰ˆæœ¬ï¼Œæœç»ifæ¡ä»¶åˆ¤æ–­
  *  https://mp.weixin.qq.com/s/WK80UZEjhPZnIPwgQc1dYQ
  */
 public class StrategyPatternUpgradeTest {
@@ -35,7 +34,7 @@ public class StrategyPatternUpgradeTest {
 
 interface CouponDiscount<T> {
     /**
-     * ÅĞ¶Ï¸Ã²ßÂÔÊÇ·ñÖ§³Ö
+     * åˆ¤æ–­è¯¥ç­–ç•¥æ˜¯å¦æ”¯æŒ
      */
     Boolean support(int price);
     int discountAmount(int skuPrice, T coupon);
@@ -47,7 +46,7 @@ class ACouponDiscount implements CouponDiscount<Integer> {
         return price < 300;
     }
     public int discountAmount(int skuPrice, Integer coupon) {
-        // TODO: ÊµÏÖÕÛ¿ÛAÒµÎñ´¦ÀíÂß¼­
+        // TODO: å®ç°æŠ˜æ‰£Aä¸šåŠ¡å¤„ç†é€»è¾‘
         return 1;
     }
 }
@@ -58,7 +57,7 @@ class BCouponDiscount implements CouponDiscount<Integer> {
         return price > 500;
     }
     public int discountAmount(int skuPrice, Integer coupon) {
-        // TODO: ÊµÏÖÕÛ¿ÛBÒµÎñ´¦ÀíÂß¼­
+        // TODO: å®ç°æŠ˜æ‰£Bä¸šåŠ¡å¤„ç†é€»è¾‘
         return 2;
     }
 }
@@ -71,7 +70,7 @@ class CouponDiscountService {
 
     public int discountAmount(int coupon, int skuPrice) {
         for (CouponDiscount v : list) {
-            // ÕâÀïÈç¹ûÂú×ãÌõ¼ş, ÄÇÃ´¾ÍÊ¹ÓÃ¸Ã²ßÂÔ£¬²»Âú×ã¼ÌĞøÑ­»·
+            // è¿™é‡Œå¦‚æœæ»¡è¶³æ¡ä»¶, é‚£ä¹ˆå°±ä½¿ç”¨è¯¥ç­–ç•¥ï¼Œä¸æ»¡è¶³ç»§ç»­å¾ªç¯
             if (v.support(skuPrice)) {
                return v.discountAmount(skuPrice, coupon);
             }
