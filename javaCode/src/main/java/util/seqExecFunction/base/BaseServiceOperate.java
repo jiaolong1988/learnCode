@@ -6,6 +6,10 @@ import util.seqExecFunction.InterruptStatusRecordUtil;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -23,13 +27,23 @@ public class BaseServiceOperate {
     //是否中断
     protected boolean interruptFlag = false;
 
+    //是否增加扩展状态的标识
+    protected static boolean expandInterruptStatusFlag = false;
+    //增加扩展状态的信息
+    protected List<String> expandInterruptStatusList = new ArrayList<>();
+
     //第一个执行的方法：创建状态文件
     public boolean exec0(Class statusClass) {
         //固定写法
         if (interruptStatus.getConfigInterruptFile().exists()) {
             interruptFlag = true;
         }
-        return interruptStatus.createConfigFile(statusClass);
+        if(!expandInterruptStatusFlag){
+            return interruptStatus.createConfigFileExpand(statusClass,null);
+        }else{
+            return interruptStatus.createConfigFileExpand(statusClass, expandInterruptStatusList);
+        }
+
     }
 
     public boolean exec99() {

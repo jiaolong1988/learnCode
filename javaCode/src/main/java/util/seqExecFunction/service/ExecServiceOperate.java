@@ -24,6 +24,11 @@ public class ExecServiceOperate extends BaseServiceOperate {
         interruptStatus.interruptConfigFileInit(TmpInfoConfig.tmpinfoDir,execTaskStatusFile);
         this.execParameter = execParameter;
         this.isDelStatus = execParameter.isDelStatus();
+
+        //中断信息扩展
+        //this.expandInterruptStatusFlag = true;
+        this.expandInterruptStatusList.add("aaa");
+        this.expandInterruptStatusList.add("bbb");
     }
 
     public boolean exec1_ftpFileName(String methodName, String statusName) {

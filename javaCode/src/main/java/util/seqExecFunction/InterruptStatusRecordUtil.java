@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,10 +67,17 @@ public class InterruptStatusRecordUtil {
      * 创建中断文件
      * @param c
      */
-    public boolean createConfigFile(Class<?> c) {
+    public boolean createConfigFileExpand(Class<?> c, List<String> expandStatusList) {
         if (!interruptStatusRecordFile.exists()) {
-
             Map<String, String> infos = new LinkedHashMap<>();
+
+            //额外扩展字段
+            if(expandStatusList != null){
+                for (String status: expandStatusList){
+                    infos.put(status, F_STATUS);
+                }
+            }
+
             Field[] fields = c.getDeclaredFields();
             for (Field field : fields) {
                 infos.put(field.getName(), F_STATUS);
@@ -84,7 +92,6 @@ public class InterruptStatusRecordUtil {
         }
         return true;
     }
-
 
     /**
      * 设置属性值为T
