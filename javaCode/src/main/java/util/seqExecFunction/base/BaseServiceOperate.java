@@ -24,6 +24,7 @@ public class BaseServiceOperate {
     //是否中断
     protected boolean interruptFlag = false;
 
+    //状态字段扩展信息
     private Map<String, String> expandInterruptStatusMap = new LinkedHashMap<>();
     public static final String nullValue = "";
     protected void addAttribute(String attributeName){

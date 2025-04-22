@@ -16,15 +16,36 @@ public class SeqExecFunctionUtiil {
     private static final Logger logger = Logger.getLogger(SeqExecFunctionUtiil.class);
 
     private static final String EXEC_PREFIX = "exec";
+    private static final String END_EXEC_Method_NAME = "exec99";
     private static final String METHOD_NAME_SPLIT_CHAR = "_";
 
+
     /**
-     *  获取顺序执行function的执行结果
-     * @param execOperate -
+     * 获取顺序执行function的执行结果-执行exec99方法
+     * @param execOperate - 业务逻辑
+     * @param execStatus - 断点状态
+     * @param parameter -  业务参数
      * @return boolean
      **/
-    public static boolean getExecResult(Class execOperate, Class execStatus, Object parameter) {
-        List<Function<Boolean, Boolean>> execList = getExecListFunction(execOperate, execStatus, parameter);
+    public static boolean getExecResultExce99Method(Class execOperate, Class execStatus, Object parameter) {
+
+        return getExecResult(execOperate, execStatus, parameter,false);
+    }
+    /**
+     * 获取顺序执行function的执行结果-不执行exec99方法
+     * @param execOperate - 业务逻辑
+     * @param execStatus - 断点状态
+     * @param parameter -  业务参数
+     * @return boolean
+     **/
+    public static boolean getExecResultNotExce99Method(Class execOperate, Class execStatus, Object parameter) {
+
+        return getExecResult(execOperate, execStatus, parameter,true);
+    }
+
+
+    private static boolean getExecResult(Class execOperate, Class execStatus, Object parameter,boolean notExec99MethodFlag) {
+        List<Function<Boolean, Boolean>> execList = getExecListFunction(execOperate, execStatus, parameter,notExec99MethodFlag);
         if(execList== null || execList.size() == 0){
             return false;
         }
@@ -50,7 +71,7 @@ public class SeqExecFunctionUtiil {
      * @param clazz -
      * @return java.util.List<java.util.function.Function<java.lang.Boolean,java.lang.Boolean>>
      **/
-    private static List<Function<Boolean, Boolean>> getExecListFunction(Class clazz, Class execStatus, Object parameter) {
+    private static List<Function<Boolean, Boolean>> getExecListFunction(Class clazz, Class execStatus, Object parameter,  boolean notExec99MethodFlag) {
 
         Method[] methods = clazz.getMethods();
         if(methods == null || methods.length == 0){
@@ -61,6 +82,13 @@ public class SeqExecFunctionUtiil {
         List<Method> execMethods = new ArrayList<>();
         for (Method method : methods) {
             if (method.getName().startsWith(EXEC_PREFIX)) {
+                //不执行exec99方法
+                if(notExec99MethodFlag){
+                    if(END_EXEC_Method_NAME.equals(method.getName())){
+                        continue;
+                    }
+                }
+
                 execMethods.add(method);
             }
         }

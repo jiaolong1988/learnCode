@@ -31,7 +31,7 @@ public class Test {
         }
 
         //3.执行
-        boolean result = SeqExecFunctionUtiil.getExecResult(ExecServiceOperate.class, ExecTaskStatus.class, parameter);
+        boolean result = SeqExecFunctionUtiil.getExecResultNotExce99Method(ExecServiceOperate.class, ExecTaskStatus.class, parameter);
         System.out.println("执行结果: "+result);
 
     }

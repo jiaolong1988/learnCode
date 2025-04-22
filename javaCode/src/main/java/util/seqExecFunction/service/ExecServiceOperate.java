@@ -23,7 +23,7 @@ public class ExecServiceOperate extends BaseServiceOperate {
         //固定写法 初始化中断文件
         interruptStatus.interruptConfigFileInit(TmpInfoConfig.tmpinfoDir,execTaskStatusFile);
         this.execParameter = execParameter;
-        this.isDelStatus = execParameter.isDelStatus();
+        //this.isDelStatus = execParameter.isDelStatus();
 
         this.addAttribute("aaa");
         this.addAttributeAndValue("bbb","222");
