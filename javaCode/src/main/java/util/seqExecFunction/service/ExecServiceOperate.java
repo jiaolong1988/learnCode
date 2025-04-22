@@ -108,9 +108,8 @@ public class ExecServiceOperate extends BaseServiceOperate {
     }
 
     public boolean exec11_batchNumUpdate(String methodName, String statusName) {
-       // Supplier<Boolean> func = () -> updateBatchNum(statusName, TmpInfoConfig.getBatchNumFile());
         Supplier<Boolean> func = ()->{
-            return updateBatchNum(statusName, TmpInfoConfig.getBatchNumFile());
+            return true;
         } ;
 
         return commonExecUpdateConfigFileValueOfMiddenValT(func, statusName, methodName);

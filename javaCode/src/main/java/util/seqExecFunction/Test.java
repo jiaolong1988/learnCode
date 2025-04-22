@@ -25,14 +25,16 @@ public class Test {
         parameter.setImportFile(new File("D:\\test.txt"));
         parameter.setDelStatus(false);
 
-        //2.batchNum文件初始化
-        if (!TmpInfoConfig.getBatchNumFile().exists()) {
-            BaseServiceOperate.writeBatchNum(TmpInfoConfig.getBatchNumFile(),"0");
-        }
+//        //2.batchNum文件初始化
+//        if (!TmpInfoConfig.getBatchNumFile().exists()) {
+//            BaseServiceOperate.writeBatchNum(TmpInfoConfig.getBatchNumFile(),"0");
+//        }
 
         //3.执行
         boolean result = SeqExecFunctionUtiil.getExecResultNotExce99Method(ExecServiceOperate.class, ExecTaskStatus.class, parameter);
         System.out.println("执行结果: "+result);
+        boolean result1 = SeqExecFunctionUtiil.getExecResultExce99Method(ExecServiceOperate.class, ExecTaskStatus.class, parameter);
+        System.out.println("执行结果: "+result1);
 
     }
 
