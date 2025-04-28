@@ -54,17 +54,39 @@ public class BaseServiceOperate extends BaseSeviceOperateOfUtil{
     }
 
 
+    /**
+     * 1.当 (字段值有中间状态)，如有三种状态：T、2025、F时，<br>
+     * 2.执行指定的方法，中断文件的字段值 【更新为T】
+     * @param sm - 执行函数
+     * @param statusField - 状态字段
+     * @param execMethodName - 执行的方法名称
+     * @return boolean
+     **/
     protected boolean commonExecUpdateConfigFileValueOfMiddenValT(Supplier<Boolean> sm, String statusField, String execMethodName) {
         StatusInfoCheck statusInfoCheck = getStatusInfo(statusField, execMethodName, interruptStatus);
         statusInfoCheck.setStatusValIsMiddleStatus(true);
         return commonExec(sm, statusInfoCheck, true);
     }
 
+    /**
+     * 执行指定的方法，中断文件的字段值 【更新为T】
+     * @param sm - 执行函数
+     * @param statusField - 状态字段
+     * @param execMethodName - 执行的方法名称
+     * @return boolean
+     **/
     protected boolean commonExecUpdateConfigFileValueT(Supplier<Boolean> sm, String statusField, String execMethodName) {
         StatusInfoCheck statusInfoCheck = getStatusInfo(statusField, execMethodName, interruptStatus);
         return commonExec(sm, statusInfoCheck, true);
     }
 
+    /**
+     * 执行指定的方法，但中断文件的字段值 【不更新】
+     * @param sm - 执行函数
+     * @param statusField - 状态字段
+     * @param execMethodName - 执行的方法名称
+     * @return boolean
+     **/
     protected boolean commonExecNotUpdateConfigFileValueT(Supplier<Boolean> sm, String statusField, String execMethodName) {
         StatusInfoCheck statusInfoCheck = getStatusInfo(statusField, execMethodName, interruptStatus);
         return commonExec(sm, statusInfoCheck, false);
@@ -135,10 +157,11 @@ public class BaseServiceOperate extends BaseSeviceOperateOfUtil{
             logger.info(String.format(logX ,statusInfoCheck.getMethodName(),"already"));
         } else {
             /*
-             * 处理所有非T状态的情况
-             * 当状态为值为非F时，且字段必须修改为T时，报错返回false.
+             * 处理所有非T状态的情况，且字段状态必须更新为T
+             * 且字段中间状态为false时，报错返回false.
              * */
-            if (!statusVal.equals(InterruptStatusRecordUtil.F_STATUS) && isUpdateConfigFileValueT && !statusInfoCheck.isStatusValIsMiddleStatus()) {
+            if (!statusVal.equals(InterruptStatusRecordUtil.F_STATUS) && isUpdateConfigFileValueT
+                    && !statusInfoCheck.isStatusValIsMiddleStatus()) {
                 logger.error("==> status filed value is not F or T, please check it. filedName:" + statusInfoCheck.getStatusField() + "  filedValue:" + statusVal);
                 return false;
             }
@@ -165,10 +188,16 @@ public class BaseServiceOperate extends BaseSeviceOperateOfUtil{
     }
 
     private class StatusInfoCheck {
+        //中断文件的 字段名称
         private String statusField;
+        //中断文件的 字段名称对应的 值
         private String statusVal;
+        //中断文件的 字段名称 对应的执行方法名称
         private String methodName;
-        //状态值是否 有中间状态
+        /**
+         * 状态值是否 有中间状态。
+         *  true:有中间状态， false:没有中间状态
+         ***/
         private boolean statusValIsMiddleStatus = false;
         private InterruptStatusRecordUtil interruptStatus;
 
