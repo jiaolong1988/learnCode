@@ -1,4 +1,4 @@
-package util;
+package util.seqExecFunction;
 
 import org.apache.log4j.Logger;
 
@@ -18,8 +18,8 @@ public class WorkTimeUtil {
 
     public static void main(String[] args) {
         String worktime = "10:00-12:00,15:00-18:00";
-        worktime = "17:00-18:00";
-         worktime = "";
+       // worktime = ",17:00-18:00";
+    //     worktime = "";
         boolean flag = getWorkTimeFlag(worktime);
         System.out.println("是否是工作时间: " + flag);
     }
@@ -177,6 +177,7 @@ public class WorkTimeUtil {
      */
     private static boolean isTimestr(String timeStr) {
         DateFormat format = new SimpleDateFormat("HH:mm");
+        // 设置严格解析
         format.setLenient(false);
 
         try {

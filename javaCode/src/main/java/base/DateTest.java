@@ -14,13 +14,25 @@ import java.util.Date;
  * @date 2025/03/31 16:07
  **/
 public class DateTest {
-    //日期格式验证
+    public static void main(String[] args) throws Exception {
+        DateFormatTest();
+        //    calendarTest();
+        //  isLegalDate();
+
+
+    }
+    /**
+     * 日期格式验证
+     * @return
+     **/
     public static boolean isLegalDate(int length, String sDate,String format) {
         int legalLen = length;
         if ((sDate == null) || (sDate.length() != legalLen)) {
             return false;
         }
         DateFormat formatter = new SimpleDateFormat(format);
+        // 设置严格解析
+        formatter.setLenient(false);
         try {
             Date date = formatter.parse(sDate);
             return sDate.equals(formatter.format(date));
@@ -33,25 +45,44 @@ public class DateTest {
 
         //1.String转换成Date类型
         SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+        // 设置严格解析
+        ft.setLenient(false);
+
         String time = "2019-09-19";
         Date date1 = ft.parse(time);
 
         //2.Date转换成String类型
-        SimpleDateFormat ft1 = new SimpleDateFormat("yyyy-MM-dd");
+       // SimpleDateFormat ft1 = new SimpleDateFormat("yyyy-MM-dd");
         Date date2 = new Date();
-        String time1 = ft1.format(date2);
+        String time1 = ft.format(date2);
+
+
 
 
         //3.Date 转 LocalDateTime
         Date startDate = new Date();
-        LocalDateTime localDateTime1 = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        LocalDateTime now = LocalDateTime.now();
+
+        LocalDateTime localDateTime1 = startDate.toInstant() // 将 Date 转换为 Instant
+                                                .atZone(ZoneId.systemDefault()) // 使用系统默认时区
+                                                .toLocalDateTime(); // 转换为 LocalDateTime
+
         // LocalDateTime 转 Date
         Date date = Date.from(localDateTime1.atZone(ZoneId.systemDefault()).toInstant());
+
+
 
         //4.日期格式化-线程安全
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String dateTimeStr = localDateTime1.format(dateTimeFormatter);
         System.out.println(dateTimeStr);
+
+        // 定义格式化模式 Begin_time:2024-09-26-21.32.11.878110
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss.SSSSSS");
+        // 格式化当前日期时间
+        String formattedDateTime = LocalDateTime.now().format(formatter);
+        System.out.println("formattedDateTime:"+formattedDateTime);
+
 
         //5.日期格式化-线程不安全
         SimpleDateFormat simpleDateFormat=new SimpleDateFormat("YYYYMMddHHmm");
@@ -59,8 +90,8 @@ public class DateTest {
         System.out.println("日期转换后："+transformDate+"\n");
 
     }
-    public static void main(String[] args) throws Exception {
 
+    public static void calendarTest() {
         Calendar dataCompare = Calendar.getInstance();
         //日期减法操作
         dataCompare.add(Calendar.DATE, -1);
@@ -72,8 +103,6 @@ public class DateTest {
 
         //设置 毫秒值为0
         dataCompare.set(Calendar.MILLISECOND, 0);
-
-
 
 
         Calendar now = Calendar.getInstance();
@@ -98,6 +127,7 @@ public class DateTest {
         System.out.println("时间操作输出: "+cal.getTime());
 
     }
+
 
 }
 

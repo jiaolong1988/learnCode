@@ -19,10 +19,15 @@ public class BaseServiceOperate extends BaseSeviceOperateOfUtil{
     protected InterruptStatusRecordUtil interruptStatus = new InterruptStatusRecordUtil();
     protected static final String STATUS_F = InterruptStatusRecordUtil.F_STATUS;
     protected static final String STATUS_T = InterruptStatusRecordUtil.T_STATUS;
-    //true:删除状态文件，false：不删除
-    protected static boolean isDelStatus = true;
+
+    //是否 打印执行日志
+    protected boolean printExecLogFlag = true;
+
     //是否中断
-    protected boolean interruptFlag = false;
+    private boolean interruptFlag = false;
+    protected boolean isInterruptFlag() {
+        return interruptFlag;
+    }
 
     //状态字段扩展信息
     private Map<String, String> expandInterruptStatusMap = new LinkedHashMap<>();
@@ -40,17 +45,14 @@ public class BaseServiceOperate extends BaseSeviceOperateOfUtil{
         if (interruptStatus.getConfigInterruptFile().exists()) {
             interruptFlag = true;
         }
-
         return interruptStatus.createConfigFileExpand(statusClass, expandInterruptStatusMap);
     }
 
+    //删除中断状态文件
     public boolean exec99() {
-        if(isDelStatus){
-            return interruptStatus.delConfigFile();
-        }
-
-        return true;
+       return interruptStatus.delConfigFile();
     }
+
 
     protected boolean commonExecUpdateConfigFileValueOfMiddenValT(Supplier<Boolean> sm, String statusField, String execMethodName) {
         StatusInfoCheck statusInfoCheck = getStatusInfo(statusField, execMethodName, interruptStatus);
@@ -142,13 +144,17 @@ public class BaseServiceOperate extends BaseSeviceOperateOfUtil{
             }
 
             if(isUpdateConfigFileValueT){
-                logger.info(String.format(logX ,statusInfoCheck.getMethodName(),"start"));
+                if(printExecLogFlag){
+                    logger.info(String.format(logX ,statusInfoCheck.getMethodName(),"start"));
+                }
 
             }else{
                 if(!statusVal.equals(InterruptStatusRecordUtil.F_STATUS)){
                     logger.info(String.format(logX ,statusInfoCheck.getMethodName(),"already"));
                 }else{
-                    logger.info(String.format(logX ,statusInfoCheck.getMethodName(),"start"));
+                    if(printExecLogFlag){
+                        logger.info(String.format(logX ,statusInfoCheck.getMethodName(),"start"));
+                    }
                 }
             }
 
