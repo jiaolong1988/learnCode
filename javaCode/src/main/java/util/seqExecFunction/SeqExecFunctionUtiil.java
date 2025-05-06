@@ -206,7 +206,7 @@ public class SeqExecFunctionUtiil {
                 }
             }else{
                 //上一个方法没执行成功，当前方法不执行
-                logger.info(execMethodName + ": no have exec. [reason:the previous method was not executed successfully.]");
+                logger.info(execMethodName + ": no have exec. [reason:the previous method executed fail.]");
             }
             return false;
         };

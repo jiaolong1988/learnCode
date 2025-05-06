@@ -20,17 +20,15 @@ public class WorkTimeUtil {
         String worktime = "10:00-12:00,15:00-18:00";
        // worktime = ",17:00-18:00";
     //     worktime = "";
-        boolean flag = getWorkTimeFlag(worktime);
-        System.out.println("是否是工作时间: " + flag);
+        getWorkTimeCheck(worktime);
     }
 
     /**
      * @param workTimeStr 如果为空时，程序不进行将时间检查
      **/
-    public static boolean getWorkTimeFlag(String workTimeStr) {
+    public static void getWorkTimeCheck(String workTimeStr) {
         if(workTimeStr.trim().length() == 0){
             logger.info("=================>>>WorkTime is null, not check worktime.");
-            return true;
         }
 
         boolean logFlag = true;
@@ -50,7 +48,7 @@ public class WorkTimeUtil {
                 }
             }
         }
-        return true;
+
     }
 
     /**

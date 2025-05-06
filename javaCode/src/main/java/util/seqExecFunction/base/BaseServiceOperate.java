@@ -2,10 +2,8 @@ package util.seqExecFunction.base;
 
 import org.apache.log4j.Logger;
 import util.seqExecFunction.InterruptStatusRecordUtil;
+import util.seqExecFunction.WorkTimeUtil;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -20,6 +18,7 @@ public class BaseServiceOperate extends BaseSeviceOperateOfUtil{
     protected static final String STATUS_F = InterruptStatusRecordUtil.F_STATUS;
     protected static final String STATUS_T = InterruptStatusRecordUtil.T_STATUS;
 
+    protected String worktime = null;
     //是否 打印执行日志
     protected boolean printExecLogFlag = true;
 
@@ -99,6 +98,10 @@ public class BaseServiceOperate extends BaseSeviceOperateOfUtil{
      * @return the boolean
      */
     private boolean commonExec(Supplier<Boolean> sm, StatusInfoCheck statusInfoCheck, boolean isUpdateConfigFileValueT) {
+        //工作时间检查
+        WorkTimeUtil.getWorkTimeCheck(worktime);
+
+        //执行状态对应的 业务方法
         String statusField = statusInfoCheck.getStatusField();
         boolean isExec = fieldExecBeforeCheck(statusInfoCheck, isUpdateConfigFileValueT);
         if (isExec) {

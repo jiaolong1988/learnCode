@@ -23,10 +23,15 @@ public class ExecServiceOperate extends BaseServiceOperate {
         //固定写法 初始化中断文件
         interruptStatus.interruptConfigFileInit(TmpInfoConfig.tmpinfoDir,execTaskStatusFile);
         this.execParameter = execParameter;
-      //  this.printExecLogFlag = false;
 
-        this.addAttribute("aaa");
-        this.addAttributeAndValue("bbb","222");
+        //日志打印
+      //  this.printExecLogFlag = false;
+        //工作时间
+        this.worktime = execParameter.getWorktime();
+
+        //整个额外的信息状态
+        this.addAttribute("extend_aaa");
+        this.addAttributeAndValue("extend_info_fn","aa.txt");
     }
 
     public boolean exec1_ftpFileName(String methodName, String statusName) {

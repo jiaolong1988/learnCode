@@ -7,8 +7,8 @@ import java.io.File;
  * @date 2025/01/07 9:45
  **/
 public class ExecParameter {
+    private String worktime;
     private File importFile;
-    private boolean isDelStatus = true;
 
     public File getImportFile() {
         return importFile;
@@ -18,11 +18,11 @@ public class ExecParameter {
         this.importFile = importFile;
     }
 
-    public boolean isDelStatus() {
-        return isDelStatus;
+    public String getWorktime() {
+        return worktime;
     }
 
-    public void setDelStatus(boolean delStatus) {
-        isDelStatus = delStatus;
+    public void setWorktime(String worktime) {
+        this.worktime = worktime;
     }
 }

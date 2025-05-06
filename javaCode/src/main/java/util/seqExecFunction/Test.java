@@ -1,12 +1,10 @@
 package util.seqExecFunction;
 
-import util.seqExecFunction.base.BaseServiceOperate;
 import util.seqExecFunction.service.ExecParameter;
 import util.seqExecFunction.service.ExecServiceOperate;
 import util.seqExecFunction.service.ExecTaskStatus;
 
 import java.io.File;
-import java.lang.reflect.Field;
 
 /**
  * @author jiaolong
@@ -22,8 +20,8 @@ public class Test {
 
         //1.执行参数
         ExecParameter parameter = new ExecParameter();
+        parameter.setWorktime("10:44-12:00,15:00-18:00");
         parameter.setImportFile(new File("D:\\test.txt"));
-        parameter.setDelStatus(false);
 
 //        //2.batchNum文件初始化
 //        if (!TmpInfoConfig.getBatchNumFile().exists()) {
