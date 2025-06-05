@@ -4,12 +4,14 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 /**
- * 队列 排序
+ *【优先队列】,实现Qune接口 排序
  * @author jiaolong
  * @date 2024-11-5 17:07
  */
 public class PriorityQueueTest {
     public static void main(String[] args) {
+        Comparator<Integer> valSort = Comparator.comparing(Integer::intValue).reversed();
+
 		Comparator<Integer> cmp = new Comparator<Integer>(){
 			@Override
 			public int compare(Integer a, Integer b) {
@@ -19,6 +21,12 @@ public class PriorityQueueTest {
 			}
 		};
 
+        test(valSort);
+        System.out.println("==========================");
+        test(cmp);
+    }
+
+    private static void test(Comparator<Integer> cmp) {
         PriorityQueue pq = new PriorityQueue(cmp);
         // 下面代码依次向pq中加入四个元素
         pq.offer(6);
