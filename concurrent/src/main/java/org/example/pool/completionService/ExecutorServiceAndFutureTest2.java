@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  * @author jiaolong
  * @date 2023-07-10 02:40:16
  */
-public class CompletionServiceTest2 {
+public class ExecutorServiceAndFutureTest2 {
 
     public static void main(String[] args) throws Exception {
 

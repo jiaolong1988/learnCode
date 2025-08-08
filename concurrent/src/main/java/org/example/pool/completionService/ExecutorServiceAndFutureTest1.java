@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * @author jiaolong
  * @date 2023-07-10 02:40:45
  */
-public class CompletionServiceTest1 {
+public class ExecutorServiceAndFutureTest1 {
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         // 创建线程池
